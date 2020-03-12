@@ -62,7 +62,6 @@ Global
 		$2.FileWidth = 80
 		$2.scope = text/x-csharp
 		$0.CSharpFormattingPolicy = $3
-		$3.IndentBraces = True
 		$3.IndentSwitchSection = False
 		$3.NewLinesForBracesInTypes = False
 		$3.NewLinesForBracesInMethods = False

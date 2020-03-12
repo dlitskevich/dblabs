@@ -127,6 +127,9 @@
     <Reference Include="Ubiety.Dns.Core">
       <HintPath>..\packages\MySql.Data.8.0.19\lib\netstandard2.1\Ubiety.Dns.Core.dll</HintPath>
     </Reference>
+    <Reference Include="System.Data.DataSetExtensions">
+      <HintPath>..\packages\System.Data.DataSetExtensions.4.5.0\lib\netstandard2.0\System.Data.DataSetExtensions.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Contents.json" />
