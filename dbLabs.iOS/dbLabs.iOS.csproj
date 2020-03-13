@@ -134,11 +134,11 @@
       <Version>4.5.0</Version>
     </PackageReference>
   </ItemGroup>
-  <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <ItemGroup>
     <ProjectReference Include="..\dbLabs\dbLabs.csproj">
       <Project>{2DCC75B9-124E-4C5F-BB04-D8E7F28DEE6E}</Project>
       <Name>dbLabs</Name>
     </ProjectReference>
   </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
 </Project>

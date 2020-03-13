@@ -9,9 +9,46 @@
     x:Class="dbLabs.MainPage"
     Appearing="PageLoaded"
     >
-    <StackLayout>
+    <StackLayout Orientation="Vertical" >
         <!-- Place new controls here -->
         <syncfusion:SfDataGrid x:Name="manufGrid"
+                               IsVisible="True"
+                               AutoGenerateColumns="True"
+                               ColumnSizer="Star"
+
+                               AllowEditing="True"
+                               SelectionMode="Single"
+
+                               HeightRequest="0.3"
+                               
+                               AllowDeleting="True"
+                               AllowKeyboardNavigation="True"
+                               NavigationMode="Cell"
+                               AllowDraggingColumn="True"
+                               ShowRowHeader="True"
+                               >
+        </syncfusion:SfDataGrid>
+
+        <StackLayout Orientation="Horizontal">
+            <Button Text="Filter Price" HorizontalOptions="Start" Clicked="Filter"/>
+            <Entry x:Name="minPrice" TextColor="Red" Text="0"/>
+            <Entry x:Name="maxPrice" TextColor="Green" Text="200"/>
+            <Label Text="Sort by type" TextColor="Aqua"/>
+            <CheckBox x:Name="byType"/>
+            <Label Text="Sort by Name" TextColor="Pink"/>
+            <CheckBox x:Name="byName"/>
+        </StackLayout>
+
+        <StackLayout Orientation="Horizontal">
+            <Button Text="Find Similiar" HorizontalOptions="Start" Clicked="FindProduct"/>
+            <Entry x:Name="productPattern" TextColor="BlueViolet" Text="Coke"/>
+        </StackLayout>
+
+        <StackLayout Orientation="Horizontal">
+            <Button Text="Refresh" HorizontalOptions="Start" Clicked="Refresh"/>
+        </StackLayout>
+
+        <syncfusion:SfDataGrid x:Name="resultGrid"
                                IsVisible="True"
                                AutoGenerateColumns="True"
                                ColumnSizer="Star"
@@ -27,24 +64,8 @@
                                >
         </syncfusion:SfDataGrid>
 
-        <syncfusion:SfDataGrid x:Name="resultGrid"
-                               IsVisible="False"
-                               AutoGenerateColumns="True"
-                               ColumnSizer="Star"
+        
 
-                               AllowEditing="True"
-                               SelectionMode="Single"
-
-                               AllowDeleting="True"
-                               AllowKeyboardNavigation="True"
-                               NavigationMode="Cell"
-                               AllowDraggingColumn="True"
-                               ShowRowHeader="True"
-                               >
-        </syncfusion:SfDataGrid>
-
-        <Button x:Name="testbutton" Text="Test" HorizontalOptions="End" Clicked="testbutton_Click"/>
-
-        <Label Text="Welcome to Xamarin.Forms!" HorizontalOptions="Center" VerticalOptions="CenterAndExpand" />
+        
     </StackLayout>
 </ContentPage>
