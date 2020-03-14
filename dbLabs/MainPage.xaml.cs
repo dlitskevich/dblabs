@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using MySql.Data.MySqlClient;
 using Xamarin.Forms;
 using System.Configuration;
+using System.Diagnostics;
 
 namespace dbLabs {
 	// Learn more about making custom code visible in the Xamarin.Forms previewer
@@ -30,6 +31,7 @@ namespace dbLabs {
 			productAdapter = new MySqlDataAdapter("select * from product", connString);
 			customerAdapter = new MySqlDataAdapter("select * from customer", connString);
 
+			
 			manufCommands = new MySqlCommandBuilder(manufAdapter);
 			productCommands = new MySqlCommandBuilder(productAdapter);
 			customerCommands = new MySqlCommandBuilder(customerAdapter);
@@ -48,7 +50,7 @@ namespace dbLabs {
 
 		private void PageLoaded(object sender, EventArgs e) {
 			manufGrid.ItemsSource = shopDS.Tables["manufact"].DefaultView;
-			resultGrid.ItemsSource = shopDS.Tables["product"];
+			resultGrid.ItemsSource = shopDS.Tables["product"].DefaultView;
 		}
 
 		//private void testbutton_Click(object sender, EventArgs e) {
@@ -103,36 +105,30 @@ namespace dbLabs {
 						 where ((string)m["prod_name"]).Contains(productPattern.Text.ToString())
 						 select m;
 
-			IEnumerable<DataRow> resultQuery;
-			if(byType.IsChecked && byName.IsChecked) {
-				resultQuery = result.OrderBy(x => x.ItemArray[2]).ThenBy(x => x.ItemArray[1]);
-			} else if(byName.IsChecked) {
-				resultQuery = result.OrderBy(x => x.ItemArray[1]);
-			} else if(byType.IsChecked) {
-				resultQuery = result.OrderBy(x => x.ItemArray[2]);
-			} else {
-				resultQuery = result;
-			};
-
-
-			resultGrid.IsVisible = true;
-			resultGrid.ItemsSource = resultQuery;
+			resultGrid.ItemsSource = result.CopyToDataTable().DefaultView;
 		}
 
 		private void Refresh(object sender, EventArgs e) {
-
-
-			//manufAdapter.Update(shopDS, "manufact");
+			
 			resultGrid.EndEdit();
-			productAdapter.Update(shopDS,"product");
+			//shopDS.Tables["product"].AcceptChanges();
+			//productAdapter.Up;
+			
+			var test = productCommands.GetUpdateCommand();
+			test.CommandText = $"UPDATE `product` SET `prod_name` = '@p1', `prod_type` = '@p2', `prod_manuf_id` = @p3, `prod_price` = @p4, `prod_quantity` = @p5 WHERE(`prod_id` = @p6)";
 
-			shopDS.Tables["product"].AcceptChanges();
-			productAdapter.Fill(shopDS.Tables["product"]);
-			//shopDS.Clear();
-			//manufAdapter.Fill(shopDS, "manufact");
-			//productAdapter.Fill(shopDS, "product");
+			productAdapter.UpdateCommand = test;
+			try { 
+				productAdapter.Update(shopDS.Tables["product"]);
+					}
+			catch (MySqlException ex)
+			{
+				Debug.WriteLine(ex.Message);
+			}
 
-			resultGrid.IsVisible = true;
+	//productAdapter.Fill(shopDS.Tables["product"]);
+
+	PageLoaded(null, null);
 		}
 
 		private void AddProduct(object sender, EventArgs e) {
