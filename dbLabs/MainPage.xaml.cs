@@ -9,6 +9,7 @@ using MySql.Data.MySqlClient;
 using Xamarin.Forms;
 using System.Configuration;
 using System.Diagnostics;
+using Syncfusion.Data.Extensions;
 
 namespace dbLabs {
 	// Learn more about making custom code visible in the Xamarin.Forms previewer
@@ -40,10 +41,18 @@ namespace dbLabs {
 			productAdapter.Fill(shopDS, "product");
 			customerAdapter.Fill(shopDS, "customer");
 
+			var productUpdateCmd = productCommands.GetUpdateCommand();
+			productUpdateCmd.CommandText = $"UPDATE `product` SET `prod_name` = '@p1', `prod_type` = '@p2', `prod_manuf_id` = @p3, `prod_price` = @p4, `prod_quantity` = @p5 WHERE(`prod_id` = @p6)";
+			productAdapter.UpdateCommand = productUpdateCmd;
+
+			var productDeleteCmd = productCommands.GetDeleteCommand();
+			productDeleteCmd.CommandText = $"DELETE FROM `product` WHERE(`prod_id` = @p1)";
+			productAdapter.DeleteCommand = productDeleteCmd;
+
 			DataRelation manufToProduct = new DataRelation("ManufProduct",
 				shopDS.Tables["manufact"].Columns["manuf_id"],
 				shopDS.Tables["product"].Columns["prod_manuf_id"]);
-
+			
 			shopDS.Relations.Add(manufToProduct);
 
 		}
@@ -96,8 +105,10 @@ namespace dbLabs {
  
 
 			resultGrid.IsVisible = true;
+			ProductManage.IsVisible = true;
 			resultGrid.ItemsSource = resultQuery.CopyToDataTable().DefaultView;
 		}
+
 
 		private void FindProduct(object sender, EventArgs e) {
 
@@ -106,7 +117,10 @@ namespace dbLabs {
 						 select m;
 
 			resultGrid.ItemsSource = result.CopyToDataTable().DefaultView;
+			ProductManage.IsVisible = true;
 		}
+
+
 
 		private void Refresh(object sender, EventArgs e) {
 			
@@ -114,10 +128,6 @@ namespace dbLabs {
 			//shopDS.Tables["product"].AcceptChanges();
 			//productAdapter.Up;
 			
-			var test = productCommands.GetUpdateCommand();
-			test.CommandText = $"UPDATE `product` SET `prod_name` = '@p1', `prod_type` = '@p2', `prod_manuf_id` = @p3, `prod_price` = @p4, `prod_quantity` = @p5 WHERE(`prod_id` = @p6)";
-
-			productAdapter.UpdateCommand = test;
 			try { 
 				productAdapter.Update(shopDS.Tables["product"]);
 					}
@@ -125,22 +135,95 @@ namespace dbLabs {
 			{
 				Debug.WriteLine(ex.Message);
 			}
+			shopDS.Clear();
+			manufAdapter.Fill(shopDS, "manufact");
+			productAdapter.Fill(shopDS, "product");
+			customerAdapter.Fill(shopDS, "customer");
 
-	//productAdapter.Fill(shopDS.Tables["product"]);
-
-	PageLoaded(null, null);
+			PageLoaded(null, null);
 		}
 
 		private void AddProduct(object sender, EventArgs e) {
-
-			var result = from m in shopDS.Tables["product"].AsEnumerable()						
-						 select m;
-
-			
-			
-
+			DataRow row;
+			row = shopDS.Tables["product"].NewRow();
+			row[0] = (int)(shopDS.Tables["product"].AsEnumerable()).Last()[0]+1;
+			shopDS.Tables["product"].Rows.Add(row);
+		
 			resultGrid.IsVisible = true;
-			resultGrid.ItemsSource = result.CopyToDataTable().DefaultView;
+			resultGrid.ItemsSource = shopDS.Tables["product"].DefaultView;
 		}
+
+		private void RemoveProduct(object sender, EventArgs e) {
+			if(resultGrid.SelectedItem != null) {
+				//shopDS.Tables["product"].Rows.Remove((DataRow)((DataRowView)resultGrid.SelectedItem).Row);
+				//shopDS.Tables["product"].Rows.RemoveAt((int)resultGrid.SelectedIndex-1);
+				((DataRow)((DataRowView)resultGrid.SelectedItem).Row).Delete();
+				Refresh(null,null);
+			}
+		}
+
+
+		private void Group(object sender, EventArgs e) {
+			var result = ((shopDS.Tables["product"].Select().Join(
+				shopDS.Tables["manufact"].Select(),
+				prod => prod[3],
+				manuf => manuf[0],
+				(prod, manuf) => new {
+					id = manuf[0],
+					Name = manuf[1],
+					Country = manuf[2],
+					Address = manuf[4],
+					Price = prod[4],
+					TotalQuantity = (int)prod[5]
+				})).GroupBy(x => x.id, (key, rest) => new {
+					id = key,
+					AVGprice = rest.Average(y => (float)y.Price),
+					TotalQuantity = rest.Sum(y => y.TotalQuantity)
+				})).Select(prop => new { prop.id, prop.AVGprice, prop.TotalQuantity });
+
+			var result2 = (shopDS.Tables["manufact"].Select()).GroupJoin(
+				(shopDS.Tables["product"].Select().Join(
+				shopDS.Tables["manufact"].Select(),
+				prod => prod[3],
+				manuf => manuf[0],
+				(prod, manuf) => new {
+					id = manuf[0],
+					Name = manuf[1],
+					Country = manuf[2],
+					Address = manuf[4],
+					Price = prod[4],
+					TotalQuantity = (int)prod[5]
+				})),
+					manuf => manuf[0],
+					key => key.id,
+					(manuf, stats) => new {
+					id = manuf[0],
+					Name = manuf[1],
+					Country = manuf[2],
+					Address = manuf[4],
+					AVGprice = stats.Average(prop => (float)prop.Price),
+					TotalQuantity = stats.Sum(prop => prop.TotalQuantity)
+				});
+
+			//var result1 = (shopDS.Tables["manufact"].Select()).Join(
+			//	result,
+			//	manuf => manuf[3],
+			//	stats => stats.id,
+			//	(manuf, stats) => new {
+			//		stats.id,
+			//		Name = manuf[1],
+			//		Country = manuf[2],
+			//		Address = manuf[4],
+			//		stats.AVGprice,
+			//		stats.TotalQuantity
+			//	})
+			//;
+
+			ProductManage.IsVisible = false;
+			resultGrid.ItemsSource = result2;
+
+		}
+
+
 	}
 }

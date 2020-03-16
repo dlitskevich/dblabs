@@ -19,7 +19,7 @@
                                AllowEditing="True"
                                SelectionMode="Single"
 
-                               HeightRequest="0.3"
+                               HeightRequest="0.2"
                                
                                AllowDeleting="True"
                                AllowKeyboardNavigation="True"
@@ -44,8 +44,14 @@
             <Entry x:Name="productPattern" TextColor="BlueViolet" Text="Coke"/>
         </StackLayout>
 
-        <StackLayout Orientation="Horizontal">
+        <StackLayout x:Name="ProductManage" Orientation="Horizontal">
             <Button Text="Refresh" HorizontalOptions="Start" Clicked="Refresh"/>
+            <Button Text="Add New Product" HorizontalOptions="Start" Clicked="AddProduct"/>
+            <Button Text="Remove Product" HorizontalOptions="Start" Clicked="RemoveProduct"/>
+        </StackLayout>
+
+        <StackLayout Orientation="Horizontal">
+            <Button Text="Group" HorizontalOptions="Start" Clicked="Group"/>
         </StackLayout>
 
         <syncfusion:SfDataGrid x:Name="resultGrid"
