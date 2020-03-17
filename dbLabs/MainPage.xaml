@@ -11,7 +11,7 @@
     >
     <StackLayout Orientation="Vertical" >
         <!-- Place new controls here -->
-        <syncfusion:SfDataGrid x:Name="manufGrid"
+        <syncfusion:SfDataGrid x:Name="resultGrid"
                                IsVisible="True"
                                AutoGenerateColumns="True"
                                ColumnSizer="Star"
@@ -19,7 +19,7 @@
                                AllowEditing="True"
                                SelectionMode="Single"
 
-                               HeightRequest="0.2"
+                               HeightRequest="0.5"
                                
                                AllowDeleting="True"
                                AllowKeyboardNavigation="True"
@@ -30,46 +30,8 @@
         </syncfusion:SfDataGrid>
 
         <StackLayout Orientation="Horizontal">
-            <Button Text="Filter Price" HorizontalOptions="Start" Clicked="Filter"/>
-            <Entry x:Name="minPrice" TextColor="Red" Text="0"/>
-            <Entry x:Name="maxPrice" TextColor="Green" Text="200"/>
-            <Label Text="Sort by type" TextColor="Aqua"/>
-            <CheckBox x:Name="byType"/>
-            <Label Text="Sort by Name" TextColor="Pink"/>
-            <CheckBox x:Name="byName"/>
+            <Button Text="GNP > 20000" HorizontalOptions="Start" Clicked="GNP"/>
         </StackLayout>
-
-        <StackLayout Orientation="Horizontal">
-            <Button Text="Find Similiar" HorizontalOptions="Start" Clicked="FindProduct"/>
-            <Entry x:Name="productPattern" TextColor="BlueViolet" Text="Coke"/>
-        </StackLayout>
-
-        <StackLayout x:Name="ProductManage" Orientation="Horizontal">
-            <Button Text="Refresh" HorizontalOptions="Start" Clicked="Refresh"/>
-            <Button Text="Add New Product" HorizontalOptions="Start" Clicked="AddProduct"/>
-            <Button Text="Remove Product" HorizontalOptions="Start" Clicked="RemoveProduct"/>
-        </StackLayout>
-
-        <StackLayout Orientation="Horizontal">
-            <Button Text="Group" HorizontalOptions="Start" Clicked="Group"/>
-            <Button Text="GroupLINQ" HorizontalOptions="Start" Clicked="GroupLINQ"/>
-        </StackLayout>
-
-        <syncfusion:SfDataGrid x:Name="resultGrid"
-                               IsVisible="True"
-                               AutoGenerateColumns="True"
-                               ColumnSizer="Star"
-
-                               AllowEditing="True"
-                               SelectionMode="Single"
-
-                               AllowDeleting="True"
-                               AllowKeyboardNavigation="True"
-                               NavigationMode="Cell"
-                               AllowDraggingColumn="True"
-                               ShowRowHeader="True"
-                               >
-        </syncfusion:SfDataGrid>
 
         
 

@@ -16,53 +16,61 @@ namespace dbLabs {
 	// by visiting https://aka.ms/xamarinforms-previewer
 	[DesignTimeVisible(false)]
 	public partial class MainPage : ContentPage {
-		private DataSet shopDS = new DataSet("Shop");
-		private string connString = "server=127.0.0.1; user=root; password=Password; database=shop_example";
-		private MySqlDataAdapter manufAdapter;
-		private MySqlDataAdapter productAdapter;
-		private MySqlDataAdapter customerAdapter;
+		private DataSet worldDS = new DataSet("World");
+		private string connString = "server=127.0.0.1; user=root; password=Password; database=world";
+		private MySqlDataAdapter cityAdapter;
+		private MySqlDataAdapter countryAdapter;
+		private MySqlDataAdapter countrylanguageAdapter;
 
-		private MySqlCommandBuilder manufCommands;
-		private MySqlCommandBuilder productCommands;
-		private MySqlCommandBuilder customerCommands;
+		private MySqlCommandBuilder cityCommands;
+		private MySqlCommandBuilder countryCommands;
+		private MySqlCommandBuilder countrylanguageCommands;
 
 		public MainPage() {
 			InitializeComponent();
-			manufAdapter = new MySqlDataAdapter("select * from manufact", connString);
-			productAdapter = new MySqlDataAdapter("select * from product", connString);
-			customerAdapter = new MySqlDataAdapter("select * from customer", connString);
+			cityAdapter = new MySqlDataAdapter("select * from city", connString);
+			countryAdapter = new MySqlDataAdapter("select * from country", connString);
+			countrylanguageAdapter = new MySqlDataAdapter("select * from countrylanguage", connString);
 
 
-			manufCommands = new MySqlCommandBuilder(manufAdapter);
-			productCommands = new MySqlCommandBuilder(productAdapter);
-			customerCommands = new MySqlCommandBuilder(customerAdapter);
+			cityCommands = new MySqlCommandBuilder(cityAdapter);
+			countryCommands = new MySqlCommandBuilder(countryAdapter);
+			countrylanguageCommands = new MySqlCommandBuilder(countrylanguageAdapter);
 
-			manufAdapter.Fill(shopDS, "manufact");
-			productAdapter.Fill(shopDS, "product");
-			customerAdapter.Fill(shopDS, "customer");
+			cityAdapter.Fill(worldDS, "city");
+			countryAdapter.Fill(worldDS, "country");
+			countrylanguageAdapter.Fill(worldDS, "countrylanguage");
 
-			var productUpdateCmd = productCommands.GetUpdateCommand();
-			productUpdateCmd.CommandText = $"UPDATE `product` SET `prod_name` = '@p1', `prod_type` = '@p2', `prod_manuf_id` = @p3, `prod_price` = @p4, `prod_quantity` = @p5 WHERE(`prod_id` = @p6)";
-			productAdapter.UpdateCommand = productUpdateCmd;
+			DataRelation cityToCountry = new DataRelation("CityCountry",
+				worldDS.Tables["country"].Columns["Code"],
+				worldDS.Tables["city"].Columns["CountryCode"]);
 
-			var productDeleteCmd = productCommands.GetDeleteCommand();
-			productDeleteCmd.CommandText = $"DELETE FROM `product` WHERE(`prod_id` = @p1)";
-			productAdapter.DeleteCommand = productDeleteCmd;
+			DataRelation countrylanguageToCountry = new DataRelation("countrylanguageCountry",
+				worldDS.Tables["country"].Columns["Code"],
+				worldDS.Tables["countrylanguage"].Columns["CountryCode"]);
 
-			DataRelation manufToProduct = new DataRelation("ManufProduct",
-				shopDS.Tables["manufact"].Columns["manuf_id"],
-				shopDS.Tables["product"].Columns["prod_manuf_id"]);
+			worldDS.Relations.Add(cityToCountry);
+			worldDS.Relations.Add(countrylanguageToCountry);
 
-			shopDS.Relations.Add(manufToProduct);
 
 		}
 
 		private void PageLoaded(object sender, EventArgs e) {
-			manufGrid.ItemsSource = shopDS.Tables["manufact"].DefaultView;
-			resultGrid.ItemsSource = shopDS.Tables["product"].DefaultView;
+			resultGrid.ItemsSource = worldDS.Tables["city"].DefaultView;
 		}
 
+		private void GNP(object sender, EventArgs e) {
+			var result = from x in worldDS.Tables["country"].AsEnumerable()
+						 where x.Field<float>("GNP")>20000
+						 select new {
+							 Name = x.Field<string>("Name"),
+							 GNP = x.Field<float>("GNP")
+						 };
 
+			resultGrid.ItemsSource = result;
+		}
+
+		/*
 		private void Filter(object sender, EventArgs e) {
 
 			var result = from m in shopDS.Tables["product"].AsEnumerable()
@@ -223,6 +231,6 @@ namespace dbLabs {
 			ProductManage.IsVisible = false;
 			resultGrid.ItemsSource = result;
 		}
-
+		*/
 	}
 }
