@@ -62,27 +62,6 @@ namespace dbLabs {
 			resultGrid.ItemsSource = shopDS.Tables["product"].DefaultView;
 		}
 
-		//private void testbutton_Click(object sender, EventArgs e) {
-		//	//var result = shopDS.Tables["manufact"].Select("manuf_name = 'dbDealer'");
-
-		//	/*
-		//	var propertyCollection = manufGrid.View.GetPropertyAccessProvider();
-		//	int compID = (int)propertyCollection.GetValue(manufGrid.SelectedItem, "id");
-		//	*/
-		//	/*
-		//	var compID = (int)(manufGrid.SelectedItem as DataRowView).Row.ItemArray[0];
-		//	var result = shopDS.Tables["manufact"].Select($"manuf_id = '{compID}'")[0].GetChildRows("ManufProduct");
-		//	*/
-		//	/* !
-		//	DataView quantityView = new DataView(shopDS.Tables["product"]) {
-		//		RowFilter = "prod_quantity > 410"
-		//	};*/
-		//	var result = from m in shopDS.Tables["product"].AsEnumerable()
-		//				 where ((string)m["prod_type"] == "entertaining" && (int)m["prod_quantity"] > 1000)
-		//				 select m;
-		//	resultGrid.IsVisible = true;
-		//	resultGrid.ItemsSource = result.CopyToDataTable().DefaultView;
-		//}
 
 		private void Filter(object sender, EventArgs e) {
 
