@@ -35,6 +35,7 @@
             <Button Text="Area ( Argentina / 2505813)" HorizontalOptions="Start" Clicked="Areas"/>
         </StackLayout>
          <Button Text="Cities pop > 3 europe countries (Faa)" HorizontalOptions="Start" Clicked="Cities"/>
+         <Button Text="Avg pop > capital pop (+)" HorizontalOptions="Start" Clicked="Capital"/>
         
 
         

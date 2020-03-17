@@ -118,6 +118,33 @@ namespace dbLabs {
 			resultGrid.ItemsSource = result.CopyToDataTable().DefaultView;
 		}
 
+
+		private void Capital(object sender, EventArgs e) {
+			var CountryAVGPopulation = from city in worldDS.Tables["city"].AsEnumerable()
+									group city
+									   by new { Code=city.Field<string>("Countrycode") }
+									   into cityGrouped
+									select new { cityGrouped.Key.Code, AVGPopulation=cityGrouped.Average(x => x.Field<int>("Population")) };
+
+			var Capitals = from city in worldDS.Tables["city"].AsEnumerable()
+						   join country in worldDS.Tables["country"].AsEnumerable()
+						   on city["ID"] equals country["Capital"]
+						   select new {
+							   Code=country["Code"],
+							   Name=country["Name"],
+							   Capital=city["Name"],
+							   CapitalPopulation=city["Population"]
+						   };
+
+			var result = from country in CountryAVGPopulation.AsEnumerable()
+						 join city in Capitals.AsEnumerable()
+						 on country.Code equals city.Code
+						 where (int)country.AVGPopulation > (int)city.CapitalPopulation
+						 select new { city.Name, AVGPopulation = (int)country.AVGPopulation, city.Capital, city.CapitalPopulation };
+
+			resultGrid.ItemsSource = result;
+		}
+
 		/*
 		private void GroupLINQ(object sender, EventArgs e) {
 			var result = from prod in shopDS.Tables["product"].AsEnumerable()
