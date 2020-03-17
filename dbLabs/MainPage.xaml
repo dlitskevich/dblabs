@@ -52,6 +52,7 @@
 
         <StackLayout Orientation="Horizontal">
             <Button Text="Group" HorizontalOptions="Start" Clicked="Group"/>
+            <Button Text="GroupLINQ" HorizontalOptions="Start" Clicked="GroupLINQ"/>
         </StackLayout>
 
         <syncfusion:SfDataGrid x:Name="resultGrid"
