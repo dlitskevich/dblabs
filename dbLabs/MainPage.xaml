@@ -30,9 +30,11 @@
         </syncfusion:SfDataGrid>
 
         <StackLayout Orientation="Horizontal">
-            <Button Text="GNP > 20000" HorizontalOptions="Start" Clicked="GNP"/>
+            <Button Text="GNP > 20000 (UAE)" HorizontalOptions="Start" Clicked="GNP"/>
+            <Button Text="Show russian language (17)" HorizontalOptions="Start" Clicked="Russians"/>
+            <Button Text="Area ( Argentina / 2505813)" HorizontalOptions="Start" Clicked="Areas"/>
         </StackLayout>
-
+         <Button Text="Cities pop > 3 europe countries (Faa)" HorizontalOptions="Start" Clicked="Cities"/>
         
 
         
