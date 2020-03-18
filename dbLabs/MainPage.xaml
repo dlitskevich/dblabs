@@ -11,24 +11,6 @@
     >
     <StackLayout Orientation="Vertical" >
         <!-- Place new controls here -->
-        <syncfusion:SfDataGrid x:Name="manufGrid"
-                               IsVisible="True"
-                               AutoGenerateColumns="True"
-                               ColumnSizer="Star"
-
-                               AllowEditing="True"
-                               SelectionMode="Single"
-
-                               HeightRequest="0.2"
-                               
-                               AllowDeleting="True"
-                               AllowKeyboardNavigation="True"
-                               NavigationMode="Cell"
-                               AllowDraggingColumn="True"
-                               ShowRowHeader="True"
-                               >
-        </syncfusion:SfDataGrid>
-
         <StackLayout Orientation="Horizontal">
             <Button Text="Filter Price" HorizontalOptions="Start" Clicked="Filter"/>
             <Entry x:Name="minPrice" TextColor="Red" Text="0"/>
