@@ -264,10 +264,49 @@ namespace dbLabs {
 					contract => contract["contract_type"],
 					(type, rest) => new {
 						Type = type,
-						Payment = rest.Average(x => x["payment"]),
+						Payment = rest.Average(x => (float)x["payment"]),
 					}
-				);
+				).OrderBy(x => (string)x.Type);
 
+			resultGrid.ItemsSource = result;
+		}
+
+		private void AutoUsage(object sender, EventArgs e) {
+			var result = shopDS.Tables["auto"].Select().GroupJoin(
+					shopDS.Tables["practice"].Select(),
+					auto => auto["auto_id"],
+					practice => practice["auto_id"],
+
+					(auto, practice) => new {						
+						Name = auto[1],
+						Count = practice.Count()
+					}
+				).OrderBy(x => (string)x.Name);
+
+			resultGrid.ItemsSource = result;
+		}
+
+		private void TeacherPractice(object sender, EventArgs e) {
+			var result = from teacher in shopDS.Tables["teacher"].AsEnumerable()
+						 join practise in shopDS.Tables["practice"].AsEnumerable()
+						 on teacher["teacher_id"] equals practise["teacher_id"]
+						 group new { teacher, practise }
+						 by new {
+							 id = teacher.Field<int>("teacher_id"),
+							 Name = teacher.Field<string>("teacher_name"),
+							 Surname = teacher.Field<string>("teacher_surname"),
+							 Phone = teacher.Field<string>("teacher_phone")
+						 } into teacherPractise
+						 orderby teacherPractise.Key.id ascending
+						 select new {
+							 teacherPractise.Key.id,
+							 teacherPractise.Key.Name,
+							 teacherPractise.Key.Surname,
+							 teacherPractise.Key.Phone,
+							 Lessons = (int)teacherPractise.Count()
+						 }
+
+						 ;
 			resultGrid.ItemsSource = result;
 		}
 

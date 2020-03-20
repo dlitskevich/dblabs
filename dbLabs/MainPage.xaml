@@ -67,6 +67,9 @@
 
             <StackLayout Orientation="Horizontal">
                 <Button Text="JoinContract" HorizontalOptions="Start" Clicked="JoinContract"/>
+                <Button Text="Average Contract" HorizontalOptions="Start" Clicked="AverageContract"/>
+                <Button Text="Auto Usage" HorizontalOptions="Start" Clicked="AutoUsage"/>
+                <Button Text="Teacher Practice" HorizontalOptions="Start" Clicked="TeacherPractice"/>
                 <Button Text="GroupLINQ" HorizontalOptions="Start" Clicked="GroupLINQ"/>
             </StackLayout>
         </StackLayout>
