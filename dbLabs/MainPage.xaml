@@ -11,30 +11,64 @@
     >
     <StackLayout Orientation="Vertical" >
         <!-- Place new controls here -->
-        <StackLayout Orientation="Horizontal">
-            <Button Text="Filter Price" HorizontalOptions="Start" Clicked="Filter"/>
-            <Entry x:Name="minPrice" TextColor="Red" Text="0"/>
-            <Entry x:Name="maxPrice" TextColor="Green" Text="200"/>
-            <Label Text="Sort by type" TextColor="Aqua"/>
-            <CheckBox x:Name="byType"/>
-            <Label Text="Sort by Name" TextColor="Pink"/>
-            <CheckBox x:Name="byName"/>
-        </StackLayout>
+        
 
         <StackLayout Orientation="Horizontal">
-            <Button Text="Find Similiar" HorizontalOptions="Start" Clicked="FindProduct"/>
-            <Entry x:Name="productPattern" TextColor="BlueViolet" Text="Coke"/>
+            <Button Text="Show Customers"  HorizontalOptions="Start" Clicked="ShowCustomer"/>
+            <Button Text="Show Teachers"  HorizontalOptions="Start" Clicked="ShowTeacher"/>
+            <Button Text="Show Autos"  HorizontalOptions="Start" Clicked="ShowAuto"/>
+            <Button Text="Show Contracts"  HorizontalOptions="Start" Clicked="ShowContract"/>
+            <Button Text="Show Practices"  HorizontalOptions="Start" Clicked="ShowPractice"/>
         </StackLayout>
 
-        <StackLayout x:Name="ProductManage" Orientation="Horizontal">
+        <StackLayout x:Name="RRA" Orientation="Horizontal">
             <Button Text="Refresh" HorizontalOptions="Start" Clicked="Refresh"/>
-            <Button Text="Add New Product" HorizontalOptions="Start" Clicked="AddProduct"/>
-            <Button Text="Remove Product" HorizontalOptions="Start" Clicked="RemoveProduct"/>
+            <Button Text="Remove Item" HorizontalOptions="Start" Clicked="RemoveItem"/>
+            <Button x:Name="addcustomer" Text="Add New Customer" IsVisible="True" HorizontalOptions="Start" Clicked="AddCustomer"/>
+            <Button x:Name="addteacher" Text="Add New Teacher" IsVisible="False" HorizontalOptions="Start" Clicked="AddTeacher"/>
+            <Button x:Name="addauto" Text="Add New Auto" IsVisible="False" HorizontalOptions="Start" Clicked="AddAuto"/>
+            <Button x:Name="addcontract" Text="Add New Contract" IsVisible="False" HorizontalOptions="Start" Clicked="AddContract"/>
+            <Button x:Name="addpractice" Text="Add New Practice" IsVisible="False" HorizontalOptions="Start" Clicked="AddPractice"/>
         </StackLayout>
 
-        <StackLayout Orientation="Horizontal">
-            <Button Text="Group" HorizontalOptions="Start" Clicked="Group"/>
-            <Button Text="GroupLINQ" HorizontalOptions="Start" Clicked="GroupLINQ"/>
+        
+
+        <syncfusion:SfDataGrid x:Name="ShowGrid"
+                               IsVisible="True"
+                               AutoGenerateColumns="True"
+                               ColumnSizer="Star"
+
+                               AllowEditing="True"
+                               SelectionMode="Single"
+
+                               AllowDeleting="True"
+                               AllowKeyboardNavigation="True"
+                               NavigationMode="Cell"
+                               AllowDraggingColumn="True"
+                               ShowRowHeader="True"
+                               >
+        </syncfusion:SfDataGrid>
+
+        <StackLayout Orientation="Vertical">
+            <StackLayout Orientation="Horizontal">
+                <Button Text="Filter Contracts" HorizontalOptions="Start" Clicked="JoinContract"/>
+                <Entry x:Name="minPrice" TextColor="Red" Text="1000"/>
+                <Entry x:Name="maxPrice" TextColor="Green" Text="5000"/>
+                <Label Text="Sort by type" TextColor="Aqua"/>
+                <CheckBox x:Name="byType"/>
+                <Label Text="Sort by Date" TextColor="Pink"/>
+                <CheckBox x:Name="byDate"/>
+            </StackLayout>
+
+            <StackLayout Orientation="Horizontal">
+                <Button Text="Find Auto by Name" HorizontalOptions="Start" Clicked="FindAuto"/>
+                <Entry x:Name="autoPattern" TextColor="BlueViolet" Text="Geely"/>
+            </StackLayout>
+
+            <StackLayout Orientation="Horizontal">
+                <Button Text="JoinContract" HorizontalOptions="Start" Clicked="JoinContract"/>
+                <Button Text="GroupLINQ" HorizontalOptions="Start" Clicked="GroupLINQ"/>
+            </StackLayout>
         </StackLayout>
 
         <syncfusion:SfDataGrid x:Name="resultGrid"
@@ -52,8 +86,6 @@
                                ShowRowHeader="True"
                                >
         </syncfusion:SfDataGrid>
-
-        
 
         
     </StackLayout>

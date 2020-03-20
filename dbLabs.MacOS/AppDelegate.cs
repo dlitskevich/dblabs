@@ -14,7 +14,7 @@ namespace dbLabs.MacOS {
                 {
                         var style = NSWindowStyle.Closable | NSWindowStyle.Resizable | NSWindowStyle.Titled;
 
-                        var rect = new CoreGraphics.CGRect (500, 1000, 700, 700);
+                        var rect = new CoreGraphics.CGRect (500, 1000, 1000, 1000);
                         _window = new NSWindow (rect, style, NSBackingStore.Buffered, false);
                         _window.Title = "Xamarin.Forms on Mac!";
                         _window.TitleVisibility = NSWindowTitleVisibility.Hidden;
