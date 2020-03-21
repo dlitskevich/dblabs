@@ -70,7 +70,7 @@
                 <Button Text="Average Contract" HorizontalOptions="Start" Clicked="AverageContract"/>
                 <Button Text="Auto Usage" HorizontalOptions="Start" Clicked="AutoUsage"/>
                 <Button Text="Teacher Practice" HorizontalOptions="Start" Clicked="TeacherPractice"/>
-                <Button Text="GroupLINQ" HorizontalOptions="Start" Clicked="GroupLINQ"/>
+                <Button Text="Customer Marks" HorizontalOptions="Start" Clicked="CustomerMark"/>
             </StackLayout>
         </StackLayout>
 

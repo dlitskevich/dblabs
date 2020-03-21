@@ -74,6 +74,8 @@ namespace dbLabs {
 			ShowGrid.ItemsSource = shopDS.Tables["customer"].DefaultView;
 		}
 
+
+
 		private void ShowCustomer(object sender, EventArgs e) {
 			ShowGrid.ItemsSource = shopDS.Tables["customer"].DefaultView;
 			addcustomer.IsVisible = true;
@@ -304,33 +306,36 @@ namespace dbLabs {
 							 teacherPractise.Key.Surname,
 							 teacherPractise.Key.Phone,
 							 Lessons = (int)teacherPractise.Count()
-						 }
-
-						 ;
-			resultGrid.ItemsSource = result;
-		}
-
-		private void GroupLINQ(object sender, EventArgs e) {
-			var result = from prod in shopDS.Tables["product"].AsEnumerable()
-						 join manuf in shopDS.Tables["manufact"].AsEnumerable()
-						 on prod["prod_manuf_id"] equals manuf["manuf_id"]
-						 group new { prod, manuf }
-						 by new {
-							 id = manuf.Field<int>("manuf_id"),
-							 mn = manuf.Field<string>("manuf_name"),
-							 address = manuf.Field<string>("manuf_address")
-						 } into mt
-						 orderby mt.Key.id ascending
-						 select new {
-							 id = mt.Key.id,
-							 Name = mt.Key.mn,
-							 Address = mt.Key.address,
-							 AVGprice = mt.Average(x => x.prod.Field<float>("prod_price")),
-							 ManufQuantity = mt.Sum(x => x.prod.Field<int>("prod_quantity"))
 						 };
 
 			resultGrid.ItemsSource = result;
 		}
+
+		private void CustomerMark(object sender, EventArgs e) {
+			var result = from customer in shopDS.Tables["customer"].AsEnumerable()
+						 join practise in shopDS.Tables["practice"].AsEnumerable()
+						 on customer["customer_id"] equals practise["customer_id"]
+						 group new { customer, practise }
+						 by new {
+							 id = customer.Field<int>("customer_id"),
+							 Name = customer.Field<string>("customer_name"),
+							 Surname = customer.Field<string>("customer_surname"),
+							 Phone = customer.Field<string>("customer_phone")
+						 } into customerPractise
+						 orderby customerPractise.Key.id ascending
+						 select new {
+							 customerPractise.Key.id,
+							 customerPractise.Key.Name,
+							 customerPractise.Key.Surname,
+							 customerPractise.Key.Phone,
+							 minMark = customerPractise.Min(x => x.practise.Field<int>("mark")),
+							 maxMark = customerPractise.Max(x => x.practise.Field<int>("mark")),
+							 averageMark = (int)customerPractise.Average(x => x.practise.Field<int>("mark"))
+						 };
+
+			resultGrid.ItemsSource = result;
+		}
+
 
 
 		
