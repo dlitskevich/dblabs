@@ -147,23 +147,14 @@ namespace dbLabs {
 
 
 		private void LangPop(object sender, EventArgs e) {
-			var language =from countrylang in worldDS.Tables["countrylanguage"].AsEnumerable()
+			var language =
+				from lang in worldDS.Tables["countrylanguage"].AsEnumerable()
+				group lang by new { CountryCode = lang.Field<string>("CountryCode") } into langGrouped
 
-						  join quant in (from lang in worldDS.Tables["countrylanguage"].AsEnumerable()
-						  group lang by new { id = lang.Field<string>("Language") } into langGrouped
-						 
-						  select new {
-							  Language = langGrouped.Key.id,
-							  Quantity = langGrouped.Count()
-						 })
-						 on countrylang.Field<string>("Language") equals quant.Language
-
-						 select new {
-							 CountryCode= countrylang.Field<string>("CountryCode"),
-							 quant.Language,
-							 quant.Quantity
-						 }
-			;
+				select new {
+					CountryCode = langGrouped.Key.CountryCode,
+					Quantity = langGrouped.Count()
+				};
 
 			var countries = from city in worldDS.Tables["city"].AsEnumerable()
 									   group city
@@ -179,7 +170,6 @@ namespace dbLabs {
 						 on country.CountryCode equals lang.CountryCode
 						 where (int)country.QuantCitiesPopGreater > (int)lang.Quantity
 						 select new { country.CountryCode, country.QuantCitiesPopGreater,
-							 lang.Language,
 							 lang.Quantity
 						 };
 
