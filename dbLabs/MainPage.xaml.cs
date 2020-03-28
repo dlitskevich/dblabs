@@ -236,7 +236,11 @@ namespace dbLabs {
 		private void FindAuto(object sender, EventArgs e) {
 
 			var result = from auto in shopDS.Tables["auto"].AsEnumerable()
-						 where ((string)auto["auto_name"]).Contains(autoPattern.Text.ToString())
+						 where
+						 ((string)auto["auto_name"]).Contains(autoPattern.Text.ToString())
+						 &&
+						 (float.TryParse(minPriceAuto.Text, out float min) ? min : 0) < (float)auto["price"]
+						 && (float)auto["price"] < (float.TryParse(maxPriceAuto.Text, out float max) ? max : 70000)
 						 select auto;
 
 			resultGrid.ItemsSource = result.CopyToDataTable().DefaultView;

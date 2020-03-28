@@ -63,6 +63,8 @@
             <StackLayout Orientation="Horizontal">
                 <Button Text="Find Auto by Name" HorizontalOptions="Start" Clicked="FindAuto"/>
                 <Entry x:Name="autoPattern" TextColor="BlueViolet" Text="Geely"/>
+                <Entry x:Name="minPriceAuto" TextColor="Red" Text="1000"/>
+                <Entry x:Name="maxPriceAuto" TextColor="Green" Text="70000"/>
             </StackLayout>
 
             <StackLayout Orientation="Horizontal">
