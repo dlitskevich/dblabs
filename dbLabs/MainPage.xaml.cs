@@ -20,25 +20,33 @@ namespace dbLabs {
 		private string connString = "server=127.0.0.1; user=root; password=Password; database=shop_example";
 		private MySqlDataAdapter manufAdapter;
 		private MySqlDataAdapter productAdapter;
+		private MySqlDataAdapter productTempAdapter;
 		private MySqlDataAdapter customerAdapter;
 
 		private MySqlCommandBuilder manufCommands;
 		private MySqlCommandBuilder productCommands;
+		private MySqlCommandBuilder productTempCommands;
 		private MySqlCommandBuilder customerCommands;
+
+		private DataTable tempProd = new DataTable();
+		
 
 		public MainPage() {
 			InitializeComponent();
 			manufAdapter = new MySqlDataAdapter("select * from manufact", connString);
 			productAdapter = new MySqlDataAdapter("select * from product", connString);
+			productTempAdapter = new MySqlDataAdapter("select * from product_temp", connString);
 			customerAdapter = new MySqlDataAdapter("select * from customer", connString);
 
 
 			manufCommands = new MySqlCommandBuilder(manufAdapter);
 			productCommands = new MySqlCommandBuilder(productAdapter);
+			productTempCommands = new MySqlCommandBuilder(productTempAdapter);
 			customerCommands = new MySqlCommandBuilder(customerAdapter);
 
 			manufAdapter.Fill(shopDS, "manufact");
 			productAdapter.Fill(shopDS, "product");
+			productTempAdapter.Fill(shopDS, "product_temp");
 			customerAdapter.Fill(shopDS, "customer");
 
 			var productUpdateCmd = productCommands.GetUpdateCommand();
@@ -55,6 +63,12 @@ namespace dbLabs {
 
 			shopDS.Relations.Add(manufToProduct);
 
+			tempProd.Columns.Add(new DataColumn("prod_id", System.Type.GetType("System.Int32")));
+			tempProd.Columns.Add(new DataColumn("prod_name", System.Type.GetType("System.String")));
+			tempProd.Columns.Add(new DataColumn("prod_type", System.Type.GetType("System.String")));
+			tempProd.Columns.Add(new DataColumn("prod_manuf_id", System.Type.GetType("System.Int32")));
+			tempProd.Columns.Add(new DataColumn("prod_price", System.Type.GetType("System.Int32")));
+			tempProd.Columns.Add(new DataColumn("prod_quantity", System.Type.GetType("System.Int32")));
 		}
 
 		private void PageLoaded(object sender, EventArgs e) {
@@ -130,6 +144,7 @@ namespace dbLabs {
 
 			try {
 				productAdapter.Update(shopDS.Tables["product"]);
+				productTempAdapter.Update(tempProd);
 			} catch(MySqlException ex) {
 				Debug.WriteLine(ex.Message);
 			}
@@ -143,12 +158,32 @@ namespace dbLabs {
 
 		private void AddProduct(object sender, EventArgs e) {
 			DataRow row;
-			row = shopDS.Tables["product"].NewRow();
-			row[0] = (int)(shopDS.Tables["product"].AsEnumerable()).Last()[0] + 1;
-			shopDS.Tables["product"].Rows.Add(row);
+			
+			if((shopDS.Tables["product"].Rows).Count < 10) {
+				row = shopDS.Tables["product"].NewRow();
+				row[0] = (int)(shopDS.Tables["product"].AsEnumerable()).Last()[0] + 1;
+				row[1] = "coka";
+				row[2] = "entertaining";
+				row[3] = 1;
+				row[4] = 1;
+				row[5] = 1;
+				shopDS.Tables["product"].Rows.Add(row);
+			} else {
+				row = tempProd.NewRow();
+				row[0] = tempProd.Rows.Count>0 ? (int)(tempProd.AsEnumerable()).Last()[0] + 1 : (int)(shopDS.Tables["product"].AsEnumerable()).Last()[0] + 1;
+				row[1] = "coka";
+				row[2] = "entertaining";
+				row[3] = 1;
+				row[4] = 1;
+				row[5] = 1;
+				tempProd.Rows.Add(row);
+			}
+
+			
 
 			resultGrid.IsVisible = true;
-			resultGrid.ItemsSource = shopDS.Tables["product"].DefaultView;
+			//resultGrid.ItemsSource = shopDS.Tables["product"].DefaultView;
+			resultGrid.ItemsSource = tempProd.DefaultView;
 		}
 
 		private void RemoveProduct(object sender, EventArgs e) {
