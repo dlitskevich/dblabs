@@ -36,6 +36,7 @@
         </StackLayout>
          <Button Text="Cities pop > 3 europe countries (Faa)" HorizontalOptions="Start" Clicked="Cities"/>
          <Button Text="Avg pop > capital pop (+)" HorizontalOptions="Start" Clicked="Capital"/>
+         <Button Text="quant lang > quant cities pop > 1000000" HorizontalOptions="Start" Clicked="LangPop"/>
         
 
         

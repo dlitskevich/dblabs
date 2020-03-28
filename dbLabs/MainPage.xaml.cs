@@ -145,6 +145,47 @@ namespace dbLabs {
 			resultGrid.ItemsSource = result;
 		}
 
+
+		private void LangPop(object sender, EventArgs e) {
+			var language =from countrylang in worldDS.Tables["countrylanguage"].AsEnumerable()
+
+						  join quant in (from lang in worldDS.Tables["countrylanguage"].AsEnumerable()
+						  group lang by new { id = lang.Field<string>("Language") } into langGrouped
+						 
+						  select new {
+							  Language = langGrouped.Key.id,
+							  Quantity = langGrouped.Count()
+						 })
+						 on countrylang.Field<string>("Language") equals quant.Language
+
+						 select new {
+							 CountryCode= countrylang.Field<string>("CountryCode"),
+							 quant.Language,
+							 quant.Quantity
+						 }
+			;
+
+			var countries = from city in worldDS.Tables["city"].AsEnumerable()
+									   group city
+										  by new { CountryCode = city.Field<string>("Countrycode") }
+									   into cityGrouped
+									   select new {
+										   cityGrouped.Key.CountryCode,
+										   QuantCitiesPopGreater = cityGrouped.Count(x => x.Field<int>("Population")>1000000) };
+
+			
+			var result = from country in countries.AsEnumerable()
+						 join lang in language.AsEnumerable()
+						 on country.CountryCode equals lang.CountryCode
+						 where (int)country.QuantCitiesPopGreater > (int)lang.Quantity
+						 select new { country.CountryCode, country.QuantCitiesPopGreater,
+							 lang.Language,
+							 lang.Quantity
+						 };
+
+			resultGrid.ItemsSource = result;
+		}
+
 		/*
 		private void GroupLINQ(object sender, EventArgs e) {
 			var result = from prod in shopDS.Tables["product"].AsEnumerable()
