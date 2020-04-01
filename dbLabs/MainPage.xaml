@@ -3,12 +3,17 @@
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:d="http://xamarin.com/schemas/2014/forms/design"
-    xmlns:syncfusion="clr-namespace:Syncfusion.SfDataGrid.XForms;assembly=Syncfusion.SfDataGrid.XForms" 
+    xmlns:syncfusionDG="clr-namespace:Syncfusion.SfDataGrid.XForms;assembly=Syncfusion.SfDataGrid.XForms"
+    
+    
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     x:Class="dbLabs.MainPage"
     Appearing="PageLoaded"
     >
+    <!--
+    
+    -->
     <StackLayout Orientation="Vertical" >
         <!-- Place new controls here -->
         
@@ -33,7 +38,7 @@
 
         
 
-        <syncfusion:SfDataGrid x:Name="ShowGrid"
+        <syncfusionDG:SfDataGrid x:Name="ShowGrid"
                                IsVisible="True"
                                AutoGenerateColumns="True"
                                ColumnSizer="Star"
@@ -47,7 +52,23 @@
                                AllowDraggingColumn="True"
                                ShowRowHeader="True"
                                >
-        </syncfusion:SfDataGrid>
+        </syncfusionDG:SfDataGrid>
+        
+        <StackLayout Orientation="Horizontal">
+            <Button Text="Show properties" HorizontalOptions="Start" Clicked="ShowProperty"/>
+            <Picker x:Name="tableSelected" HorizontalOptions="FillAndExpand" SelectedIndexChanged="UpdateColumnsNames">
+                <Picker.Items>
+                    <x:String>customer</x:String>
+                    <x:String>teacher</x:String>
+                    <x:String>auto</x:String>
+                    <x:String>contract</x:String>
+                    <x:String>practice</x:String>
+                </Picker.Items>
+            </Picker>
+            <Picker x:Name="columnNames" HorizontalOptions="FillAndExpand" />
+
+
+        </StackLayout>
 
         <StackLayout Orientation="Vertical">
             <StackLayout Orientation="Horizontal">
@@ -76,7 +97,7 @@
             </StackLayout>
         </StackLayout>
 
-        <syncfusion:SfDataGrid x:Name="resultGrid"
+        <syncfusionDG:SfDataGrid x:Name="resultGrid"
                                IsVisible="True"
                                AutoGenerateColumns="True"
                                ColumnSizer="Star"
@@ -90,7 +111,7 @@
                                AllowDraggingColumn="True"
                                ShowRowHeader="True"
                                >
-        </syncfusion:SfDataGrid>
+        </syncfusionDG:SfDataGrid>
 
         
     </StackLayout>

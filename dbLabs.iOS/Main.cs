@@ -13,6 +13,7 @@ namespace dbLabs.iOS {
 			// if you want to use a different Application Delegate class from "AppDelegate"
 			// you can specify it here.
 			Syncfusion.SfDataGrid.XForms.iOS.SfDataGridRenderer.Init();
+			//Syncfusion.XForms.iOS.Buttons.SfRadioButtonRenderer.Init();
 			UIApplication.Main (args, null, "AppDelegate");
 		}
 	}

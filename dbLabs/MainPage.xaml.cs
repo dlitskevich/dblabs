@@ -10,13 +10,14 @@ using Xamarin.Forms;
 using System.Configuration;
 using System.Diagnostics;
 using Syncfusion.Data.Extensions;
+using AppKit;
 
 namespace dbLabs {
 	// Learn more about making custom code visible in the Xamarin.Forms previewer
 	// by visiting https://aka.ms/xamarinforms-previewer
 	[DesignTimeVisible(false)]
 	public partial class MainPage : ContentPage {
-		private DataSet shopDS = new DataSet("Shop");
+		private DataSet autoschoolDS = new DataSet("Autoschool");
 		private string connString = "server=127.0.0.1; user=root; password=Password; database=autoschool";
 		private MySqlDataAdapter customerAdapter;
 		private MySqlDataAdapter teacherAdapter;
@@ -47,11 +48,11 @@ namespace dbLabs {
 			practiceCommands = new MySqlCommandBuilder(practiceAdapter);
 
 
-			customerAdapter.Fill(shopDS, "customer");
-			teacherAdapter.Fill(shopDS, "teacher");
-			autoAdapter.Fill(shopDS, "auto");
-			contractAdapter.Fill(shopDS, "contract");
-			practiceAdapter.Fill(shopDS, "practice");
+			customerAdapter.Fill(autoschoolDS, "customer");
+			teacherAdapter.Fill(autoschoolDS, "teacher");
+			autoAdapter.Fill(autoschoolDS, "auto");
+			contractAdapter.Fill(autoschoolDS, "contract");
+			practiceAdapter.Fill(autoschoolDS, "practice");
 
 			var UpdateCmd = customerCommands.GetUpdateCommand();
 			UpdateCmd.CommandText = $"UPDATE `product` SET `customer_name` = '@p1', `customer_surname` = '@p2', `customer_phone` = @p3, `customer_birth` = @p4 WHERE(`customer_id` = @p5)";
@@ -63,31 +64,76 @@ namespace dbLabs {
 
 			/*
 			DataRelation manufToProduct = new DataRelation("ManufProduct",
-				shopDS.Tables["manufact"].Columns["manuf_id"],
-				shopDS.Tables["product"].Columns["prod_manuf_id"]);
+				autoschoolDS.Tables["manufact"].Columns["manuf_id"],
+				autoschoolDS.Tables["product"].Columns["prod_manuf_id"]);
 
-			shopDS.Relations.Add(manufToProduct);
+			autoschoolDS.Relations.Add(manufToProduct);
 			*/
 		}
 
+		/// ////////////////////////////////////////////////
+		/// Initialize page
+		/// ////////////////////////////////////////////////
+		
 		private void PageLoaded(object sender, EventArgs e) {
-			ShowGrid.ItemsSource = shopDS.Tables["customer"].DefaultView;
+			ShowGrid.ItemsSource = autoschoolDS.Tables["customer"].DefaultView;
+			UpdateColumnsNames(null, null);
+		}
+
+		/// ////////////////////////////////////////////////
+		/// Show properties
+		/// ////////////////////////////////////////////////		
+
+		private void UpdateColumnsNames(object sender, EventArgs e) {
+			string tableName = sender==null? "customer" : (string)((Picker)sender).SelectedItem;
+			DataColumnCollection columns = autoschoolDS.Tables[tableName].Columns;
+
+			List<string> names = new List<string>();
+			foreach(DataColumn column in columns) {
+				names.Add(column.ColumnName);
+			}
+			columnNames.ItemsSource = names.ToArray();
+		}
+
+		private void ShowProperty(object sender, EventArgs e) {
+			string tableName = tableSelected.SelectedItem == null ? "customer" : (string)tableSelected.SelectedItem;
+			string colname = columnNames.SelectedItem == null? (string)columnNames.Items[0] : (string)columnNames.SelectedItem;
+
+			var columnSelected = autoschoolDS.Tables[tableName].Columns[colname];
+			
+			string colproperty = "";
+			colproperty += "Name - > " + columnSelected.ColumnName + "\n";
+			colproperty += "Type - > " + columnSelected.DataType + "\n";
+			colproperty += "Allow NULL - > " + columnSelected.AllowDBNull + "\n";
+			colproperty += "Autoincrement - > " + columnSelected.AutoIncrement + "\n";
+			colproperty += "Unique - > " + columnSelected.Unique + "\n";
+			colproperty += "Number of primary keys - >" + autoschoolDS.Tables[tableName].PrimaryKey.Length + "\n";
+
+			var alert = new NSAlert() {
+				AlertStyle = NSAlertStyle.Informational,
+				InformativeText = colproperty,
+				MessageText = "Properties of"+ colname,
+			};
+			alert.AddButton("Ok");
+			alert.RunModal();
 		}
 
 
+		/// ////////////////////////////////////////////////
+		/// CRUD
+		/// ////////////////////////////////////////////////
 
 		private void ShowCustomer(object sender, EventArgs e) {
-			ShowGrid.ItemsSource = shopDS.Tables["customer"].DefaultView;
+			ShowGrid.ItemsSource = autoschoolDS.Tables["customer"].DefaultView;
 			addcustomer.IsVisible = true;
 			addteacher.IsVisible = false;
 			addauto.IsVisible = false;
 			addcontract.IsVisible = false;
 			addpractice.IsVisible = false;
-		
 		}
 
 		private void ShowTeacher(object sender, EventArgs e) {
-			ShowGrid.ItemsSource = shopDS.Tables["teacher"].DefaultView;
+			ShowGrid.ItemsSource = autoschoolDS.Tables["teacher"].DefaultView;
 			addcustomer.IsVisible = false;
 			addteacher.IsVisible = true;
 			addauto.IsVisible = false;
@@ -96,7 +142,7 @@ namespace dbLabs {
 		}
 
 		private void ShowAuto(object sender, EventArgs e) {
-			ShowGrid.ItemsSource = shopDS.Tables["auto"].DefaultView;
+			ShowGrid.ItemsSource = autoschoolDS.Tables["auto"].DefaultView;
 			addcustomer.IsVisible = false;
 			addteacher.IsVisible = false;
 			addauto.IsVisible = true;
@@ -105,7 +151,7 @@ namespace dbLabs {
 		}
 
 		private void ShowContract(object sender, EventArgs e) {
-			ShowGrid.ItemsSource = shopDS.Tables["contract"].DefaultView;
+			ShowGrid.ItemsSource = autoschoolDS.Tables["contract"].DefaultView;
 			addcustomer.IsVisible = false;
 			addteacher.IsVisible = false;
 			addauto.IsVisible = false;
@@ -114,7 +160,7 @@ namespace dbLabs {
 		}
 
 		private void ShowPractice(object sender, EventArgs e) {
-			ShowGrid.ItemsSource = shopDS.Tables["practice"].DefaultView;
+			ShowGrid.ItemsSource = autoschoolDS.Tables["practice"].DefaultView;
 			addcustomer.IsVisible = false;
 			addteacher.IsVisible = false;
 			addauto.IsVisible = false;
@@ -126,80 +172,80 @@ namespace dbLabs {
 		private void Refresh(object sender, EventArgs e) {
 
 			ShowGrid.EndEdit();
-			//shopDS.Tables["product"].AcceptChanges();
+			//autoschoolDS.Tables["product"].AcceptChanges();
 			//productAdapter.Up;
 
 			try {
-				customerAdapter.Update(shopDS.Tables["customer"]);
-				teacherAdapter.Update(shopDS.Tables["teacher"]);
-				autoAdapter.Update(shopDS.Tables["auto"]);
-				contractAdapter.Update(shopDS.Tables["contract"]);
-				practiceAdapter.Update(shopDS.Tables["practice"]);
+				customerAdapter.Update(autoschoolDS.Tables["customer"]);
+				teacherAdapter.Update(autoschoolDS.Tables["teacher"]);
+				autoAdapter.Update(autoschoolDS.Tables["auto"]);
+				contractAdapter.Update(autoschoolDS.Tables["contract"]);
+				practiceAdapter.Update(autoschoolDS.Tables["practice"]);
 			} catch(MySqlException ex) {
 				Debug.WriteLine(ex.Message);
 			}
-			shopDS.Clear();
-			customerAdapter.Fill(shopDS, "customer");
-			teacherAdapter.Fill(shopDS, "teacher");
-			autoAdapter.Fill(shopDS, "auto");
-			contractAdapter.Fill(shopDS, "contract");
-			practiceAdapter.Fill(shopDS, "practice");
+			autoschoolDS.Clear();
+			customerAdapter.Fill(autoschoolDS, "customer");
+			teacherAdapter.Fill(autoschoolDS, "teacher");
+			autoAdapter.Fill(autoschoolDS, "auto");
+			contractAdapter.Fill(autoschoolDS, "contract");
+			practiceAdapter.Fill(autoschoolDS, "practice");
 
 			// PageLoaded(null, null);
 		}
 
 		private void AddCustomer(object sender, EventArgs e) {
 			DataRow row;
-			row = shopDS.Tables["customer"].NewRow();
-			row[0] = (int)(shopDS.Tables["customer"].AsEnumerable()).Last()[0] + 1;
-			shopDS.Tables["customer"].Rows.Add(row);
+			row = autoschoolDS.Tables["customer"].NewRow();
+			row[0] = (int)(autoschoolDS.Tables["customer"].AsEnumerable()).Last()[0] + 1;
+			autoschoolDS.Tables["customer"].Rows.Add(row);
 
-			ShowGrid.ItemsSource = shopDS.Tables["customer"].DefaultView;
+			ShowGrid.ItemsSource = autoschoolDS.Tables["customer"].DefaultView;
 		}
 
 		private void AddTeacher(object sender, EventArgs e) {
 			DataRow row;
-			row = shopDS.Tables["teacher"].NewRow();
-			row[0] = (int)(shopDS.Tables["teacher"].AsEnumerable()).Last()[0] + 1;
-			shopDS.Tables["teacher"].Rows.Add(row);
+			row = autoschoolDS.Tables["teacher"].NewRow();
+			row[0] = (int)(autoschoolDS.Tables["teacher"].AsEnumerable()).Last()[0] + 1;
+			autoschoolDS.Tables["teacher"].Rows.Add(row);
 
-			ShowGrid.ItemsSource = shopDS.Tables["teacher"].DefaultView;
+			ShowGrid.ItemsSource = autoschoolDS.Tables["teacher"].DefaultView;
 		}
 
 		private void AddAuto(object sender, EventArgs e) {
 			DataRow row;
-			row = shopDS.Tables["auto"].NewRow();
-			row[0] = (int)(shopDS.Tables["auto"].AsEnumerable()).Last()[0] + 1;
-			shopDS.Tables["auto"].Rows.Add(row);
+			row = autoschoolDS.Tables["auto"].NewRow();
+			row[0] = (int)(autoschoolDS.Tables["auto"].AsEnumerable()).Last()[0] + 1;
+			autoschoolDS.Tables["auto"].Rows.Add(row);
 
-			ShowGrid.ItemsSource = shopDS.Tables["auto"].DefaultView;
+			ShowGrid.ItemsSource = autoschoolDS.Tables["auto"].DefaultView;
 		}
 
 		private void AddContract(object sender, EventArgs e) {
 			DataRow row;
-			row = shopDS.Tables["contract"].NewRow();
-			row[0] = (int)(shopDS.Tables["contract"].AsEnumerable()).Last()[0] + 1;
+			row = autoschoolDS.Tables["contract"].NewRow();
+			row[0] = (int)(autoschoolDS.Tables["contract"].AsEnumerable()).Last()[0] + 1;
 			row[4] = (DateTime)DateTime.Now;
 			row[5] = (DateTime)DateTime.Now.AddMonths(3);
-			shopDS.Tables["contract"].Rows.Add(row);
+			autoschoolDS.Tables["contract"].Rows.Add(row);
 
-			ShowGrid.ItemsSource = shopDS.Tables["contract"].DefaultView;
+			ShowGrid.ItemsSource = autoschoolDS.Tables["contract"].DefaultView;
 		}
 
 		private void AddPractice(object sender, EventArgs e) {
 			DataRow row;
-			row = shopDS.Tables["practice"].NewRow();
-			row[0] = (int)(shopDS.Tables["practice"].AsEnumerable()).Last()[0] + 1;
+			row = autoschoolDS.Tables["practice"].NewRow();
+			row[0] = (int)(autoschoolDS.Tables["practice"].AsEnumerable()).Last()[0] + 1;
 			row[4] = (DateTime)DateTime.Now;
-			shopDS.Tables["practice"].Rows.Add(row);
+			autoschoolDS.Tables["practice"].Rows.Add(row);
 
-			ShowGrid.ItemsSource = shopDS.Tables["practice"].DefaultView;
+			ShowGrid.ItemsSource = autoschoolDS.Tables["practice"].DefaultView;
 		}
 
 		private void RemoveItem(object sender, EventArgs e) {
 			if(ShowGrid.SelectedItem != null) {
-				//shopDS.Tables["product"].Rows.Remove((DataRow)((DataRowView)ShowGrid.SelectedItem).Row);
-				//shopDS.Tables["product"].Rows.RemoveAt((int)ShowGrid.SelectedIndex-1);
+				//autoschoolDS.Tables["product"].Rows.Remove((DataRow)((DataRowView)ShowGrid.SelectedItem).Row);
+				//autoschoolDS.Tables["product"].Rows.RemoveAt((int)ShowGrid.SelectedIndex-1);
 				((DataRow)((DataRowView)ShowGrid.SelectedItem).Row).Delete();
 				Refresh(null, null);
 			}
@@ -213,7 +259,7 @@ namespace dbLabs {
 
 		private void FilterContract(object sender, EventArgs e) {
 
-			var result = from contract in shopDS.Tables["contract"].AsEnumerable()
+			var result = from contract in autoschoolDS.Tables["contract"].AsEnumerable()
 						 where
 						 (float.TryParse(minPrice.Text, out float min) ? min : 0) < (float)contract["payment"]
 						 && (float)contract["payment"] < (float.TryParse(maxPrice.Text, out float max) ? max : 5000)
@@ -235,7 +281,7 @@ namespace dbLabs {
 
 		private void FindAuto(object sender, EventArgs e) {
 
-			var result = from auto in shopDS.Tables["auto"].AsEnumerable()
+			var result = from auto in autoschoolDS.Tables["auto"].AsEnumerable()
 						 where
 						 ((string)auto["auto_name"]).Contains(autoPattern.Text.ToString())
 						 &&
@@ -248,8 +294,8 @@ namespace dbLabs {
 
 
 		private void JoinContract(object sender, EventArgs e) {
-			var result = shopDS.Tables["contract"].Select().Join(
-				shopDS.Tables["customer"].Select(),
+			var result = autoschoolDS.Tables["contract"].Select().Join(
+				autoschoolDS.Tables["customer"].Select(),
 				contract => contract["customer_id"],
 				customer => customer["customer_id"],
 				(contract, customer) => new {
@@ -266,7 +312,7 @@ namespace dbLabs {
 		}
 
 		private void AverageContract(object sender, EventArgs e) {
-			var result = shopDS.Tables["contract"].Select().GroupBy(
+			var result = autoschoolDS.Tables["contract"].Select().GroupBy(
 					contract => contract["contract_type"],
 					(type, rest) => new {
 						Type = type,
@@ -278,8 +324,8 @@ namespace dbLabs {
 		}
 
 		private void AutoUsage(object sender, EventArgs e) {
-			var result = shopDS.Tables["auto"].Select().GroupJoin(
-					shopDS.Tables["practice"].Select(),
+			var result = autoschoolDS.Tables["auto"].Select().GroupJoin(
+					autoschoolDS.Tables["practice"].Select(),
 					auto => auto["auto_id"],
 					practice => practice["auto_id"],
 
@@ -293,8 +339,8 @@ namespace dbLabs {
 		}
 
 		private void TeacherPractice(object sender, EventArgs e) {
-			var result = from teacher in shopDS.Tables["teacher"].AsEnumerable()
-						 join practise in shopDS.Tables["practice"].AsEnumerable()
+			var result = from teacher in autoschoolDS.Tables["teacher"].AsEnumerable()
+						 join practise in autoschoolDS.Tables["practice"].AsEnumerable()
 						 on teacher["teacher_id"] equals practise["teacher_id"]
 						 group new { teacher, practise }
 						 by new {
@@ -316,8 +362,8 @@ namespace dbLabs {
 		}
 
 		private void CustomerMark(object sender, EventArgs e) {
-			var result = from customer in shopDS.Tables["customer"].AsEnumerable()
-						 join practise in shopDS.Tables["practice"].AsEnumerable()
+			var result = from customer in autoschoolDS.Tables["customer"].AsEnumerable()
+						 join practise in autoschoolDS.Tables["practice"].AsEnumerable()
 						 on customer["customer_id"] equals practise["customer_id"]
 						 group new { customer, practise }
 						 by new {

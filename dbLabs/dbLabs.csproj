@@ -16,9 +16,15 @@
     <PackageReference Include="Syncfusion.Xamarin.SfDataGrid" Version="17.4.0.55" />
     <PackageReference Include="MySql.Data" Version="8.0.19" />
     <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
+    <PackageReference Include="Syncfusion.Xamarin.Buttons" Version="18.1.0.42" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Pages\" />
     <Folder Include="Classes\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Xamarin.Mac">
+      <HintPath>..\..\..\..\..\..\Library\Frameworks\Xamarin.Mac.framework\Versions\6.10.0.17\lib\reference\mobile\Xamarin.Mac.dll</HintPath>
+    </Reference>
   </ItemGroup>
 </Project>

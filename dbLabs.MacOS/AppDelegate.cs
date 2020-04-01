@@ -29,7 +29,8 @@ namespace dbLabs.MacOS {
                         //Forms.Init();
                         Forms.Init ();
                         Syncfusion.SfDataGrid.XForms.MacOS.SfDataGridRenderer.Init ();
-                        LoadApplication (new App ());
+
+						LoadApplication (new App ());
                         base.DidFinishLaunching (notification);
                 }
 
