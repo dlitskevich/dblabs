@@ -27,13 +27,24 @@
         </StackLayout>
 
         <StackLayout x:Name="RRA" Orientation="Horizontal">
-            <Button Text="Refresh" HorizontalOptions="Start" Clicked="Refresh"/>
+            <Button Text="Sync" HorizontalOptions="Start" Clicked="Sync"/>
+            <Button Text="Cancel" HorizontalOptions="Start" Clicked="Cancel"/>
             <Button Text="Remove Item" HorizontalOptions="Start" Clicked="RemoveItem"/>
             <Button x:Name="addcustomer" Text="Add New Customer" IsVisible="True" HorizontalOptions="Start" Clicked="AddCustomer"/>
             <Button x:Name="addteacher" Text="Add New Teacher" IsVisible="False" HorizontalOptions="Start" Clicked="AddTeacher"/>
             <Button x:Name="addauto" Text="Add New Auto" IsVisible="False" HorizontalOptions="Start" Clicked="AddAuto"/>
             <Button x:Name="addcontract" Text="Add New Contract" IsVisible="False" HorizontalOptions="Start" Clicked="AddContract"/>
             <Button x:Name="addpractice" Text="Add New Practice" IsVisible="False" HorizontalOptions="Start" Clicked="AddPractice"/>
+            <Button x:Name="clonePractice" Text="Clone Practice" IsVisible="False" HorizontalOptions="Start" Clicked="ClonePractice"/>
+
+            <Label Text="MultSelection" TextColor="Aqua"/>
+            <CheckBox IsChecked="False" HorizontalOptions="End" CheckedChanged="MultSelection"/>
+
+            <Button Text="CancelDel" HorizontalOptions="End" Clicked="CancelDeleted"/>
+            <Button Text="CancelMod" HorizontalOptions="End" Clicked="CancelModified"/>
+            <Button Text="CancelLastMod" HorizontalOptions="End" Clicked="CancelLastModified"/>
+            <Button Text="CancelLast" HorizontalOptions="End" Clicked="CancelLast"/>
+            <Button Text="Remove Selected" HorizontalOptions="End" Clicked="RemoveSelected"/>
         </StackLayout>
 
         
@@ -55,6 +66,9 @@
         </syncfusionDG:SfDataGrid>
         
         <StackLayout Orientation="Horizontal">
+            <Button Text="Show row state" HorizontalOptions="Start" Clicked="ShowRowState"/>
+            <Entry x:Name="rowNumber" Text="  0"/>
+            <Entry x:Name="rowState" IsReadOnly="True" Text="default_value"/>
             <Button Text="Show properties" HorizontalOptions="Start" Clicked="ShowProperty"/>
             <Picker x:Name="tableSelected" HorizontalOptions="FillAndExpand" SelectedIndexChanged="UpdateColumnsNames">
                 <Picker.Items>

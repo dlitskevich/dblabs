@@ -12,12 +12,22 @@ using System.Diagnostics;
 using Syncfusion.Data.Extensions;
 using AppKit;
 
+
 namespace dbLabs {
 	// Learn more about making custom code visible in the Xamarin.Forms previewer
 	// by visiting https://aka.ms/xamarinforms-previewer
 	[DesignTimeVisible(false)]
 	public partial class MainPage : ContentPage {
 		private DataSet autoschoolDS = new DataSet("Autoschool");
+		private Dictionary<DataRow, DateTime> modified = new Dictionary<DataRow, DateTime>();
+		private Dictionary<DataRow, DateTime> changed = new Dictionary<DataRow, DateTime>();
+
+		private enum AutoTypes{
+			A=1,
+			B=2,
+			C=3,
+			D=4
+		};
 		private string connString = "server=127.0.0.1; user=root; password=Password; database=autoschool";
 		private MySqlDataAdapter customerAdapter;
 		private MySqlDataAdapter teacherAdapter;
@@ -36,7 +46,7 @@ namespace dbLabs {
 
 			customerAdapter = new MySqlDataAdapter("select * from customer", connString);
 			teacherAdapter = new MySqlDataAdapter("select * from teacher", connString);
-			autoAdapter = new MySqlDataAdapter("select * from auto", connString);
+			autoAdapter = new MySqlDataAdapter("select auto_id,auto_name, auto_type+0 as auto_type, colour, available, price from auto", connString);
 			contractAdapter = new MySqlDataAdapter("select * from contract", connString);
 			practiceAdapter = new MySqlDataAdapter("select * from practice", connString);
 
@@ -48,19 +58,173 @@ namespace dbLabs {
 			practiceCommands = new MySqlCommandBuilder(practiceAdapter);
 
 
+			//customerAdapter.Fill(autoschoolDS, "customer");
+			//teacherAdapter.Fill(autoschoolDS, "teacher");
+			//autoAdapter.Fill(autoschoolDS, "auto");
+			//contractAdapter.Fill(autoschoolDS, "contract");
+			//practiceAdapter.Fill(autoschoolDS, "practice");
+
+
+			//autoschoolDS.Tables["customer"].PrimaryKey = new DataColumn[] { autoschoolDS.Tables["customer"].Columns["customer_id"] };
+			//autoschoolDS.Tables["teacher"].PrimaryKey = new DataColumn[] { autoschoolDS.Tables["teacher"].Columns["teacher_id"] };
+			//autoschoolDS.Tables["auto"].PrimaryKey = new DataColumn[] { autoschoolDS.Tables["auto"].Columns["auto_id"] };
+			//autoschoolDS.Tables["contract"].PrimaryKey = new DataColumn[] { autoschoolDS.Tables["contract"].Columns["contract_id"] };
+			//autoschoolDS.Tables["practice"].PrimaryKey = new DataColumn[] { autoschoolDS.Tables["practice"].Columns["practice_id"] };
+
+			customerAdapter.FillSchema(autoschoolDS, SchemaType.Source,"customer");
+			teacherAdapter.FillSchema(autoschoolDS, SchemaType.Source, "teacher");
+			autoAdapter.FillSchema(autoschoolDS, SchemaType.Source, "auto");
+			contractAdapter.FillSchema(autoschoolDS, SchemaType.Source, "contract");
+			practiceAdapter.FillSchema(autoschoolDS, SchemaType.Source, "practice");
+
+			//autoschoolDS.Tables["auto"].Rows.Clear();
+
+			//autoschoolDS.Tables.Add("customer");
+			//autoschoolDS.Tables.Add("teacher");
+			//autoschoolDS.Tables.Add("auto");
+			//autoschoolDS.Tables.Add("contract");
+			//autoschoolDS.Tables.Add("practice");
+
+			//autoschoolDS.Tables["customer"].Columns.Add("customer_name", Type.GetType("System.String"));
+			//autoschoolDS.Tables["customer"].Columns["customer_name"].AllowDBNull = false;
+			//autoschoolDS.Tables["customer"].Columns.Add("customer_surname", Type.GetType("System.String"));
+			//autoschoolDS.Tables["customer"].Columns["customer_surname"].AllowDBNull = false;
+			//autoschoolDS.Tables["customer"].Columns.Add("customer_phone", Type.GetType("System.String"));
+			//autoschoolDS.Tables["customer"].Columns.Add("customer_birth", Type.GetType("System.DateTime"));
+
+			//teacherAdapter.Fill(autoschoolDS, "customer");
+			//teacherAdapter.Fill(autoschoolDS, "teacher");
+			//autoAdapter.Fill(autoschoolDS, "auto");
+			//contractAdapter.Fill(autoschoolDS, "contract");
+			//practiceAdapter.Fill(autoschoolDS, "practice");
+
+
+			
+			autoschoolDS.Tables["customer"].Columns["customer_name"].DataType = Type.GetType("System.String");
+			autoschoolDS.Tables["customer"].Columns["customer_name"].AllowDBNull = false;
+			autoschoolDS.Tables["customer"].Columns["customer_surname"].DataType = Type.GetType("System.String");
+			autoschoolDS.Tables["customer"].Columns["customer_surname"].AllowDBNull = false;
+			autoschoolDS.Tables["customer"].Columns["customer_phone"].DataType = Type.GetType("System.String");
+			autoschoolDS.Tables["customer"].Columns["customer_birth"].DataType = Type.GetType("System.DateTime");
+
+
+			autoschoolDS.Tables["teacher"].Columns["teacher_name"].DataType = Type.GetType("System.String");
+			autoschoolDS.Tables["teacher"].Columns["teacher_name"].AllowDBNull = false;
+			autoschoolDS.Tables["teacher"].Columns["teacher_surname"].DataType = Type.GetType("System.String");
+			autoschoolDS.Tables["teacher"].Columns["teacher_surname"].AllowDBNull = false;
+			autoschoolDS.Tables["teacher"].Columns["teacher_phone"].DataType = Type.GetType("System.String");
+
+			var c = Type.GetType("System.String");
+			var b = AutoTypes.A.GetType();
+			autoschoolDS.Tables["auto"].Columns["auto_name"].DataType = Type.GetType("System.String");
+			autoschoolDS.Tables["auto"].Columns["auto_name"].DefaultValue = "Gillie";
+			//autoschoolDS.Tables["auto"].Columns["auto_type"].DataType = Type.GetType("System.String");
+			autoschoolDS.Tables["auto"].Columns["auto_type"].DataType = AutoTypes.A.GetType();
+			
+			//autoschoolDS.Tables["auto"].Columns["auto_type"].d =
+			autoschoolDS.Tables["auto"].Columns["auto_type"].DefaultValue = AutoTypes.A;//Enum.Parse(typeof(types), "A");
+			//autoschoolDS.Tables["auto"].Columns["auto_type"].Expression = "CONVERT(auto_type,typeof(types))";
+
+			autoschoolDS.Tables["auto"].Columns["colour"].DataType = Type.GetType("System.String");
+			autoschoolDS.Tables["auto"].Columns["colour"].DefaultValue = "red";
+			autoschoolDS.Tables["auto"].Columns["available"].DataType = Type.GetType("System.Boolean");
+			autoschoolDS.Tables["auto"].Columns["available"].DefaultValue = true;
+			autoschoolDS.Tables["auto"].Columns["price"].DataType = Type.GetType("System.Double");
+			autoschoolDS.Tables["auto"].Columns["price"].DefaultValue = 5000.94;
+
+
+
+			autoschoolDS.Tables["contract"].Columns["customer_id"].DataType = Type.GetType("System.Int32");
+			autoschoolDS.Tables["contract"].Columns["customer_id"].AllowDBNull = false;
+			autoschoolDS.Tables["contract"].Columns["contract_type"].DataType = Type.GetType("System.String");
+			//autoschoolDS.Tables["contract"].Columns["contract_type"].Co
+			autoschoolDS.Tables["contract"].Columns["contract_type"].DefaultValue = "A";
+			autoschoolDS.Tables["contract"].Columns["payment"].DataType = Type.GetType("System.Int32");
+			autoschoolDS.Tables["contract"].Columns["payment"].DefaultValue = 500;
+			autoschoolDS.Tables["contract"].Columns["contract_start_date"].DataType = Type.GetType("System.DateTime");
+			//autoschoolDS.Tables["contract"].Columns["contract_start_date"].DefaultValue = DateTime.Now;
+			autoschoolDS.Tables["contract"].Columns["contract_end_date"].DataType = Type.GetType("System.DateTime");
+			//autoschoolDS.Tables["contract"].Columns["contract_end_date"].DefaultValue = DateTime.Now.AddMonths(3);
+
+			autoschoolDS.Tables["practice"].Columns["customer_id"].DataType = Type.GetType("System.Int32");
+			autoschoolDS.Tables["practice"].Columns["customer_id"].AllowDBNull = false;
+			autoschoolDS.Tables["practice"].Columns["teacher_id"].DataType = Type.GetType("System.Int32");
+			autoschoolDS.Tables["practice"].Columns["teacher_id"].AllowDBNull = false;
+			autoschoolDS.Tables["practice"].Columns["auto_id"].DataType = Type.GetType("System.Int32");
+			autoschoolDS.Tables["practice"].Columns["auto_id"].AllowDBNull = false;
+			autoschoolDS.Tables["practice"].Columns["practice_date"].DataType = Type.GetType("System.DateTime");
+			autoschoolDS.Tables["practice"].Columns["practice_date"].DefaultValue = DateTime.Now;
+			autoschoolDS.Tables["practice"].Columns["mark"].DataType = Type.GetType("System.Int32");
+			autoschoolDS.Tables["practice"].Columns["mark"].DefaultValue = 8;
+
+
 			customerAdapter.Fill(autoschoolDS, "customer");
 			teacherAdapter.Fill(autoschoolDS, "teacher");
 			autoAdapter.Fill(autoschoolDS, "auto");
 			contractAdapter.Fill(autoschoolDS, "contract");
 			practiceAdapter.Fill(autoschoolDS, "practice");
 
+
+			foreach(string table in new string[] { "customer", "teacher", "auto", "contract", "practice" }) {
+				autoschoolDS.Tables[table].PrimaryKey = new DataColumn[] { autoschoolDS.Tables[table].Columns[table + "_id"] };
+
+				autoschoolDS.Tables[table].Columns[table + "_id"].AutoIncrement = true;
+				var lastId = (from m in autoschoolDS.Tables[table].AsEnumerable()
+							  select m[table + "_id"]).Max();
+				autoschoolDS.Tables[table].Columns[table + "_id"].AutoIncrementSeed = (int)lastId + 1;
+				autoschoolDS.Tables[table].Columns[table + "_id"].AutoIncrementStep = 1;
+			};
+
+
+			ForeignKeyConstraint CustomerToContract =
+				new ForeignKeyConstraint(
+					"CustomerContract",
+					autoschoolDS.Tables["customer"].Columns["customer_id"],
+					autoschoolDS.Tables["contract"].Columns["customer_id"]
+					);
+			autoschoolDS.Tables["contract"].Constraints.Add(CustomerToContract);
+			
+
+			DataRelation CustomerToPractice =
+				new DataRelation(
+					"CustomerPractice",
+					autoschoolDS.Tables["customer"].Columns["customer_id"],
+					autoschoolDS.Tables["practice"].Columns["customer_id"]
+					);
+			autoschoolDS.Relations.Add(CustomerToPractice);
+
+			DataRelation AutoToPractice =
+				new DataRelation(
+					"AutoPractice",
+					autoschoolDS.Tables["auto"].Columns["auto_id"],
+					autoschoolDS.Tables["practice"].Columns["auto_id"]
+					);
+			autoschoolDS.Relations.Add(AutoToPractice);
+			AutoToPractice.ChildKeyConstraint.DeleteRule = Rule.Cascade;
+
+			DataRelation TeacherToPractice =
+				new DataRelation(
+					"TeacherPractice",
+					autoschoolDS.Tables["teacher"].Columns["teacher_id"],
+					autoschoolDS.Tables["practice"].Columns["teacher_id"]
+					);
+			autoschoolDS.Relations.Add(TeacherToPractice);
+
+
+
+			/*
 			var UpdateCmd = customerCommands.GetUpdateCommand();
-			UpdateCmd.CommandText = $"UPDATE `product` SET `customer_name` = '@p1', `customer_surname` = '@p2', `customer_phone` = @p3, `customer_birth` = @p4 WHERE(`customer_id` = @p5)";
+			UpdateCmd.CommandText = $"UPDATE `customer` SET `customer_name` = '@p1', `customer_surname` = '@p2', `customer_phone` = @p3, `customer_birth` = @p4 WHERE(`customer_id` = @p5)";
 			customerAdapter.UpdateCommand = UpdateCmd;
 
 			var DeleteCmd = customerCommands.GetDeleteCommand();
-			DeleteCmd.CommandText = $"DELETE FROM `product` WHERE(`customer_id` = @p1)";
-			customerAdapter.DeleteCommand = UpdateCmd;
+			DeleteCmd.CommandText = $"DELETE FROM `customer` WHERE(`customer_id` = @p1)";
+			customerAdapter.DeleteCommand = DeleteCmd;
+			*/
+
+			var DeleteCmd = autoCommands.GetDeleteCommand();
+			DeleteCmd.CommandText = $"DELETE FROM `auto` WHERE(`auto_id` = @p1)";
+			customerAdapter.DeleteCommand = DeleteCmd;
 
 			/*
 			DataRelation manufToProduct = new DataRelation("ManufProduct",
@@ -69,7 +233,27 @@ namespace dbLabs {
 
 			autoschoolDS.Relations.Add(manufToProduct);
 			*/
+
+			autoschoolDS.Tables["customer"].RowChanged += StackModified;
+			autoschoolDS.Tables["teacher"].RowChanged += StackModified;
+			autoschoolDS.Tables["auto"].RowChanged += StackModified;
+			autoschoolDS.Tables["contract"].RowChanged += StackModified;
+			autoschoolDS.Tables["practice"].RowChanged += StackModified;
+
+			autoschoolDS.Tables["customer"].RowDeleted += StackDeleted;
+			autoschoolDS.Tables["teacher"].RowDeleted += StackDeleted;
+			autoschoolDS.Tables["auto"].RowDeleted += StackDeleted;
+			autoschoolDS.Tables["contract"].RowDeleted += StackDeleted;
+			autoschoolDS.Tables["practice"].RowDeleted += StackDeleted;
+
+			//autoschoolDS.Tables["customer"].N += StackAdded;
+			//autoschoolDS.Tables["teacher"].TableNewRow += StackAdded;
+			//autoschoolDS.Tables["auto"].TableNewRow += StackAdded;
+			//autoschoolDS.Tables["contract"].TableNewRow += StackAdded;
+			//autoschoolDS.Tables["practice"].TableNewRow += StackAdded;
 		}
+
+		
 
 		/// ////////////////////////////////////////////////
 		/// Initialize page
@@ -95,6 +279,27 @@ namespace dbLabs {
 			columnNames.ItemsSource = names.ToArray();
 		}
 
+		private void ShowRowState(object sender, EventArgs e) {
+			string tableName = tableSelected.SelectedItem == null ? "customer" : (string)tableSelected.SelectedItem;
+			int rowIndex = 1;
+			try {
+				if(Int32.Parse(rowNumber.Text) == 0) {
+					rowIndex = ShowGrid.SelectedIndex;
+				} else {
+					rowIndex = Int32.Parse(rowNumber.Text);
+				}
+			} catch {
+				rowIndex = 1;
+			}
+			try {
+				rowState.Text = autoschoolDS.Tables[tableName].Rows[rowIndex-1].RowState.ToString();
+			} catch {
+				rowState.Text = "smth_wrong";
+			}
+			
+
+		}
+
 		private void ShowProperty(object sender, EventArgs e) {
 			string tableName = tableSelected.SelectedItem == null ? "customer" : (string)tableSelected.SelectedItem;
 			string colname = columnNames.SelectedItem == null? (string)columnNames.Items[0] : (string)columnNames.SelectedItem;
@@ -112,7 +317,7 @@ namespace dbLabs {
 			var alert = new NSAlert() {
 				AlertStyle = NSAlertStyle.Informational,
 				InformativeText = colproperty,
-				MessageText = "Properties of"+ colname,
+				MessageText = "Properties of "+ colname,
 			};
 			alert.AddButton("Ok");
 			alert.RunModal();
@@ -130,6 +335,7 @@ namespace dbLabs {
 			addauto.IsVisible = false;
 			addcontract.IsVisible = false;
 			addpractice.IsVisible = false;
+			ShowGrid.Columns[0].IsHidden = true;
 		}
 
 		private void ShowTeacher(object sender, EventArgs e) {
@@ -139,6 +345,7 @@ namespace dbLabs {
 			addauto.IsVisible = false;
 			addcontract.IsVisible = false;
 			addpractice.IsVisible = false;
+			ShowGrid.Columns[0].IsHidden = true;
 		}
 
 		private void ShowAuto(object sender, EventArgs e) {
@@ -148,6 +355,7 @@ namespace dbLabs {
 			addauto.IsVisible = true;
 			addcontract.IsVisible = false;
 			addpractice.IsVisible = false;
+			//ShowGrid.Columns[0].IsHidden = true;
 		}
 
 		private void ShowContract(object sender, EventArgs e) {
@@ -157,6 +365,7 @@ namespace dbLabs {
 			addauto.IsVisible = false;
 			addcontract.IsVisible = true;
 			addpractice.IsVisible = false;
+			ShowGrid.Columns[0].IsHidden = true;
 		}
 
 		private void ShowPractice(object sender, EventArgs e) {
@@ -169,22 +378,24 @@ namespace dbLabs {
 		}
 
 
-		private void Refresh(object sender, EventArgs e) {
+		private void Sync(object sender, EventArgs e) {
 
 			ShowGrid.EndEdit();
 			//autoschoolDS.Tables["product"].AcceptChanges();
 			//productAdapter.Up;
 
 			try {
+				contractAdapter.Update(autoschoolDS.Tables["contract"]);
+				practiceAdapter.Update(autoschoolDS.Tables["practice"]);
 				customerAdapter.Update(autoschoolDS.Tables["customer"]);
 				teacherAdapter.Update(autoschoolDS.Tables["teacher"]);
 				autoAdapter.Update(autoschoolDS.Tables["auto"]);
-				contractAdapter.Update(autoschoolDS.Tables["contract"]);
-				practiceAdapter.Update(autoschoolDS.Tables["practice"]);
+				
+
 			} catch(MySqlException ex) {
 				Debug.WriteLine(ex.Message);
 			}
-			autoschoolDS.Clear();
+			//autoschoolDS.Clear();
 			customerAdapter.Fill(autoschoolDS, "customer");
 			teacherAdapter.Fill(autoschoolDS, "teacher");
 			autoAdapter.Fill(autoschoolDS, "auto");
@@ -194,10 +405,108 @@ namespace dbLabs {
 			// PageLoaded(null, null);
 		}
 
+		private void Cancel(object sender, EventArgs e) {
+			ShowGrid.EndEdit();
+			autoschoolDS.RejectChanges();
+		}
+
+		private void CancelDeleted(object sender, EventArgs e) {
+			ShowGrid.EndEdit();
+			foreach(DataTable table in autoschoolDS.Tables) {
+				foreach(DataRow row in table.Rows) {
+					if(row.RowState == DataRowState.Deleted) {
+						row.RejectChanges();
+					}
+				}
+			}
+		}
+
+		private void CancelModified(object sender, EventArgs e) {
+			ShowGrid.EndEdit();
+			foreach(DataTable table in autoschoolDS.Tables) {
+				foreach(DataRow row in table.Rows) {
+					if(row.RowState == DataRowState.Modified) {
+						row.RejectChanges();
+					}
+				}
+			}
+		}
+
+		private void CancelLastModified(object sender, EventArgs e) {
+			if(modified.Count > 0) {
+				DataRow row = modified.Aggregate((x, y) => x.Value > y.Value ? x : y).Key;
+				modified.Remove(row);
+				try {
+					changed.Remove(row);
+				} catch {
+
+				}
+				row.RejectChanges();
+			}
+		}
+
+		private void CancelLast(object sender, EventArgs e) {
+			if(changed.Count > 0) {
+				DataRow row = changed.Aggregate((x, y) => x.Value > y.Value ? x : y).Key;
+				changed.Remove(row);
+				try {
+					modified.Remove(row);
+				} catch {
+
+				}
+				row.RejectChanges();
+			}
+		}
+
+
+		private void StackDeleted(object sender, DataRowChangeEventArgs e) {			
+	
+			if(e.Row.RowState == DataRowState.Unchanged) {
+				try {
+					modified.Remove(e.Row);
+				} catch {
+
+				}
+				changed.Remove(e.Row);
+			} else {
+				changed.Add(e.Row, DateTime.Now);
+				try {
+					modified.Remove(e.Row);
+				} catch {
+					
+				}
+			}
+
+		}
+
+		//private void StackAdded(object sender, DataRowChangeEventArgs e) {
+			
+		//	if(e.Row.RowState == DataRowState.Unchanged) {				
+		//		changed.Remove(e.Row);
+		//	} else {				
+		//		changed.Add(e.Row, DateTime.Now);
+		//	}
+
+		//}
+
+		private void StackModified(object sender, DataRowChangeEventArgs e) {
+			if(e.Row.RowState == DataRowState.Unchanged) {
+				modified.Remove(e.Row);
+				changed.Remove(e.Row);
+			} else {
+				modified.Add(e.Row, DateTime.Now);
+				changed.Add(e.Row, DateTime.Now);
+			}
+
+		}
+
 		private void AddCustomer(object sender, EventArgs e) {
 			DataRow row;
 			row = autoschoolDS.Tables["customer"].NewRow();
-			row[0] = (int)(autoschoolDS.Tables["customer"].AsEnumerable()).Last()[0] + 1;
+			//row[0] = (int)(autoschoolDS.Tables["customer"].AsEnumerable()).Last()[0] + 1;
+			row[1] = "Name";
+			row[2] = "Surname";
+			row[4] = (DateTime)DateTime.Now.AddYears(-18);
 			autoschoolDS.Tables["customer"].Rows.Add(row);
 
 			ShowGrid.ItemsSource = autoschoolDS.Tables["customer"].DefaultView;
@@ -206,7 +515,10 @@ namespace dbLabs {
 		private void AddTeacher(object sender, EventArgs e) {
 			DataRow row;
 			row = autoschoolDS.Tables["teacher"].NewRow();
-			row[0] = (int)(autoschoolDS.Tables["teacher"].AsEnumerable()).Last()[0] + 1;
+			//row[0] = (int)(autoschoolDS.Tables["teacher"].AsEnumerable()).Last()[0] + 1;
+			row[1] = "Name";
+			row[2] = "Surname";
+			row[3] = "";
 			autoschoolDS.Tables["teacher"].Rows.Add(row);
 
 			ShowGrid.ItemsSource = autoschoolDS.Tables["teacher"].DefaultView;
@@ -215,7 +527,7 @@ namespace dbLabs {
 		private void AddAuto(object sender, EventArgs e) {
 			DataRow row;
 			row = autoschoolDS.Tables["auto"].NewRow();
-			row[0] = (int)(autoschoolDS.Tables["auto"].AsEnumerable()).Last()[0] + 1;
+			//row[0] = (int)(autoschoolDS.Tables["auto"].AsEnumerable()).Last()[0] + 1;
 			autoschoolDS.Tables["auto"].Rows.Add(row);
 
 			ShowGrid.ItemsSource = autoschoolDS.Tables["auto"].DefaultView;
@@ -224,7 +536,7 @@ namespace dbLabs {
 		private void AddContract(object sender, EventArgs e) {
 			DataRow row;
 			row = autoschoolDS.Tables["contract"].NewRow();
-			row[0] = (int)(autoschoolDS.Tables["contract"].AsEnumerable()).Last()[0] + 1;
+			//row[0] = (int)(autoschoolDS.Tables["contract"].AsEnumerable()).Last()[0] + 1;
 			row[4] = (DateTime)DateTime.Now;
 			row[5] = (DateTime)DateTime.Now.AddMonths(3);
 			autoschoolDS.Tables["contract"].Rows.Add(row);
@@ -235,11 +547,30 @@ namespace dbLabs {
 		private void AddPractice(object sender, EventArgs e) {
 			DataRow row;
 			row = autoschoolDS.Tables["practice"].NewRow();
-			row[0] = (int)(autoschoolDS.Tables["practice"].AsEnumerable()).Last()[0] + 1;
+			//row[0] = (int)(autoschoolDS.Tables["practice"].AsEnumerable()).Last()[0] + 1;
+			row[1] = 1;
+			row[2] = 1;
+			row[3] = 1;
 			row[4] = (DateTime)DateTime.Now;
 			autoschoolDS.Tables["practice"].Rows.Add(row);
 
 			ShowGrid.ItemsSource = autoschoolDS.Tables["practice"].DefaultView;
+		}
+
+		private void ClonePractice(object sender, EventArgs e) {
+			if(ShowGrid.SelectedItem != null) {
+				DataRow selectedRow = ((DataRow)((DataRowView)ShowGrid.SelectedItem).Row);
+				DataRow row;
+				row = autoschoolDS.Tables["practice"].NewRow();
+				//row[0] = (int)(autoschoolDS.Tables["practice"].AsEnumerable()).Last()[0] + 1;
+				row[1] = selectedRow[1];
+				row[2] = selectedRow[2];
+				row[3] = selectedRow[3];
+				row[4] = (DateTime)DateTime.Now;
+				autoschoolDS.Tables["practice"].Rows.Add(row);
+
+				ShowGrid.ItemsSource = autoschoolDS.Tables["practice"].DefaultView;
+			}
 		}
 
 		private void RemoveItem(object sender, EventArgs e) {
@@ -247,9 +578,29 @@ namespace dbLabs {
 				//autoschoolDS.Tables["product"].Rows.Remove((DataRow)((DataRowView)ShowGrid.SelectedItem).Row);
 				//autoschoolDS.Tables["product"].Rows.RemoveAt((int)ShowGrid.SelectedIndex-1);
 				((DataRow)((DataRowView)ShowGrid.SelectedItem).Row).Delete();
-				Refresh(null, null);
+				//Refresh(null, null);
 			}
 		}
+
+		private void RemoveSelected(object sender, EventArgs e) {
+			if(ShowGrid.SelectedItems.Count > 0) {
+				var selected = ShowGrid.SelectedItems.ToArray();
+				foreach(DataRowView row in selected) {
+					((DataRow)row.Row).Delete();
+				}
+				
+			}
+		}
+
+
+		private void MultSelection(object sender, EventArgs e) {
+			if(((CheckBox)sender).IsChecked) {
+				ShowGrid.SelectionMode = Syncfusion.SfDataGrid.XForms.SelectionMode.Multiple;
+			} else {
+				ShowGrid.SelectionMode = Syncfusion.SfDataGrid.XForms.SelectionMode.Single;
+			}
+		}
+		
 
 
 
@@ -340,22 +691,22 @@ namespace dbLabs {
 
 		private void TeacherPractice(object sender, EventArgs e) {
 			var result = from teacher in autoschoolDS.Tables["teacher"].AsEnumerable()
-						 join practise in autoschoolDS.Tables["practice"].AsEnumerable()
-						 on teacher["teacher_id"] equals practise["teacher_id"]
-						 group new { teacher, practise }
+						 join practice in autoschoolDS.Tables["practice"].AsEnumerable()
+						 on teacher["teacher_id"] equals practice["teacher_id"]
+						 group new { teacher, practice }
 						 by new {
 							 id = teacher.Field<int>("teacher_id"),
 							 Name = teacher.Field<string>("teacher_name"),
 							 Surname = teacher.Field<string>("teacher_surname"),
 							 Phone = teacher.Field<string>("teacher_phone")
-						 } into teacherPractise
-						 orderby teacherPractise.Key.id ascending
+						 } into teacherpractice
+						 orderby teacherpractice.Key.id ascending
 						 select new {
-							 teacherPractise.Key.id,
-							 teacherPractise.Key.Name,
-							 teacherPractise.Key.Surname,
-							 teacherPractise.Key.Phone,
-							 Lessons = (int)teacherPractise.Count()
+							 teacherpractice.Key.id,
+							 teacherpractice.Key.Name,
+							 teacherpractice.Key.Surname,
+							 teacherpractice.Key.Phone,
+							 Lessons = (int)teacherpractice.Count()
 						 };
 
 			resultGrid.ItemsSource = result;
@@ -363,24 +714,24 @@ namespace dbLabs {
 
 		private void CustomerMark(object sender, EventArgs e) {
 			var result = from customer in autoschoolDS.Tables["customer"].AsEnumerable()
-						 join practise in autoschoolDS.Tables["practice"].AsEnumerable()
-						 on customer["customer_id"] equals practise["customer_id"]
-						 group new { customer, practise }
+						 join practice in autoschoolDS.Tables["practice"].AsEnumerable()
+						 on customer["customer_id"] equals practice["customer_id"]
+						 group new { customer, practice }
 						 by new {
 							 id = customer.Field<int>("customer_id"),
 							 Name = customer.Field<string>("customer_name"),
 							 Surname = customer.Field<string>("customer_surname"),
 							 Phone = customer.Field<string>("customer_phone")
-						 } into customerPractise
-						 orderby customerPractise.Key.id ascending
+						 } into customerpractice
+						 orderby customerpractice.Key.id ascending
 						 select new {
-							 customerPractise.Key.id,
-							 customerPractise.Key.Name,
-							 customerPractise.Key.Surname,
-							 customerPractise.Key.Phone,
-							 minMark = customerPractise.Min(x => x.practise.Field<int>("mark")),
-							 maxMark = customerPractise.Max(x => x.practise.Field<int>("mark")),
-							 averageMark = (int)customerPractise.Average(x => x.practise.Field<int>("mark"))
+							 customerpractice.Key.id,
+							 customerpractice.Key.Name,
+							 customerpractice.Key.Surname,
+							 customerpractice.Key.Phone,
+							 minMark = customerpractice.Min(x => x.practice.Field<int>("mark")),
+							 maxMark = customerpractice.Max(x => x.practice.Field<int>("mark")),
+							 averageMark = (int)customerpractice.Average(x => x.practice.Field<int>("mark"))
 						 };
 
 			resultGrid.ItemsSource = result;
