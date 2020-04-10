@@ -46,7 +46,9 @@ namespace dbLabs {
 
 			customerAdapter = new MySqlDataAdapter("select * from customer", connString);
 			teacherAdapter = new MySqlDataAdapter("select * from teacher", connString);
-			autoAdapter = new MySqlDataAdapter("select auto_id,auto_name, auto_type+0 as auto_type, colour, available, price from auto", connString);
+			//,  auto_type+0 as auto_type_id
+			autoAdapter = new MySqlDataAdapter("select * from auto", connString);
+
 			contractAdapter = new MySqlDataAdapter("select * from contract", connString);
 			practiceAdapter = new MySqlDataAdapter("select * from practice", connString);
 
@@ -56,7 +58,6 @@ namespace dbLabs {
 			autoCommands = new MySqlCommandBuilder(autoAdapter);
 			contractCommands = new MySqlCommandBuilder(contractAdapter);
 			practiceCommands = new MySqlCommandBuilder(practiceAdapter);
-
 
 			//customerAdapter.Fill(autoschoolDS, "customer");
 			//teacherAdapter.Fill(autoschoolDS, "teacher");
@@ -114,30 +115,28 @@ namespace dbLabs {
 			autoschoolDS.Tables["teacher"].Columns["teacher_surname"].AllowDBNull = false;
 			autoschoolDS.Tables["teacher"].Columns["teacher_phone"].DataType = Type.GetType("System.String");
 
-			var c = Type.GetType("System.String");
-			var b = AutoTypes.A.GetType();
+			
 			autoschoolDS.Tables["auto"].Columns["auto_name"].DataType = Type.GetType("System.String");
 			autoschoolDS.Tables["auto"].Columns["auto_name"].DefaultValue = "Gillie";
-			//autoschoolDS.Tables["auto"].Columns["auto_type"].DataType = Type.GetType("System.String");
-			autoschoolDS.Tables["auto"].Columns["auto_type"].DataType = AutoTypes.A.GetType();
-			
-			//autoschoolDS.Tables["auto"].Columns["auto_type"].d =
-			autoschoolDS.Tables["auto"].Columns["auto_type"].DefaultValue = AutoTypes.A;//Enum.Parse(typeof(types), "A");
+			autoschoolDS.Tables["auto"].Columns["auto_type"].DataType = Type.GetType("System.String");
+			autoschoolDS.Tables["auto"].Columns["auto_type"].DefaultValue = "A";
+			//autoschoolDS.Tables["auto"].Columns["auto_type_id"].DataType = typeof(AutoTypes);
+			//autoschoolDS.Tables["auto"].Columns["auto_type_id"].DefaultValue = AutoTypes.A;//Enum.Parse(typeof(types), "A");
 			//autoschoolDS.Tables["auto"].Columns["auto_type"].Expression = "CONVERT(auto_type,typeof(types))";
 
 			autoschoolDS.Tables["auto"].Columns["colour"].DataType = Type.GetType("System.String");
 			autoschoolDS.Tables["auto"].Columns["colour"].DefaultValue = "red";
 			autoschoolDS.Tables["auto"].Columns["available"].DataType = Type.GetType("System.Boolean");
+			
 			autoschoolDS.Tables["auto"].Columns["available"].DefaultValue = true;
-			autoschoolDS.Tables["auto"].Columns["price"].DataType = Type.GetType("System.Double");
-			autoschoolDS.Tables["auto"].Columns["price"].DefaultValue = 5000.94;
+			autoschoolDS.Tables["auto"].Columns["price"].DataType = Type.GetType("System.Int32");
+			autoschoolDS.Tables["auto"].Columns["price"].DefaultValue = 5000;
 
 
 
 			autoschoolDS.Tables["contract"].Columns["customer_id"].DataType = Type.GetType("System.Int32");
 			autoschoolDS.Tables["contract"].Columns["customer_id"].AllowDBNull = false;
 			autoschoolDS.Tables["contract"].Columns["contract_type"].DataType = Type.GetType("System.String");
-			//autoschoolDS.Tables["contract"].Columns["contract_type"].Co
 			autoschoolDS.Tables["contract"].Columns["contract_type"].DefaultValue = "A";
 			autoschoolDS.Tables["contract"].Columns["payment"].DataType = Type.GetType("System.Int32");
 			autoschoolDS.Tables["contract"].Columns["payment"].DefaultValue = 500;
@@ -212,20 +211,23 @@ namespace dbLabs {
 
 
 
+			
+			//var UpdateCmd = autoCommands.GetUpdateCommand();
+			//var parameter = UpdateCmd.Parameters.Add("@auto_type", MySqlDbType.Int32,13, "auto_type");
+			//auto_type = @auto_type,     `colour` = @p2, `available` = @p3, `price` = @p4
+			//UpdateCmd.CommandText = $"UPDATE `auto` SET `auto_name` = @p1 where `auto_id` = @p6";
+			//autoAdapter.UpdateCommand = UpdateCmd;
+		
 			/*
-			var UpdateCmd = customerCommands.GetUpdateCommand();
-			UpdateCmd.CommandText = $"UPDATE `customer` SET `customer_name` = '@p1', `customer_surname` = '@p2', `customer_phone` = @p3, `customer_birth` = @p4 WHERE(`customer_id` = @p5)";
-			customerAdapter.UpdateCommand = UpdateCmd;
-
 			var DeleteCmd = customerCommands.GetDeleteCommand();
 			DeleteCmd.CommandText = $"DELETE FROM `customer` WHERE(`customer_id` = @p1)";
 			customerAdapter.DeleteCommand = DeleteCmd;
 			*/
-
+			/*
 			var DeleteCmd = autoCommands.GetDeleteCommand();
 			DeleteCmd.CommandText = $"DELETE FROM `auto` WHERE(`auto_id` = @p1)";
 			customerAdapter.DeleteCommand = DeleteCmd;
-
+			*/
 			/*
 			DataRelation manufToProduct = new DataRelation("ManufProduct",
 				autoschoolDS.Tables["manufact"].Columns["manuf_id"],
@@ -251,6 +253,8 @@ namespace dbLabs {
 			//autoschoolDS.Tables["auto"].TableNewRow += StackAdded;
 			//autoschoolDS.Tables["contract"].TableNewRow += StackAdded;
 			//autoschoolDS.Tables["practice"].TableNewRow += StackAdded;
+
+			
 		}
 
 		
@@ -388,12 +392,12 @@ namespace dbLabs {
 				contractAdapter.Update(autoschoolDS.Tables["contract"]);
 				practiceAdapter.Update(autoschoolDS.Tables["practice"]);
 				customerAdapter.Update(autoschoolDS.Tables["customer"]);
-				teacherAdapter.Update(autoschoolDS.Tables["teacher"]);
 				autoAdapter.Update(autoschoolDS.Tables["auto"]);
+				teacherAdapter.Update(autoschoolDS.Tables["teacher"]);
 				
 
 			} catch(MySqlException ex) {
-				Debug.WriteLine(ex.Message);
+				Console.WriteLine(ex.Message);
 			}
 			//autoschoolDS.Clear();
 			customerAdapter.Fill(autoschoolDS, "customer");
