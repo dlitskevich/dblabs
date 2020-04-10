@@ -46,7 +46,7 @@ namespace dbLabs {
 
 			customerAdapter = new MySqlDataAdapter("select * from customer", connString);
 			teacherAdapter = new MySqlDataAdapter("select * from teacher", connString);
-			//,  auto_type+0 as auto_type_id
+			// auto_type+0 as auto_type_id
 			autoAdapter = new MySqlDataAdapter("select * from auto", connString);
 
 			contractAdapter = new MySqlDataAdapter("select * from contract", connString);
@@ -254,7 +254,13 @@ namespace dbLabs {
 			//autoschoolDS.Tables["contract"].TableNewRow += StackAdded;
 			//autoschoolDS.Tables["practice"].TableNewRow += StackAdded;
 
-			
+			practiceAdapter.InsertCommand = new MySqlCommand("add_practice");
+			practiceAdapter.InsertCommand.CommandType = CommandType.StoredProcedure;
+			MySqlParameter param = new MySqlParameter("id", MySqlDbType.Int32, 0, "practice_id");
+			param.Direction = ParameterDirection.Output;
+			practiceAdapter.InsertCommand.Parameters.Add(param);
+
+
 		}
 
 		
@@ -335,6 +341,7 @@ namespace dbLabs {
 		private void ShowCustomer(object sender, EventArgs e) {
 			ShowGrid.ItemsSource = autoschoolDS.Tables["customer"].DefaultView;
 			addcustomer.IsVisible = true;
+			contractPK.IsVisible = true;
 			addteacher.IsVisible = false;
 			addauto.IsVisible = false;
 			addcontract.IsVisible = false;
@@ -344,11 +351,12 @@ namespace dbLabs {
 
 		private void ShowTeacher(object sender, EventArgs e) {
 			ShowGrid.ItemsSource = autoschoolDS.Tables["teacher"].DefaultView;
-			addcustomer.IsVisible = false;
+			addcustomer.IsVisible = false;	
 			addteacher.IsVisible = true;
 			addauto.IsVisible = false;
 			addcontract.IsVisible = false;
 			addpractice.IsVisible = false;
+			contractPK.IsVisible = false;
 			ShowGrid.Columns[0].IsHidden = true;
 		}
 
@@ -359,6 +367,7 @@ namespace dbLabs {
 			addauto.IsVisible = true;
 			addcontract.IsVisible = false;
 			addpractice.IsVisible = false;
+			contractPK.IsVisible = false;
 			//ShowGrid.Columns[0].IsHidden = true;
 		}
 
@@ -370,6 +379,7 @@ namespace dbLabs {
 			addcontract.IsVisible = true;
 			addpractice.IsVisible = false;
 			ShowGrid.Columns[0].IsHidden = true;
+			contractPK.IsVisible = false;
 		}
 
 		private void ShowPractice(object sender, EventArgs e) {
@@ -379,6 +389,7 @@ namespace dbLabs {
 			addauto.IsVisible = false;
 			addcontract.IsVisible = false;
 			addpractice.IsVisible = true;
+			contractPK.IsVisible = false;
 		}
 
 
@@ -394,7 +405,8 @@ namespace dbLabs {
 				customerAdapter.Update(autoschoolDS.Tables["customer"]);
 				autoAdapter.Update(autoschoolDS.Tables["auto"]);
 				teacherAdapter.Update(autoschoolDS.Tables["teacher"]);
-				
+				changed.Clear();
+				modified.Clear();
 
 			} catch(MySqlException ex) {
 				Console.WriteLine(ex.Message);
@@ -558,22 +570,27 @@ namespace dbLabs {
 			row[4] = (DateTime)DateTime.Now;
 			autoschoolDS.Tables["practice"].Rows.Add(row);
 
+			practiceAdapter.Update(autoschoolDS, "practice");
+			autoschoolDS.AcceptChanges();
+			changed.Clear();
+			modified.Clear();
+
 			ShowGrid.ItemsSource = autoschoolDS.Tables["practice"].DefaultView;
 		}
 
-		private void ClonePractice(object sender, EventArgs e) {
+		private void ContractPK(object sender, EventArgs e) {
 			if(ShowGrid.SelectedItem != null) {
 				DataRow selectedRow = ((DataRow)((DataRowView)ShowGrid.SelectedItem).Row);
 				DataRow row;
-				row = autoschoolDS.Tables["practice"].NewRow();
-				//row[0] = (int)(autoschoolDS.Tables["practice"].AsEnumerable()).Last()[0] + 1;
-				row[1] = selectedRow[1];
-				row[2] = selectedRow[2];
-				row[3] = selectedRow[3];
+				row = autoschoolDS.Tables["contract"].NewRow();
+				row[1] = selectedRow[0];
+				row[2] = contractType.Text;
 				row[4] = (DateTime)DateTime.Now;
-				autoschoolDS.Tables["practice"].Rows.Add(row);
+				row[5] = (DateTime)DateTime.Now.AddMonths(3);
+				autoschoolDS.Tables["contract"].Rows.Add(row);
 
-				ShowGrid.ItemsSource = autoschoolDS.Tables["practice"].DefaultView;
+
+				ShowGrid.ItemsSource = autoschoolDS.Tables["contract"].DefaultView;
 			}
 		}
 
@@ -616,8 +633,8 @@ namespace dbLabs {
 
 			var result = from contract in autoschoolDS.Tables["contract"].AsEnumerable()
 						 where
-						 (float.TryParse(minPrice.Text, out float min) ? min : 0) < (float)contract["payment"]
-						 && (float)contract["payment"] < (float.TryParse(maxPrice.Text, out float max) ? max : 5000)
+						 (int.TryParse(minPrice.Text, out int min) ? min : 0) < (int)contract["payment"]
+						 && (int)contract["payment"] < (int.TryParse(maxPrice.Text, out int max) ? max : 5000)
 						 select contract;
 
 			IEnumerable<DataRow> resultQuery;
@@ -638,15 +655,34 @@ namespace dbLabs {
 
 			var result = from auto in autoschoolDS.Tables["auto"].AsEnumerable()
 						 where
-						 ((string)auto["auto_name"]).Contains(autoPattern.Text.ToString())
+						 (auto["auto_name"].ToString()).Contains(autoPattern.Text.ToString())
 						 &&
-						 (float.TryParse(minPriceAuto.Text, out float min) ? min : 0) < (float)auto["price"]
-						 && (float)auto["price"] < (float.TryParse(maxPriceAuto.Text, out float max) ? max : 70000)
+						 (int.TryParse(minPriceAuto.Text, out int min) ? min : 0) < (int)auto["price"]
+						 && (int)auto["price"] < (int.TryParse(maxPriceAuto.Text, out int max) ? max : 70000)
 						 select auto;
-
-			resultGrid.ItemsSource = result.CopyToDataTable().DefaultView;
+			if(result.Count() != 0) {
+				resultGrid.ItemsSource = result.CopyToDataTable().DefaultView;
+			}
 		}
 
+		private void UpdatePriceAuto(object sender, EventArgs e) {
+
+			(from auto in autoschoolDS.Tables["auto"].AsEnumerable()
+			 where
+			 ((string)auto["auto_name"]).Contains(autoPattern.Text.ToString())
+			 select auto).ForEach(row => row["price"]= (int.TryParse(updatePriceAuto.Text, out int newPrice) ? newPrice : 7000));
+
+		}
+
+
+		private void DeleteAutoName(object sender, EventArgs e) {
+
+			(from auto in autoschoolDS.Tables["auto"].AsEnumerable()
+			 where
+			 ((string)auto["auto_name"]).Contains(autoPattern.Text.ToString())
+			 select auto).ForEach(row => row.Delete()) ;
+
+		}
 
 		private void JoinContract(object sender, EventArgs e) {
 			var result = autoschoolDS.Tables["contract"].Select().Join(
@@ -671,7 +707,7 @@ namespace dbLabs {
 					contract => contract["contract_type"],
 					(type, rest) => new {
 						Type = type,
-						Payment = rest.Average(x => (float)x["payment"]),
+						Payment = rest.Average(x => (int)x["payment"]),
 					}
 				).OrderBy(x => (string)x.Type);
 

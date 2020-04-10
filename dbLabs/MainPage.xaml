@@ -35,7 +35,8 @@
             <Button x:Name="addauto" Text="Add New Auto" IsVisible="False" HorizontalOptions="Start" Clicked="AddAuto"/>
             <Button x:Name="addcontract" Text="Add New Contract" IsVisible="False" HorizontalOptions="Start" Clicked="AddContract"/>
             <Button x:Name="addpractice" Text="Add New Practice" IsVisible="False" HorizontalOptions="Start" Clicked="AddPractice"/>
-            <Button x:Name="clonePractice" Text="Clone Practice" IsVisible="False" HorizontalOptions="Start" Clicked="ClonePractice"/>
+            <Button x:Name="contractPK" Text="Add Contract PK" IsVisible="False" HorizontalOptions="Start" Clicked="ContractPK"/>
+            <Entry x:Name="contractType" Text="A"/>
 
             <Label Text="MultSelection" TextColor="Aqua"/>
             <CheckBox IsChecked="False" HorizontalOptions="End" CheckedChanged="MultSelection"/>
@@ -97,9 +98,12 @@
 
             <StackLayout Orientation="Horizontal">
                 <Button Text="Find Auto by Name" HorizontalOptions="Start" Clicked="FindAuto"/>
-                <Entry x:Name="autoPattern" TextColor="BlueViolet" Text="Geely"/>
+                <Entry x:Name="autoPattern" TextColor="BlueViolet" Text="ek"/>
                 <Entry x:Name="minPriceAuto" TextColor="Red" Text="1000"/>
                 <Entry x:Name="maxPriceAuto" TextColor="Green" Text="70000"/>
+                <Button Text="Update Auto price by Name" HorizontalOptions="Start" Clicked="UpdatePriceAuto"/>
+                <Entry x:Name="updatePriceAuto" TextColor="Magenta" Text="7000"/>
+                <Button Text="Delete Auto by name" HorizontalOptions="Start" Clicked="DeleteAutoName"/>
             </StackLayout>
 
             <StackLayout Orientation="Horizontal">
