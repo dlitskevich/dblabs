@@ -365,6 +365,7 @@ namespace dbLabs {
 
 		private void ShowAuto(object sender, EventArgs e) {
 			ShowGrid.ItemsSource = autoschoolDS.Tables["auto"].DefaultView;
+			ShowGrid.Columns["auto_type"].AllowEditing = false;
 			addcustomer.IsVisible = false;
 			addteacher.IsVisible = false;
 			addauto.IsVisible = true;
