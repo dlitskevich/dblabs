@@ -41,6 +41,7 @@ namespace dbLabs {
 		private MySqlCommandBuilder contractCommands;
 		private MySqlCommandBuilder practiceCommands;
 
+
 		public MainPage() {
 			InitializeComponent();
 
@@ -155,7 +156,7 @@ namespace dbLabs {
 			autoschoolDS.Tables["practice"].Columns["practice_date"].DataType = Type.GetType("System.DateTime");
 			autoschoolDS.Tables["practice"].Columns["practice_date"].DefaultValue = DateTime.Now;
 			autoschoolDS.Tables["practice"].Columns["mark"].DataType = Type.GetType("System.Int32");
-			autoschoolDS.Tables["practice"].Columns["mark"].DefaultValue = 8;
+			autoschoolDS.Tables["practice"].Columns["mark"].DefaultValue = 80;
 
 
 			customerAdapter.Fill(autoschoolDS, "customer");
@@ -211,30 +212,26 @@ namespace dbLabs {
 			autoschoolDS.Relations.Add(TeacherToPractice);
 
 
+			var UpdateCmd = customerCommands.GetUpdateCommand();
+			//var parameter = UpdateCmd.Parameters.Add("@auto_type", MySqlDbType.Int32,13, "auto_type");
+			//auto_type = @auto_type,     `colour` = @p2, `available` = @p3, `price` = @p4
+			UpdateCmd.CommandText = $"UPDATE `customer` SET `customer_name` = @p1," +
+														 $" `customer_surname` = @p2, " +
+														 $"`customer_phone` = @p3, " +
+														 $"`customer_birth` = @p4 WHERE `customer_id` = @p5)";
+			customerAdapter.UpdateCommand = UpdateCmd;
 
-			
+
 			//var UpdateCmd = autoCommands.GetUpdateCommand();
 			//var parameter = UpdateCmd.Parameters.Add("@auto_type", MySqlDbType.Int32,13, "auto_type");
 			//auto_type = @auto_type,     `colour` = @p2, `available` = @p3, `price` = @p4
 			//UpdateCmd.CommandText = $"UPDATE `auto` SET `auto_name` = @p1 where `auto_id` = @p6";
 			//autoAdapter.UpdateCommand = UpdateCmd;
-		
+
 			/*
 			var DeleteCmd = customerCommands.GetDeleteCommand();
 			DeleteCmd.CommandText = $"DELETE FROM `customer` WHERE(`customer_id` = @p1)";
 			customerAdapter.DeleteCommand = DeleteCmd;
-			*/
-			/*
-			var DeleteCmd = autoCommands.GetDeleteCommand();
-			DeleteCmd.CommandText = $"DELETE FROM `auto` WHERE(`auto_id` = @p1)";
-			customerAdapter.DeleteCommand = DeleteCmd;
-			*/
-			/*
-			DataRelation manufToProduct = new DataRelation("ManufProduct",
-				autoschoolDS.Tables["manufact"].Columns["manuf_id"],
-				autoschoolDS.Tables["product"].Columns["prod_manuf_id"]);
-
-			autoschoolDS.Relations.Add(manufToProduct);
 			*/
 
 			autoschoolDS.Tables["customer"].RowChanged += StackModified;
@@ -261,6 +258,10 @@ namespace dbLabs {
 			practiceAdapter.InsertCommand.CommandType = CommandType.StoredProcedure;
 			MySqlParameter param = new MySqlParameter("id", MySqlDbType.Int32, 0, "practice_id");
 			param.Direction = ParameterDirection.Output;
+			practiceAdapter.InsertCommand.Parameters.Add(param);
+
+			param = new MySqlParameter("cur_mark", MySqlDbType.Int32, 0, "mark");
+			param.Direction = ParameterDirection.InputOutput;
 			practiceAdapter.InsertCommand.Parameters.Add(param);
 
 
@@ -572,6 +573,7 @@ namespace dbLabs {
 			DataRow row;
 			row = autoschoolDS.Tables["auto"].NewRow();
 			//row[0] = (int)(autoschoolDS.Tables["auto"].AsEnumerable()).Last()[0] + 1;
+			
 			autoschoolDS.Tables["auto"].Rows.Add(row);
 
 			ShowGrid.ItemsSource = autoschoolDS.Tables["auto"].DefaultView;
@@ -596,6 +598,7 @@ namespace dbLabs {
 			row[2] = 1;
 			row[3] = 1;
 			row[4] = (DateTime)DateTime.Now;
+			row[5] = 100;
 			autoschoolDS.Tables["practice"].Rows.Add(row);
 
 			practiceAdapter.Update(autoschoolDS, "practice");
@@ -626,7 +629,12 @@ namespace dbLabs {
 			if(ShowGrid.SelectedItem != null) {
 				//autoschoolDS.Tables["product"].Rows.Remove((DataRow)((DataRowView)ShowGrid.SelectedItem).Row);
 				//autoschoolDS.Tables["product"].Rows.RemoveAt((int)ShowGrid.SelectedIndex-1);
-				((DataRow)((DataRowView)ShowGrid.SelectedItem).Row).Delete();
+				if(
+					(((DataRowView)ShowGrid.SelectedItem).Row).Table.TableName!="auto"
+					||(((DataRowView)ShowGrid.SelectedItem).Row).GetChildRows("AutoPractice").Count() < 3
+					) {					
+					((DataRow)((DataRowView)ShowGrid.SelectedItem).Row).Delete();
+				}
 				//Refresh(null, null);
 			}
 		}
@@ -646,6 +654,7 @@ namespace dbLabs {
 			if(((CheckBox)sender).IsChecked) {
 				ShowGrid.SelectionMode = Syncfusion.SfDataGrid.XForms.SelectionMode.Multiple;
 			} else {
+				
 				ShowGrid.SelectionMode = Syncfusion.SfDataGrid.XForms.SelectionMode.Single;
 			}
 		}
@@ -688,17 +697,27 @@ namespace dbLabs {
 						 (int.TryParse(minPriceAuto.Text, out int min) ? min : 0) < (int)auto["price"]
 						 && (int)auto["price"] < (int.TryParse(maxPriceAuto.Text, out int max) ? max : 70000)
 						 select auto;
-			if(result.Count() != 0) {
-				resultGrid.ItemsSource = result.CopyToDataTable().DefaultView;
-			}
+
+			// test
+			var resultt = from auto in autoschoolDS.Tables["auto"].AsEnumerable()
+						 select new { id=auto.Field<int>("auto_id"), newPrice = auto.Field<string>("colour") == "blue" ? 16001 : (auto.Field<string>("colour") == "black" ? 16000 : auto.Field<int>("price")) }
+						 ;
+
+			resultGrid.ItemsSource = resultt;
+			//if(result.Count() != 0) {
+			//	resultGrid.ItemsSource = result.CopyToDataTable().DefaultView;
+			//}
 		}
 
 		private void UpdatePriceAuto(object sender, EventArgs e) {
 
 			(from auto in autoschoolDS.Tables["auto"].AsEnumerable()
-			 where
-			 ((string)auto["auto_name"]).Contains(autoPattern.Text.ToString())
-			 select auto).ForEach(row => row["price"]= (int.TryParse(updatePriceAuto.Text, out int newPrice) ? newPrice : 7000));
+			 join newPrice in (from auto in autoschoolDS.Tables["auto"].AsEnumerable()
+			 select new { id = auto.Field<int>("auto_id"), newPrice = auto.Field<string>("colour") == "blue" ? 16001 : (auto.Field<string>("colour") == "black" ? 16000 : auto.Field<int>("price")) })
+			 on auto.Field<int>("auto_id") equals newPrice.id
+			where
+			 auto.Field<int>("price") != newPrice.newPrice
+			 select new { auto, newPrice.newPrice }).ForEach(row => (row.auto)["price"] = row.newPrice);
 
 		}
 
