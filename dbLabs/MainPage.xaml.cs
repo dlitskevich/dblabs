@@ -47,7 +47,7 @@ namespace dbLabs {
 			customerAdapter = new MySqlDataAdapter("select * from customer", connString);
 			teacherAdapter = new MySqlDataAdapter("select * from teacher", connString);
 			// auto_type+0 as auto_type_id
-			autoAdapter = new MySqlDataAdapter("select * from auto", connString);
+			autoAdapter = new MySqlDataAdapter("select *, auto_type+0 as auto_type_id from auto", connString);
 
 			contractAdapter = new MySqlDataAdapter("select * from contract", connString);
 			practiceAdapter = new MySqlDataAdapter("select * from practice", connString);
@@ -120,8 +120,9 @@ namespace dbLabs {
 			autoschoolDS.Tables["auto"].Columns["auto_name"].DefaultValue = "Gillie";
 			autoschoolDS.Tables["auto"].Columns["auto_type"].DataType = Type.GetType("System.String");
 			autoschoolDS.Tables["auto"].Columns["auto_type"].DefaultValue = "A";
-			//autoschoolDS.Tables["auto"].Columns["auto_type_id"].DataType = typeof(AutoTypes);
-			//autoschoolDS.Tables["auto"].Columns["auto_type_id"].DefaultValue = AutoTypes.A;//Enum.Parse(typeof(types), "A");
+			autoschoolDS.Tables["auto"].Columns["auto_type_id"].DataType = typeof(AutoTypes);
+			autoschoolDS.Tables["auto"].Columns["auto_type_id"].DefaultValue = AutoTypes.A;
+			//Enum.Parse(typeof(types), "A");
 			//autoschoolDS.Tables["auto"].Columns["auto_type"].Expression = "CONVERT(auto_type,typeof(types))";
 
 			autoschoolDS.Tables["auto"].Columns["colour"].DataType = Type.GetType("System.String");
@@ -248,6 +249,8 @@ namespace dbLabs {
 			autoschoolDS.Tables["contract"].RowDeleted += StackDeleted;
 			autoschoolDS.Tables["practice"].RowDeleted += StackDeleted;
 
+
+			autoschoolDS.Tables["auto"].ColumnChanged += AutoTypeSync;
 			//autoschoolDS.Tables["customer"].N += StackAdded;
 			//autoschoolDS.Tables["teacher"].TableNewRow += StackAdded;
 			//autoschoolDS.Tables["auto"].TableNewRow += StackAdded;
@@ -495,8 +498,20 @@ namespace dbLabs {
 
 		}
 
+		private void AutoTypeSync(object sender, DataColumnChangeEventArgs e) {
+
+			if(e.Column.Table.TableName == "auto" && e.Column.ColumnName == "auto_type_id") {
+				try {
+					var test = e.Row["auto_type_id"];
+					e.Row["auto_type"] = ((AutoTypes)e.Row["auto_type_id"]).ToString();
+				} catch  {
+				}
+			} 
+
+		}
+
 		//private void StackAdded(object sender, DataRowChangeEventArgs e) {
-			
+
 		//	if(e.Row.RowState == DataRowState.Unchanged) {				
 		//		changed.Remove(e.Row);
 		//	} else {				
