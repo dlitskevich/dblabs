@@ -265,8 +265,12 @@ namespace dbLabs {
 
 
 		}
-
-		
+		// TODO:
+		// 1) update configurate
+		// 2) fk restrict deleting row with 3 and more child rows
+		// 3) call procedure updating rows, without fill
+		// 4) linq update non-linearly (update + join)
+		// TODO:
 
 		/// ////////////////////////////////////////////////
 		/// Initialize page
@@ -385,7 +389,7 @@ namespace dbLabs {
 			ShowGrid.Columns[0].IsHidden = true;
 			contractPK.IsVisible = false;
 		}
-
+		
 		private void ShowPractice(object sender, EventArgs e) {
 			ShowGrid.ItemsSource = autoschoolDS.Tables["practice"].DefaultView;
 			addcustomer.IsVisible = false;
@@ -503,7 +507,6 @@ namespace dbLabs {
 
 			if(e.Column.Table.TableName == "auto" && e.Column.ColumnName == "auto_type_id") {
 				try {
-					var test = e.Row["auto_type_id"];
 					e.Row["auto_type"] = ((AutoTypes)e.Row["auto_type_id"]).ToString();
 				} catch  {
 				}
@@ -522,13 +525,22 @@ namespace dbLabs {
 		//}
 
 		private void StackModified(object sender, DataRowChangeEventArgs e) {
+			
 			if(e.Row.RowState == DataRowState.Unchanged) {
-				modified.Remove(e.Row);
-				changed.Remove(e.Row);
+				try {
+					modified.Remove(e.Row);
+					changed.Remove(e.Row);
+				} catch {
+				}
 			} else {
 				modified.Add(e.Row, DateTime.Now);
-				changed.Add(e.Row, DateTime.Now);
+				try {
+					changed.Add(e.Row, DateTime.Now);
+				} catch {
+					changed[e.Row] = DateTime.Now;
+				}
 			}
+			
 
 		}
 
