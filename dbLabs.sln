@@ -1,8 +1,6 @@
 
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dbLabs.iOS", "dbLabs.iOS\dbLabs.iOS.csproj", "{90CECA0C-908B-40DF-B307-9CFABE3EA7DD}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dbLabs", "dbLabs\dbLabs.csproj", "{2DCC75B9-124E-4C5F-BB04-D8E7F28DEE6E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dbLabs.MacOS", "dbLabs.MacOS\dbLabs.MacOS.csproj", "{6527DFFF-3971-4679-91EF-6BD0CE8439D4}"
@@ -17,16 +15,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{90CECA0C-908B-40DF-B307-9CFABE3EA7DD}.Debug|iPhoneSimulator.ActiveCfg = Debug|iPhoneSimulator
-		{90CECA0C-908B-40DF-B307-9CFABE3EA7DD}.Release|iPhoneSimulator.ActiveCfg = Release|iPhoneSimulator
-		{90CECA0C-908B-40DF-B307-9CFABE3EA7DD}.Release|iPhoneSimulator.Build.0 = Release|iPhoneSimulator
-		{90CECA0C-908B-40DF-B307-9CFABE3EA7DD}.Debug|iPhone.ActiveCfg = Debug|iPhone
-		{90CECA0C-908B-40DF-B307-9CFABE3EA7DD}.Debug|iPhone.Build.0 = Debug|iPhone
-		{90CECA0C-908B-40DF-B307-9CFABE3EA7DD}.Release|iPhone.ActiveCfg = Release|iPhone
-		{90CECA0C-908B-40DF-B307-9CFABE3EA7DD}.Release|iPhone.Build.0 = Release|iPhone
-		{90CECA0C-908B-40DF-B307-9CFABE3EA7DD}.Debug|Any CPU.ActiveCfg = Debug|iPhoneSimulator
-		{90CECA0C-908B-40DF-B307-9CFABE3EA7DD}.Release|Any CPU.ActiveCfg = Release|iPhoneSimulator
-		{90CECA0C-908B-40DF-B307-9CFABE3EA7DD}.Release|Any CPU.Build.0 = Release|iPhoneSimulator
 		{2DCC75B9-124E-4C5F-BB04-D8E7F28DEE6E}.Debug|iPhoneSimulator.ActiveCfg = Debug|Any CPU
 		{2DCC75B9-124E-4C5F-BB04-D8E7F28DEE6E}.Debug|iPhoneSimulator.Build.0 = Debug|Any CPU
 		{2DCC75B9-124E-4C5F-BB04-D8E7F28DEE6E}.Release|iPhoneSimulator.ActiveCfg = Release|Any CPU

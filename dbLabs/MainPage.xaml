@@ -3,21 +3,24 @@
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:d="http://xamarin.com/schemas/2014/forms/design"
-    xmlns:syncfusionDG="clr-namespace:Syncfusion.SfDataGrid.XForms;assembly=Syncfusion.SfDataGrid.XForms"
+    
     
     
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     x:Class="dbLabs.MainPage"
-    Appearing="PageLoaded"
-    >
-    <!--
     
-    -->
+    >
+    
+    
+    
     <StackLayout Orientation="Vertical" >
-        <!-- Place new controls here -->
+        <!-- Place new controls here
+        Appearing="PageLoaded"
+        xmlns:syncfusionDG="clr-namespace:Syncfusion.SfDataGrid.XForms;assembly=Syncfusion.SfDataGrid.XForms"
+        -->
         
-
+        <!--
         <StackLayout Orientation="Horizontal">
             <Button Text="Show Customers"  HorizontalOptions="Start" Clicked="ShowCustomer"/>
             <Button Text="Show Teachers"  HorizontalOptions="Start" Clicked="ShowTeacher"/>
@@ -131,6 +134,6 @@
                                >
         </syncfusionDG:SfDataGrid>
 
-        
+        -->
     </StackLayout>
 </ContentPage>
