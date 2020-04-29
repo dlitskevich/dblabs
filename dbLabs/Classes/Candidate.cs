@@ -7,11 +7,14 @@ namespace dbLabs.Classes {
         public string Name { get; set; }
         public string Surname { get; set; }
         public float Rating { get; set; }
+
+        //public CandidateProfile CandidateProfile { get; set; }
         public ICollection<Confident> Confidents { get; set; }
-        //public ICollection<Promise> Promises { get; set; }
+        public ICollection<CandidatePromise> CandidatePromise { get; set; }
+
         public Candidate() {
             Confidents = new List<Confident>();
-            //Promises = new List<Promise>();
+            CandidatePromise = new List<CandidatePromise>();
         }
     }
 }

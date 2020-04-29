@@ -23,5 +23,10 @@
     <PackageReference Include="Xamarin.Forms" Version="4.5.0.657" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.2.6" />
     <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.1" />
+    <PackageReference Include="MySql.Data.EntityFrameworkCore" Version="8.0.20" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="Classes\books.cs" />
   </ItemGroup>
 </Project>

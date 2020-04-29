@@ -8,7 +8,7 @@ namespace dbLabs.Classes {
 		public string PoliticalPreferences { get; set; }
 		public int Age { get; set; }
 		public int? CandidateId { get; set; }
-		public virtual Candidate Candidate { get; set; }
+		public Candidate Candidate { get; set; }
 		
 	}
 }

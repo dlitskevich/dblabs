@@ -5,9 +5,9 @@ namespace dbLabs.Classes {
     public class Promise {
         public int Id { get; set; }
         public string Text { get; set; }
-        public ICollection<Candidate> Candidates { get; set; }
+        public ICollection<CandidatePromise> CandidatePromise { get; set; }
         public Promise() {
-            Candidates = new List<Candidate>();
+            CandidatePromise = new List<CandidatePromise>();
         }
     }
 }
