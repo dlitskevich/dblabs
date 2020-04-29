@@ -23,8 +23,7 @@
         <StackLayout x:Name="RRA" Orientation="Horizontal">
             <Button Text="Sync" HorizontalOptions="Start" Clicked="Sync"/>
             <Button Text="Remove Item" HorizontalOptions="Start" Clicked="RemoveItem"/>
-            <Button Text="Ratings" HorizontalOptions="Start" Clicked="Rating_Click"/>
-            <Button Text="Change surname" HorizontalOptions="Start" Clicked="Edit_Surname"/>
+            <Button Text="Change surname" HorizontalOptions="Start" Clicked="RemoveItem"/>
             <Entry x:Name="editSurname" Text="A"/>
         </StackLayout>
 
@@ -46,7 +45,7 @@
 
         <!-- Result -->
         <StackLayout Orientation="Horizontal">
-                <Button Text="query" HorizontalOptions="Start" Clicked="query_Click"/>
+                <Button Text="query" HorizontalOptions="Start" />
         </StackLayout>
         
         <syncfusionDG:SfDataGrid x:Name="resultGrid"

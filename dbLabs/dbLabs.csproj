@@ -13,6 +13,7 @@
   <ItemGroup>
     <Folder Include="Pages\" />
     <Folder Include="Classes\" />
+    <Folder Include="Classes\old\" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Xamarin.Mac">

@@ -1,20 +1,23 @@
 ﻿using System;
-
 using System.Collections;
 
-using dbLabs.Classes;
+using dbLabs;
 using Microsoft.EntityFrameworkCore;
 using MySQL.Data.EntityFrameworkCore;
 
-namespace dbLabs {
-    class ElectionContext : DbContext {
-        //ConfigurationManager.ConnectionStrings["mmfConString"].ConnectionString
-        //"server=127.0.0.1; user id=root; password=Password; database=weapon"
-        //"data source=(localdb)\\MSSQLLocalDB;Initial Catalog=Election;Integrated Security=True;"
-        public DbSet<Candidate> Candidates { get; set; }
-        public DbSet<CandidateProfile> CandidateProfiles { get; set; }
-        public DbSet<Promise> Promises { get; set; }
-        public DbSet<Confident> Confidents { get; set; }
+namespace dbLabs.Classes {
+    public class ShopContext : DbContext {
+
+        public DbSet<Contract> Contracts { get; set; }
+        public DbSet<Staff> Staffs { get; set; }
+
+        public DbSet<Customer> Customers { get; set; }
+
+        public DbSet<Provider> Providers { get; set; }
+        public DbSet<Product> Products { get; set; }
+        public DbSet<ShopItem> ShopItems { get; set; }
+		public DbSet<Purchase> Purchases { get; set; }
+
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
             optionsBuilder.UseMySQL("server=127.0.0.1;database=maskShop;user=root;password=Password");
@@ -24,9 +27,16 @@ namespace dbLabs {
         protected override void OnModelCreating(ModelBuilder modelBuilder) {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<CandidatePromise>(entity => {
-                entity.HasKey(e => new { e.CandidateId, e.PromiseId });                
+            modelBuilder.Entity<Contract>(entity => {
+                entity.HasKey(e => e.Id);
+                entity.HasOne(e => e.Staff).WithOne(c => c.Contract).HasForeignKey<Staff>(s => s.Id); 
             });
+
+            modelBuilder.Entity<ShopItem>(entity => {
+                entity.HasKey(e => e.Id);
+                entity.HasIndex(e => new { e.ProductId, e.ProviderId });
+            });
+
             /*
             modelBuilder.Entity<Candidate>(entity => {
                 entity.HasKey(e => e.Id);
@@ -37,15 +47,15 @@ namespace dbLabs {
                 //entity.HasMany(e => e.Confidents).WithOne(e => e.Candidate);
                 //entity.HasMany(e => e.Promises).;
             });
-			*/
 			
+
             modelBuilder.Entity<CandidateProfile>(entity => {
                 entity.HasKey(e => e.Id);
                 entity.Property(e => e.Age).IsRequired();
                 entity.Property(e => e.Description).IsRequired();
                 entity.HasOne(d => d.Candidate);
             });
-			
+			*/
             /*
             modelBuilder.Entity<Promise>(entity => {
                 entity.HasKey(e => e.Id);
@@ -63,6 +73,6 @@ namespace dbLabs {
 
             */
         }
-
+    
     }
 }
