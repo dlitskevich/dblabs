@@ -38,13 +38,14 @@ namespace dbLabs {
                 //entity.HasMany(e => e.Promises).;
             });
 			*/
-            /*modelBuilder.Entity<CandidateProfile>(entity => {
+			
+            modelBuilder.Entity<CandidateProfile>(entity => {
                 entity.HasKey(e => e.Id);
                 entity.Property(e => e.Age).IsRequired();
                 entity.Property(e => e.Description).IsRequired();
                 entity.HasOne(d => d.Candidate);
             });
-			*/
+			
             /*
             modelBuilder.Entity<Promise>(entity => {
                 entity.HasKey(e => e.Id);

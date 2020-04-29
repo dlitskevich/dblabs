@@ -59,31 +59,31 @@
       <HintPath>..\packages\Xamarin.Forms.4.5.0.356\lib\Xamarin.Mac\Xamarin.Forms.Platform.macOS.dll</HintPath>
     </Reference>
     <Reference Include="Syncfusion.Licensing">
-      <HintPath>..\packages\Syncfusion.Licensing.18.1.0.42\lib\Xamarin.Mac\Syncfusion.Licensing.dll</HintPath>
+      <HintPath>..\packages\Syncfusion.Licensing.18.1.0.46\lib\Xamarin.Mac\Syncfusion.Licensing.dll</HintPath>
     </Reference>
     <Reference Include="Syncfusion.GridCommon.Portable">
-      <HintPath>..\packages\Syncfusion.Xamarin.GridCommon.17.4.0.55\lib\Xamarin.Mac\Syncfusion.GridCommon.Portable.dll</HintPath>
+      <HintPath>..\packages\Syncfusion.Xamarin.GridCommon.18.1.0.46\lib\Xamarin.Mac\Syncfusion.GridCommon.Portable.dll</HintPath>
     </Reference>
     <Reference Include="Syncfusion.Core.XForms">
-      <HintPath>..\packages\Syncfusion.Xamarin.Core.18.1.0.42\lib\Xamarin.Mac\Syncfusion.Core.XForms.dll</HintPath>
+      <HintPath>..\packages\Syncfusion.Xamarin.Core.18.1.0.46\lib\Xamarin.Mac\Syncfusion.Core.XForms.dll</HintPath>
     </Reference>
     <Reference Include="Syncfusion.Core.XForms.macOS">
-      <HintPath>..\packages\Syncfusion.Xamarin.Core.18.1.0.42\lib\Xamarin.Mac\Syncfusion.Core.XForms.macOS.dll</HintPath>
+      <HintPath>..\packages\Syncfusion.Xamarin.Core.18.1.0.46\lib\Xamarin.Mac\Syncfusion.Core.XForms.macOS.dll</HintPath>
     </Reference>
     <Reference Include="Syncfusion.SfComboBox.XForms">
-      <HintPath>..\packages\Syncfusion.Xamarin.SfComboBox.17.4.0.55\lib\netstandard2.0\Syncfusion.SfComboBox.XForms.dll</HintPath>
+      <HintPath>..\packages\Syncfusion.Xamarin.SfComboBox.18.1.0.46\lib\netstandard2.0\Syncfusion.SfComboBox.XForms.dll</HintPath>
     </Reference>
     <Reference Include="Syncfusion.SfNumericTextBox.XForms">
-      <HintPath>..\packages\Syncfusion.Xamarin.SfNumericTextBox.17.4.0.55\lib\netstandard2.0\Syncfusion.SfNumericTextBox.XForms.dll</HintPath>
+      <HintPath>..\packages\Syncfusion.Xamarin.SfNumericTextBox.18.1.0.46\lib\netstandard2.0\Syncfusion.SfNumericTextBox.XForms.dll</HintPath>
     </Reference>
     <Reference Include="Syncfusion.Data.Portable">
-      <HintPath>..\packages\Syncfusion.Xamarin.SfDataGrid.17.4.0.55\lib\Xamarin.Mac\Syncfusion.Data.Portable.dll</HintPath>
+      <HintPath>..\packages\Syncfusion.Xamarin.SfDataGrid.18.1.0.46\lib\Xamarin.Mac\Syncfusion.Data.Portable.dll</HintPath>
     </Reference>
     <Reference Include="Syncfusion.SfDataGrid.XForms">
-      <HintPath>..\packages\Syncfusion.Xamarin.SfDataGrid.17.4.0.55\lib\Xamarin.Mac\Syncfusion.SfDataGrid.XForms.dll</HintPath>
+      <HintPath>..\packages\Syncfusion.Xamarin.SfDataGrid.18.1.0.46\lib\Xamarin.Mac\Syncfusion.SfDataGrid.XForms.dll</HintPath>
     </Reference>
     <Reference Include="Syncfusion.SfDataGrid.XForms.macOS">
-      <HintPath>..\packages\Syncfusion.Xamarin.SfDataGrid.17.4.0.55\lib\Xamarin.Mac\Syncfusion.SfDataGrid.XForms.macOS.dll</HintPath>
+      <HintPath>..\packages\Syncfusion.Xamarin.SfDataGrid.18.1.0.46\lib\Xamarin.Mac\Syncfusion.SfDataGrid.XForms.macOS.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Configuration.ConfigurationManager">

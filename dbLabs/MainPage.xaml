@@ -5,11 +5,12 @@
     xmlns:d="http://xamarin.com/schemas/2014/forms/design"
     
     
-    
+    xmlns:syncfusionDG="clr-namespace:Syncfusion.SfDataGrid.XForms;assembly=Syncfusion.SfDataGrid.XForms"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     x:Class="dbLabs.MainPage"
-    
+    Appearing="PageLoaded"
+    Disappearing="PageClosed"
     >
     
     
@@ -17,9 +18,52 @@
     <StackLayout Orientation="Vertical" >
         <!-- Place new controls here
         Appearing="PageLoaded"
-        xmlns:syncfusionDG="clr-namespace:Syncfusion.SfDataGrid.XForms;assembly=Syncfusion.SfDataGrid.XForms"
-        -->
         
+        -->
+        <StackLayout x:Name="RRA" Orientation="Horizontal">
+            <Button Text="Sync" HorizontalOptions="Start" Clicked="Sync"/>
+            <Button Text="Remove Item" HorizontalOptions="Start" Clicked="RemoveItem"/>
+            <Button Text="Ratings" HorizontalOptions="Start" Clicked="Rating_Click"/>
+            <Button Text="Change surname" HorizontalOptions="Start" Clicked="Edit_Surname"/>
+            <Entry x:Name="editSurname" Text="A"/>
+        </StackLayout>
+
+        <syncfusionDG:SfDataGrid x:Name="ShowGrid"
+                               IsVisible="True"
+                               AutoGenerateColumns="True"
+                               ColumnSizer="Star"
+
+                               AllowEditing="True"
+                               SelectionMode="Single"
+
+                               AllowDeleting="True"
+                               AllowKeyboardNavigation="True"
+                               NavigationMode="Cell"
+                               AllowDraggingColumn="True"
+                               ShowRowHeader="True"
+                               >
+        </syncfusionDG:SfDataGrid>
+
+        <!-- Result -->
+        <StackLayout Orientation="Horizontal">
+                <Button Text="query" HorizontalOptions="Start" Clicked="query_Click"/>
+        </StackLayout>
+        
+        <syncfusionDG:SfDataGrid x:Name="resultGrid"
+                               IsVisible="True"
+                               AutoGenerateColumns="True"
+                               ColumnSizer="Star"
+
+                               AllowEditing="True"
+                               SelectionMode="Single"
+
+                               AllowDeleting="True"
+                               AllowKeyboardNavigation="True"
+                               NavigationMode="Cell"
+                               AllowDraggingColumn="True"
+                               ShowRowHeader="True"
+                               >
+        </syncfusionDG:SfDataGrid>
         <!--
         <StackLayout Orientation="Horizontal">
             <Button Text="Show Customers"  HorizontalOptions="Start" Clicked="ShowCustomer"/>
@@ -33,6 +77,7 @@
             <Button Text="Sync" HorizontalOptions="Start" Clicked="Sync"/>
             <Button Text="Cancel" HorizontalOptions="Start" Clicked="Cancel"/>
             <Button Text="Remove Item" HorizontalOptions="Start" Clicked="RemoveItem"/>
+
             <Button x:Name="addcustomer" Text="Add New Customer" IsVisible="True" HorizontalOptions="Start" Clicked="AddCustomer"/>
             <Button x:Name="addteacher" Text="Add New Teacher" IsVisible="False" HorizontalOptions="Start" Clicked="AddTeacher"/>
             <Button x:Name="addauto" Text="Add New Auto" IsVisible="False" HorizontalOptions="Start" Clicked="AddAuto"/>
