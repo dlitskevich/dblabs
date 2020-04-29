@@ -17,7 +17,7 @@ namespace dbLabs {
         public DbSet<Confident> Confidents { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
-            optionsBuilder.UseMySQL("server=127.0.0.1;database=maskShop;user=root;password=Password");
+            optionsBuilder.UseMySQL("server=127.0.0.1;database=election;user=root;password=Password");
         }
 
 
