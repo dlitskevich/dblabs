@@ -10,5 +10,7 @@ namespace dbLabs.Classes {
 		public Customer Customer { get; set; }
 		public ShopItem ShopItem { get; set; }
 		public Staff Staff { get; set; }
+
+		
 	}
 }

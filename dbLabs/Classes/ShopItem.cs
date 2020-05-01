@@ -18,5 +18,13 @@ namespace dbLabs.Classes {
 			Purchase = new List<Purchase>();
 		}
 
+		public bool Buy(int amount) {
+			if(Amount - amount < 0 || amount < 1) {
+				return false;
+			}
+			Amount -= amount;
+			return true;
+		}
+
 	}
 }

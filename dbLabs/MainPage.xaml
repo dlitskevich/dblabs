@@ -24,6 +24,7 @@
         <StackLayout Orientation="Horizontal">
             <Button Text="Show Contracts"  HorizontalOptions="Start" Clicked="ShowContracts"/>
             <Button Text="Show ShopItems"  HorizontalOptions="Start" Clicked="ShowShopItems"/>
+            <Button Text="Show Purchases"  HorizontalOptions="Start" Clicked="ShowPurchase"/>
         </StackLayout>
 
         <StackLayout x:Name="RRA" Orientation="Horizontal">
@@ -34,8 +35,8 @@
             <Button Text="Add ShopItem" HorizontalOptions="Start" Clicked="AddShopItem"/>
             <Button Text="Update ShopItem" HorizontalOptions="Start" Clicked="UpdateShopItem"/>
 
-            <Button Text="Change surname" HorizontalOptions="Start" Clicked="RemoveContract"/>
-            <Entry x:Name="editSurname" Text="A"/>
+            <Button Text="Buy Item" HorizontalOptions="Start" Clicked="BuyItem"/>
+            <Entry x:Name="buyAmount" Text="1"/>
         </StackLayout>
 
         <syncfusionDG:SfDataGrid x:Name="ShowGrid"
@@ -59,6 +60,7 @@
         <StackLayout Orientation="Horizontal">
                 <Button Text="Average purchase amount" HorizontalOptions="Start" Clicked="ProductAVGamount"/>
                 <Button Text="Customer Total" HorizontalOptions="Start" Clicked="CustomerTotal"/>
+                <Button Text="Provider Info" HorizontalOptions="Start" Clicked="ProviderInfo"/>
             </StackLayout>
         <!-- Result -->
         <StackLayout Orientation="Horizontal">

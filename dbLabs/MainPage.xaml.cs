@@ -213,7 +213,12 @@ namespace dbLabs {
 		}
 		private void ShowShopItems(object sender, EventArgs e) {
 			context.ShopItems.Load();
-			ShowGrid.ItemsSource = context.ShopItems.Local.ToBindingList();
+			ShowGrid.ItemsSource = context.ShopItems.Local.OrderBy(i => i.Id);
+		}
+
+		private void ShowPurchase(object sender, EventArgs e) {
+			context.Purchases.Load();
+			ShowGrid.ItemsSource = context.Purchases.Local.OrderBy(p => p.Id);
 		}
 
 		private void UpdateShopItem(object sender, EventArgs e) {
@@ -286,6 +291,24 @@ namespace dbLabs {
 			}
 		}
 
+		/// ///////////////// ///////////////// ///////////////// //////////////
+		/// /// ///////////////// //////////////
+		/// /// ///////////////// //////////////
+		/// /// ///////////////// //////////////
+
+		private void BuyItem(object sender, EventArgs e) {
+			try {
+				if(ShowGrid.SelectedItem != null) {
+					ShopItem item = ShowGrid.SelectedItem as ShopItem;
+					context.MakePurchase(item, int.TryParse(buyAmount.Text, out int min) ? min : 0);
+
+				}
+				context.SaveChanges();
+			} catch(Exception ex) {
+				System.Console.WriteLine(ex.Message);
+			}
+		}
+
 		//private void Rating_Click(object sender, EventArgs e) {
 		//	Candidate firstCandidate = context.Candidates.FirstOrDefault();
 		//	System.Random rnd = new System.Random();
@@ -310,7 +333,7 @@ namespace dbLabs {
 		//private void query_Click(object sender, EventArgs e) {
 		//	using(ElectionContext db = new ElectionContext()) {
 		//		var result = db.Candidates.Where(x => x.Rating > 10).ToList();
-				
+
 		//		var result2 = db.Candidates.Join(db.Confidents,
 		//			  p => p.Id,
 		//			  c => c.CandidateId,
@@ -347,10 +370,34 @@ namespace dbLabs {
 
 		private void CustomerTotal(object sender, EventArgs e) {
 			var purchases = context.Purchases.Include(p => p.Customer).Include(p => p.ShopItem).ToList();
+			// TODO: FirstOrDefault()??
 			var result = purchases.GroupBy(p => p.Customer.Id).Select(p => new { Name = p.FirstOrDefault().Customer.Name, Total = p.Sum(x =>x.Amount*x.ShopItem.Price) } );
 						;
 			resultGrid.ItemsSource = result;
 		}
 
+		private void ProviderInfo(object sender, EventArgs e) {
+			var items = context.ShopItems.ToList();
+			var provs = context.Providers.ToList();
+			var result = from item in items
+						 join prov in provs
+						 on item.ProviderId equals prov.Id
+						 group new { item, prov }
+						 by new {
+							 prov.Id,
+							 prov.Name,
+							 prov.Info
+						 } into itemProv
+						 orderby itemProv.Key.Id ascending
+						 select new {
+							 itemProv.Key.Id,
+							 itemProv.Key.Name,
+							 itemProv.Key.Info,
+							 AVGprice = itemProv.Average(x => x.item.Price),
+							 ManufQuantity = itemProv.Sum(x => x.item.Amount)
+						 };
+
+			resultGrid.ItemsSource = result;
+		}
 	}
 }
