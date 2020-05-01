@@ -5,7 +5,7 @@ namespace dbLabs.Classes {
 	public class Staff {
 		public int Id { get; set; }
 		public string Name { get; set; }
-		public Contract Contract { get; set; }
+		public virtual Contract Contract { get; set; }
 		public ICollection<Purchase> Purchase { get; set; }
 
 		public Staff() {

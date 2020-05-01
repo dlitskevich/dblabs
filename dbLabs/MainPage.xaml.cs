@@ -29,6 +29,7 @@ namespace dbLabs {
 
 			using(ShopContext db = new ShopContext()) {
 				// Creates the database if not exists
+				db.Database.EnsureDeleted();
 				if(db.Database.EnsureCreated() == true) {
 
 					Contract contract1 = new Contract { Info = "From now to then 553" };
@@ -152,10 +153,11 @@ namespace dbLabs {
 			context = new ShopContext();
 			context.Staffs.Load();
 			ShowGrid.ItemsSource = context.Staffs.Local.ToBindingList();
+			CheckFK(null, null);
 			//
 
 			/////////////////////
-			// Greedy (not virtual props)
+			// Greedy (not virtual props)   .Include
 			/////////////////////
 			/*
 			List<Candidate> curCand = context.Candidates.Include(p => p.Confidents).ToList<Candidate>();
@@ -170,7 +172,7 @@ namespace dbLabs {
 			}
 			*/
 			/////////////////////
-			// Lazy (set virtual props) delayed
+			// Lazy (set virtual props) delayed   Directly
 			/////////////////////
 			/*
 			var curCand1 = context.Candidates.ToList();
@@ -184,7 +186,7 @@ namespace dbLabs {
 			}
 			*/
 			/////////////////////
-			// Explicit (not virtual props) delayed
+			// Explicit (not virtual props) delayed     .Load()
 			/////////////////////
 			/*
 			var curCand = context.Candidates.FirstOrDefault();
@@ -205,12 +207,76 @@ namespace dbLabs {
 			context.SaveChanges();
 		}
 
-		private void RemoveItem(object sender, EventArgs e) {
+		private void ShowContracts(object sender, EventArgs e) {
+			context.Contracts.Load();
+			ShowGrid.ItemsSource = context.Contracts.Local.ToBindingList();
+		}
+		private void ShowShopItems(object sender, EventArgs e) {
+			context.ShopItems.Load();
+			ShowGrid.ItemsSource = context.ShopItems.Local.ToBindingList();
+		}
+
+		private void UpdateShopItem(object sender, EventArgs e) {
+			try {
+				var toUpdShop = (from sh in context.ShopItems.AsEnumerable()
+								 where sh.Amount > 10000
+								 select sh).ToList();
+				foreach(ShopItem item in toUpdShop) {
+					item.Price = 1;
+				}
+
+				context.SaveChanges();
+			} catch(Exception ex) {
+				System.Console.WriteLine(ex.Message);
+			}
+			ShowShopItems(null, null);
+		}
+
+		private void AddShopItem(object sender, EventArgs e) {
+
+			context.ShopItems.Add(new ShopItem { Amount = 0, Price = 0, ProductId = 1, ProviderId = 1 });
+			context.SaveChanges();
+		}
+		/// /////////////// ////////////
+		/// /////////////// ////////////
+		// simpe test (if set fkID its automaticaly ads its object)
+		/// /////////////// ////////////
+		private void CheckFK(object sender, EventArgs e) {
+			var testFK = context.ShopItems.Include(s => s.Product).ToList<ShopItem>();
+			Console.WriteLine();
+		}
+
+		private void RemoveShopItem(object sender, EventArgs e) {
+			List<ShopItem> shop = context.ShopItems.Include(s => s.Purchase).ToList<ShopItem>();
+			try {
+				var toDelShop = (from sh in shop
+										   where sh.Amount < 1000
+										   select sh).ToList();
+				for(int i = 0; i < toDelShop.Count(); i++) {
+					ShopItem curItem = toDelShop[i] as ShopItem;
+					if(curItem != null) {
+						foreach(Purchase purch in curItem.Purchase) {
+							context.Purchases.Remove(purch);
+						}
+						context.ShopItems.Remove(curItem);
+					}
+				}
+				
+				context.SaveChanges();
+			} catch(Exception ex) {
+				System.Console.WriteLine(ex.Message);
+			}
+
+		}
+
+
+		private void RemoveContract(object sender, EventArgs e) {
 			try {
 				if(ShowGrid.SelectedItems != null) {
 					for(int i = 0; i < ShowGrid.SelectedItems.Count; i++) {
-						Staff curCand = ShowGrid.SelectedItems[i] as Staff; if(curCand != null) {
-							context.Staffs.Remove(curCand);
+						Contract curCand = ShowGrid.SelectedItems[i] as Contract;
+						if(curCand != null) {
+							context.Contracts.Remove(curCand);
 						}
 					}
 				}
@@ -268,5 +334,23 @@ namespace dbLabs {
 		//		resultGrid.ItemsSource = result2;
 		//	}
 		//}
+
+		private void ProductAVGamount(object sender, EventArgs e) {
+			// TODO: possible include nested??
+			var purchases = context.Purchases.Include(p => p.ShopItem).ToList();
+			var result =from purch in purchases
+						 group purch by purch.ShopItem.Product.Name into amount
+						 select new { Name = amount.Key, AVGamount = amount.Average(a => a.Amount) }
+						;
+			resultGrid.ItemsSource = result;
+		}
+
+		private void CustomerTotal(object sender, EventArgs e) {
+			var purchases = context.Purchases.Include(p => p.Customer).Include(p => p.ShopItem).ToList();
+			var result = purchases.GroupBy(p => p.Customer.Id).Select(p => new { Name = p.FirstOrDefault().Customer.Name, Total = p.Sum(x =>x.Amount*x.ShopItem.Price) } );
+						;
+			resultGrid.ItemsSource = result;
+		}
+
 	}
 }

@@ -29,12 +29,17 @@ namespace dbLabs.Classes {
 
             modelBuilder.Entity<Contract>(entity => {
                 entity.HasKey(e => e.Id);
-                entity.HasOne(e => e.Staff).WithOne(c => c.Contract).HasForeignKey<Staff>(s => s.Id); 
+                entity.HasOne(e => e.Staff).WithOne(c => c.Contract).HasForeignKey<Staff>(s => s.Id).OnDelete(DeleteBehavior.Cascade); 
             });
 
             modelBuilder.Entity<ShopItem>(entity => {
                 entity.HasKey(e => e.Id);
                 entity.HasIndex(e => new { e.ProductId, e.ProviderId });
+            });
+
+            modelBuilder.Entity<Staff>(entity => {
+                entity.HasKey(e => e.Id);
+                entity.HasMany(e => e.Purchase).WithOne(p => p.Staff).OnDelete(DeleteBehavior.SetNull);
             });
 
             /*

@@ -20,10 +20,21 @@
         Appearing="PageLoaded"
         
         -->
+
+        <StackLayout Orientation="Horizontal">
+            <Button Text="Show Contracts"  HorizontalOptions="Start" Clicked="ShowContracts"/>
+            <Button Text="Show ShopItems"  HorizontalOptions="Start" Clicked="ShowShopItems"/>
+        </StackLayout>
+
         <StackLayout x:Name="RRA" Orientation="Horizontal">
             <Button Text="Sync" HorizontalOptions="Start" Clicked="Sync"/>
-            <Button Text="Remove Item" HorizontalOptions="Start" Clicked="RemoveItem"/>
-            <Button Text="Change surname" HorizontalOptions="Start" Clicked="RemoveItem"/>
+            <Button Text="Remove Contract" HorizontalOptions="Start" Clicked="RemoveContract"/>
+            <Button Text="Remove ShopItem" HorizontalOptions="Start" Clicked="RemoveShopItem"/>
+
+            <Button Text="Add ShopItem" HorizontalOptions="Start" Clicked="AddShopItem"/>
+            <Button Text="Update ShopItem" HorizontalOptions="Start" Clicked="UpdateShopItem"/>
+
+            <Button Text="Change surname" HorizontalOptions="Start" Clicked="RemoveContract"/>
             <Entry x:Name="editSurname" Text="A"/>
         </StackLayout>
 
@@ -43,6 +54,12 @@
                                >
         </syncfusionDG:SfDataGrid>
 
+
+
+        <StackLayout Orientation="Horizontal">
+                <Button Text="Average purchase amount" HorizontalOptions="Start" Clicked="ProductAVGamount"/>
+                <Button Text="Customer Total" HorizontalOptions="Start" Clicked="CustomerTotal"/>
+            </StackLayout>
         <!-- Result -->
         <StackLayout Orientation="Horizontal">
                 <Button Text="query" HorizontalOptions="Start" />
