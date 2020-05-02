@@ -61,6 +61,7 @@
                 <Button Text="Average purchase amount" HorizontalOptions="Start" Clicked="ProductAVGamount"/>
                 <Button Text="Customer Total" HorizontalOptions="Start" Clicked="CustomerTotal"/>
                 <Button Text="Provider Info" HorizontalOptions="Start" Clicked="ProviderInfo"/>
+                <Button Text="Purchase Info" HorizontalOptions="Start" Clicked="PurchaseInfo"/>
             </StackLayout>
         <!-- Result -->
         <StackLayout Orientation="Horizontal">

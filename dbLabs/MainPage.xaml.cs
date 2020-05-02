@@ -371,7 +371,9 @@ namespace dbLabs {
 		private void CustomerTotal(object sender, EventArgs e) {
 			var purchases = context.Purchases.Include(p => p.Customer).Include(p => p.ShopItem).ToList();
 			// TODO: FirstOrDefault()??
-			var result = purchases.GroupBy(p => p.Customer.Id).Select(p => new { Name = p.FirstOrDefault().Customer.Name, Total = p.Sum(x =>x.Amount*x.ShopItem.Price) } );
+			var result = purchases
+				.GroupBy(p => p.Customer.Id)
+				.Select(p => new { Name = p.FirstOrDefault().Customer.Name, Total = p.Sum(x =>x.Amount*x.ShopItem.Price) } );
 						;
 			resultGrid.ItemsSource = result;
 		}
@@ -395,6 +397,46 @@ namespace dbLabs {
 							 itemProv.Key.Info,
 							 AVGprice = itemProv.Average(x => x.item.Price),
 							 ManufQuantity = itemProv.Sum(x => x.item.Amount)
+						 };
+
+			resultGrid.ItemsSource = result;
+		}
+
+		private void PurchaseInfo(object sender, EventArgs e) {
+			var purchs = context.Purchases.ToList();
+			var items = context.ShopItems.ToList();
+			var provs = context.Providers.ToList();
+			var result = from purch in purchs
+						 
+						 join cust in context.Customers.ToList()
+						 on purch.CustomerId equals cust.Id
+
+						 join staff in context.Staffs.ToList()
+						 on purch.StaffId equals staff.Id
+
+						 join item in (from item in items
+									   join prov in provs
+									   on item.ProviderId equals prov.Id
+									   join prod in context.Products.ToList()
+									   on item.ProductId equals prod.Id
+									   select new {
+										   item.Id,
+										   prod.Name,
+										   Provider = prov.Name,
+										   item.Price
+									   }
+										   )
+						 on purch.ShopItemId equals item.Id
+
+						 orderby purch.Id ascending
+						 select new {
+							 purch.Id,
+							 Customer=cust.Name,
+							 Product=item.Name,
+							 Seller=staff.Name,
+							 item.Provider,
+							 purch.Amount,
+							 item.Price
 						 };
 
 			resultGrid.ItemsSource = result;
