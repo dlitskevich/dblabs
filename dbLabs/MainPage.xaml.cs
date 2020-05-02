@@ -250,6 +250,10 @@ namespace dbLabs {
 			var testFK = context.ShopItems.Include(s => s.Product).ToList<ShopItem>();
 			Console.WriteLine();
 		}
+		/// TODO:
+		/// 1) set null
+		/// 2) example of: inheritance
+		/// 3) database first (world)  linq query
 
 		private void RemoveShopItem(object sender, EventArgs e) {
 			List<ShopItem> shop = context.ShopItems.Include(s => s.Purchase).ToList<ShopItem>();
