@@ -21,15 +21,12 @@ namespace dbLabs.Classes {
 
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
-            optionsBuilder.UseMySQL(
-                "server=127.0.0.1;database=maskShop;user=root;password=Password");
-            
+            optionsBuilder.UseMySQL("server=127.0.0.1;database=maskShop;user=root;password=Password");
         }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder) {
             base.OnModelCreating(modelBuilder);
-            
 
             modelBuilder.Entity<Contract>(entity => {
                 entity.HasKey(e => e.Id);
@@ -52,10 +49,44 @@ namespace dbLabs.Classes {
 				.HasValue<Customer>("customer")
 				.HasValue<VIP>("VIP");
 
-            modelBuilder.Entity<VIP>();
-            
+            //modelBuilder.Entity<VIP>();
+            /*
+            modelBuilder.Entity<Candidate>(entity => {
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.Name).IsRequired();
+                entity.Property(e => e.Surname).IsRequired();
+                entity.Property(e => e.Rating);
+                entity.HasOne(e => e.CandidateProfile).WithOne(c => c.Candidate).HasForeignKey<CandidateProfile>(b => b.CandidateRef);
+                //entity.HasMany(e => e.Confidents).WithOne(e => e.Candidate);
+                //entity.HasMany(e => e.Promises).;
+            });
+			
+
+            modelBuilder.Entity<CandidateProfile>(entity => {
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.Age).IsRequired();
+                entity.Property(e => e.Description).IsRequired();
+                entity.HasOne(d => d.Candidate);
+            });
+			*/
+            /*
+            modelBuilder.Entity<Promise>(entity => {
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.Text).IsRequired();
+                entity.HasMany(e => e.Candidates);
+            });
+
+            modelBuilder.Entity<Confident>(entity => {
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.FullName).IsRequired();
+                entity.Property(e => e.PoliticalPreferences).IsRequired();
+                entity.Property(e => e.Age).IsRequired();
+                entity.HasOne(e => e.Candidate);
+            });
+
+            */
         }
-        
+
         public bool MakePurchase(ShopItem item, int amount) {
             if(item.Buy(amount)) {
                 Purchases.Add(new Purchase { ShopItem = item, Amount = amount, CustomerId = 1, StaffId = 1 });

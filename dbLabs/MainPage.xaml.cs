@@ -24,14 +24,17 @@ namespace dbLabs {
 		//private string connString = "server=127.0.0.1; user=root; password=Password; database=autoschool";
 
 		private ShopContext context;
-
+		private VIP vip1 = new VIP { Name = "Pe", Discount = 10 };
 		public MainPage() {
 
 			using(ShopContext db = new ShopContext()) {
 				// Creates the database if not exists
 				db.Database.EnsureDeleted();
-				if(db.Database.EnsureCreated() == true) {
 
+				//db.Database.Migrate();
+
+				if(db.Database.EnsureCreated() == true) {
+					//if(true) {
 					Contract contract1 = new Contract { Info = "From now to then 553" };
 					Contract contract2 = new Contract { Id = 20, Info = "From now to then 323" };
 					Contract contract3 = new Contract { Info = "From now to then 400" };
@@ -75,6 +78,11 @@ namespace dbLabs {
 					Customer customer3 = new Customer { Name = "Autoencoder" };
 					Customer customer4 = new Customer { Name = "Pythonist" };
 					db.Customers.AddRange(new List<Customer>() { customer1, customer2, customer3, customer4 });
+					db.SaveChanges();
+
+					
+					VIP vip2 = new VIP { Name = "Pe", Discount = 20 };
+					db.VIPs.AddRange(new List<VIP>() { vip1, vip2 });
 					db.SaveChanges();
 
 					db.Purchases.AddRange(new List<Purchase>() {
@@ -142,8 +150,9 @@ namespace dbLabs {
 					prom2.Candidates.Add(c2);
 					*/
 				}
+				
 			}
-
+			
 			InitializeComponent();
 
 
@@ -209,8 +218,18 @@ namespace dbLabs {
 
 		private void ShowContracts(object sender, EventArgs e) {
 			context.Contracts.Load();
-			ShowGrid.ItemsSource = context.Contracts.Local.ToBindingList();
+			ShowGrid.ItemsSource = context.Contracts.Local.ToList();
 		}
+
+		private void ShowCustomers(object sender, EventArgs e) {
+			context.Customers.Load();
+			ShowGrid.ItemsSource = context.Customers.Local.ToBindingList();
+		}
+		private void ShowVIPs(object sender, EventArgs e) {
+			context.VIPs.Load();
+			ShowGrid.ItemsSource = context.VIPs.Local.ToList();
+		}
+
 		private void ShowShopItems(object sender, EventArgs e) {
 			context.ShopItems.Load();
 			ShowGrid.ItemsSource = context.ShopItems.Local.OrderBy(i => i.Id);
@@ -252,7 +271,11 @@ namespace dbLabs {
 		}
 		/// TODO:
 		/// 1) set null
-		/// 2) example of: inheritance
+		/// 2) example of: inheritance     https://www.thinktecture.com/en/entity-framework-core/table-per-type-inheritance-support-part-1-code-first/#table-per-type-tpt
+		/// dotnet ef migrations add Initial_TPH_Migration -p /Users/danila/Documents/VisualStudio/dbLabs/dbLabs/dbLabs.csproj -s /Users/danila/Documents/VisualStudio/dbLabs/dbLabs/dbLabs.csproj -c ShopContext -o ./TphModel/CodeFirst/Migrations
+		/// dotnet ef migrations add Initial_TPH_Migration -p dbLabs/dbLabs.csproj -s dbLabs.MacOS/dbLabs.MacOS.csproj -c ShopContext -o ./TphModel/CodeFirst/Migrations
+		/// dotnet ef migrations add Initial_TPH_Migration -c ShopContext -o ./TphModel/CodeFirst/Migrations
+		/// --msbuildprojectextensionspath
 		/// 3) database first (world)  linq query
 
 		private void RemoveShopItem(object sender, EventArgs e) {
@@ -264,9 +287,10 @@ namespace dbLabs {
 				for(int i = 0; i < toDelShop.Count(); i++) {
 					ShopItem curItem = toDelShop[i] as ShopItem;
 					if(curItem != null) {
+						/*
 						foreach(Purchase purch in curItem.Purchase) {
 							context.Purchases.Remove(purch);
-						}
+						}*/
 						context.ShopItems.Remove(curItem);
 					}
 				}

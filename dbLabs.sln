@@ -5,6 +5,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dbLabs", "dbLabs\dbLabs.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dbLabs.MacOS", "dbLabs.MacOS\dbLabs.MacOS.csproj", "{6527DFFF-3971-4679-91EF-6BD0CE8439D4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dbLabsDummy", "dbLabsDummy\dbLabsDummy.csproj", "{A46C93C3-E4F3-4202-8260-DBD557A69A2B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|iPhoneSimulator = Debug|iPhoneSimulator
@@ -39,6 +41,18 @@ Global
 		{6527DFFF-3971-4679-91EF-6BD0CE8439D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6527DFFF-3971-4679-91EF-6BD0CE8439D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6527DFFF-3971-4679-91EF-6BD0CE8439D4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A46C93C3-E4F3-4202-8260-DBD557A69A2B}.Debug|iPhoneSimulator.ActiveCfg = Debug|Any CPU
+		{A46C93C3-E4F3-4202-8260-DBD557A69A2B}.Debug|iPhoneSimulator.Build.0 = Debug|Any CPU
+		{A46C93C3-E4F3-4202-8260-DBD557A69A2B}.Release|iPhoneSimulator.ActiveCfg = Release|Any CPU
+		{A46C93C3-E4F3-4202-8260-DBD557A69A2B}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
+		{A46C93C3-E4F3-4202-8260-DBD557A69A2B}.Debug|iPhone.ActiveCfg = Debug|Any CPU
+		{A46C93C3-E4F3-4202-8260-DBD557A69A2B}.Debug|iPhone.Build.0 = Debug|Any CPU
+		{A46C93C3-E4F3-4202-8260-DBD557A69A2B}.Release|iPhone.ActiveCfg = Release|Any CPU
+		{A46C93C3-E4F3-4202-8260-DBD557A69A2B}.Release|iPhone.Build.0 = Release|Any CPU
+		{A46C93C3-E4F3-4202-8260-DBD557A69A2B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A46C93C3-E4F3-4202-8260-DBD557A69A2B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A46C93C3-E4F3-4202-8260-DBD557A69A2B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A46C93C3-E4F3-4202-8260-DBD557A69A2B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		Policies = $0

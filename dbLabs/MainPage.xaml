@@ -25,6 +25,9 @@
             <Button Text="Show Contracts"  HorizontalOptions="Start" Clicked="ShowContracts"/>
             <Button Text="Show ShopItems"  HorizontalOptions="Start" Clicked="ShowShopItems"/>
             <Button Text="Show Purchases"  HorizontalOptions="Start" Clicked="ShowPurchase"/>
+
+            <Button Text="Show Customers"  HorizontalOptions="Start" Clicked="ShowCustomers"/>
+            <Button Text="Show VIPs"  HorizontalOptions="Start" Clicked="ShowVIPs"/>
         </StackLayout>
 
         <StackLayout x:Name="RRA" Orientation="Horizontal">
