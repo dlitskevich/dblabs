@@ -12,6 +12,7 @@ using System.Diagnostics;
 //using Syncfusion.Data.Extensions;
 using AppKit;
 using dbLabs.Classes;
+using dbLabs.world;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 
@@ -24,6 +25,7 @@ namespace dbLabs {
 		//private string connString = "server=127.0.0.1; user=root; password=Password; database=autoschool";
 
 		private ShopContext context;
+		private worldContext worldContext;
 		private VIP vip1 = new VIP { Name = "Pe", Discount = 10 };
 		public MainPage() {
 
@@ -160,8 +162,30 @@ namespace dbLabs {
 
 		public void PageLoaded(object sender, EventArgs e) {
 			context = new ShopContext();
+			worldContext = new worldContext();
+
 			context.Staffs.Load();
 			ShowGrid.ItemsSource = context.Staffs.Local.ToBindingList();
+
+			worldContext.Country.Load();
+			var result = from country in worldContext.Country.ToList()
+						 let maxArea = (
+							from countr in worldContext.Country.ToList()
+							group countr by new {
+								id = countr.Continent
+							} into countryGrouped
+							where countryGrouped.Key.id.ToLower() == "africa"
+							select new { max = countryGrouped.Max(x => x.SurfaceArea) }
+
+							).FirstOrDefault().max
+						 where country.SurfaceArea > maxArea
+						 select new {
+							 Name = country.Name,
+							 Area = country.SurfaceArea,
+							 AfricaMaxArea = maxArea
+						 };
+			resultGrid.ItemsSource = result;
+
 			CheckFK(null, null);
 			//
 
@@ -276,7 +300,14 @@ namespace dbLabs {
 		/// dotnet ef migrations add Initial_TPH_Migration -p dbLabs/dbLabs.csproj -s dbLabs.MacOS/dbLabs.MacOS.csproj -c ShopContext -o ./TphModel/CodeFirst/Migrations
 		/// dotnet ef migrations add Initial_TPH_Migration -c ShopContext -o ./TphModel/CodeFirst/Migrations
 		/// --msbuildprojectextensionspath
+		///
+		/// *) to use migrations there is a dummy project with NET Core in oder to use CLI
+		/// 
 		/// 3) database first (world)  linq query
+		/// https://dev.mysql.com/doc/connector-net/en/connector-net-entityframework-core-scaffold-example.html
+		/// dotnet ef dbcontext scaffold "server=127.0.0.1;database=world;user=root;password=Password" MySql.Data.EntityFrameworkCore -o world -f
+		///
+
 
 		private void RemoveShopItem(object sender, EventArgs e) {
 			List<ShopItem> shop = context.ShopItems.Include(s => s.Purchase).ToList<ShopItem>();
