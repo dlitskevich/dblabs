@@ -9,12 +9,14 @@ using System.Threading.Tasks;
 using Xamarin.Forms;
 using System.Configuration;
 using System.Diagnostics;
-//using Syncfusion.Data.Extensions;
+using Syncfusion.Data.Extensions;
+using Syncfusion;
 using AppKit;
 using dbLabs.Classes;
 using dbLabs.world;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
+using Syncfusion.SfDataGrid.XForms;
 
 namespace dbLabs {
 	// Learn more about making custom code visible in the Xamarin.Forms previewer
@@ -166,7 +168,21 @@ namespace dbLabs {
 
 			context.Staffs.Load();
 			ShowGrid.ItemsSource = context.Staffs.Local.ToBindingList();
+			
+			/*
 
+			ShowGrid.AutoGeneratingColumn += datagrid_AutoGeneratingColumn;
+
+			void datagrid_AutoGeneratingColumn(object sender, AutoGeneratingColumnEventArgs e) {
+				if(e.Column.MappingName == "EmployeeDate") {
+					// Setting default date and time format for EmployeeDate column
+					((e.Column) as GridDateTimeColumn).Pattern = GridDateTimeColumn.P;
+						//Syncfusion.SfDataGrid.XForms.Da.
+						//SfDataGrid.XForms.SfDataGrid.Auto.Shared.DateTimePattern.FullDateTime;
+				}
+			}
+			*/
+			/*
 			worldContext.Country.Load();
 			var result = from country in worldContext.Country.ToList()
 						 let maxArea = (
@@ -187,6 +203,7 @@ namespace dbLabs {
 			resultGrid.ItemsSource = result;
 
 			CheckFK(null, null);
+			*/
 			//
 
 			/////////////////////
@@ -262,8 +279,15 @@ namespace dbLabs {
 		private void ShowPurchase(object sender, EventArgs e) {
 			context.Purchases.Load();
 			ShowGrid.ItemsSource = context.Purchases.Local.OrderBy(p => p.Id);
+
 		}
 
+		private void ShowProducts(object sender, EventArgs e) {
+			context.Products.Load();
+			ShowGrid.ItemsSource = context.Products.Local.OrderBy(p => p.Id);
+
+		}
+		
 		private void UpdateShopItem(object sender, EventArgs e) {
 			try {
 				var toUpdShop = (from sh in context.ShopItems.AsEnumerable()

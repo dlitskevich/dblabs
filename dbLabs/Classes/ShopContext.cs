@@ -29,7 +29,8 @@ namespace dbLabs.Classes {
 
         protected override void OnModelCreating(ModelBuilder modelBuilder) {
             base.OnModelCreating(modelBuilder);
-            
+
+            modelBuilder.Entity<Provider>().ToTable("provider");
 
             modelBuilder.Entity<Contract>(entity => {
                 entity.HasKey(e => e.Id);
@@ -53,7 +54,11 @@ namespace dbLabs.Classes {
 				.HasValue<VIP>("VIP");
 
             modelBuilder.Entity<VIP>();
-            
+
+            modelBuilder.Entity<Product>().Property(p => p.Name).HasMaxLength(50).HasDefaultValue("goodproduct");
+            modelBuilder.Entity<ShopItem>().Property(c => c.Happiness).HasDefaultValue((Happiness)1).HasConversion<string>();
+            modelBuilder.Entity<Purchase>().Property(p => p.Date).HasColumnType("date").HasColumnName("Time");
+
         }
         
         public bool MakePurchase(ShopItem item, int amount) {

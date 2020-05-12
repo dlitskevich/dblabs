@@ -25,6 +25,7 @@
             <Button Text="Show Contracts"  HorizontalOptions="Start" Clicked="ShowContracts"/>
             <Button Text="Show ShopItems"  HorizontalOptions="Start" Clicked="ShowShopItems"/>
             <Button Text="Show Purchases"  HorizontalOptions="Start" Clicked="ShowPurchase"/>
+            <Button Text="Show Products"  HorizontalOptions="Start" Clicked="ShowProducts"/>
 
             <Button Text="Show Customers"  HorizontalOptions="Start" Clicked="ShowCustomers"/>
             <Button Text="Show VIPs"  HorizontalOptions="Start" Clicked="ShowVIPs"/>
@@ -49,6 +50,8 @@
 
                                AllowEditing="True"
                                SelectionMode="Single"
+
+                               
 
                                AllowDeleting="True"
                                AllowKeyboardNavigation="True"

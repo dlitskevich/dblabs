@@ -6,11 +6,15 @@ namespace dbLabs.Classes {
 		public int? ShopItemId { get; set; }
 		public int? StaffId { get; set; }
 		public int Amount { get; set; }
+		public DateTime Date { get; set; }
 
 		public Customer Customer { get; set; }
 		public ShopItem ShopItem { get; set; }
 		public Staff Staff { get; set; }
 
-		
+		public Purchase() {
+			Date = DateTime.Now;
+		}
 	}
+	
 }
