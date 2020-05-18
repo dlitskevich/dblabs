@@ -1,5 +1,8 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace dbLabs.Classes {
+	[Table("Purchases")]
 	public class Purchase {
 		public int Id { get; set; }
 		public int CustomerId { get; set; }

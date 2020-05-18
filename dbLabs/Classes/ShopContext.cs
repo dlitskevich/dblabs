@@ -12,7 +12,6 @@ namespace dbLabs.Classes {
         public DbSet<Staff> Staffs { get; set; }
 
         public DbSet<Customer> Customers { get; set; }
-        public DbSet<VIP> VIPs { get; set; }
 
         public DbSet<Provider> Providers { get; set; }
         public DbSet<Product> Products { get; set; }
@@ -48,12 +47,7 @@ namespace dbLabs.Classes {
                 entity.HasMany(e => e.Purchase).WithOne(p => p.Staff).OnDelete(DeleteBehavior.SetNull);
             });
 
-            modelBuilder.Entity<Customer>()
-				.HasDiscriminator<string>("Customer_type")
-				.HasValue<Customer>("customer")
-				.HasValue<VIP>("VIP");
-
-            modelBuilder.Entity<VIP>();
+            
 
             modelBuilder.Entity<Product>().Property(p => p.Name).HasMaxLength(50).HasDefaultValue("goodproduct");
             modelBuilder.Entity<ShopItem>().Property(c => c.Happiness).HasDefaultValue((Happiness)1).HasConversion<string>();

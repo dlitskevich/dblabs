@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace dbLabs.Classes {
+	[Table("Products")]
 	public class Product {
 		public int Id { get; set; }
 

@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace dbLabs.Classes {
+	[Table("ShopItems")]
 	public class ShopItem {
 		public int Id { get; set; }
 		[Required]
