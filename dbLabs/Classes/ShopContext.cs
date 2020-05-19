@@ -54,16 +54,17 @@ namespace dbLabs.Classes {
             modelBuilder.Entity<Purchase>().Property(p => p.Date).HasColumnType("date").HasColumnName("Time");
 
         }
-        
-        public bool MakePurchase(ShopItem item, int amount) {
-            if(item.Buy(amount)) {
-                Purchases.Add(new Purchase { ShopItem = item, Amount = amount, CustomerId = 1, StaffId = 1 });
-                SaveChanges();
-                return true;
-            }
-            return false;
 
-        }
+		//public bool MakePurchase(ShopItem item, int amount) {
+		//if(item.Buy(amount)) {
+		//    Purchases.Add(new Purchase { ShopItem = item, Amount = amount, CustomerId = 1, StaffId = 1 });
+		//    SaveChanges();
+		//    return true;
+		//}
+		//return false;
 
-    }
+
+		//}
+
+	}
 }

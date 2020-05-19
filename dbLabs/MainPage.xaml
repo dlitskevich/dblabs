@@ -39,7 +39,7 @@
             <Button Text="Update ShopItem" HorizontalOptions="Start" Clicked="UpdateShopItem"/>
 
             <Button Text="Buy Item" HorizontalOptions="Start" Clicked="BuyItem"/>
-            <Entry x:Name="buyAmount" Text="1"/>
+            <Entry x:Name="buyAmount" Text="00100"/>
         </StackLayout>
 
         <syncfusionDG:SfDataGrid x:Name="ShowGrid"

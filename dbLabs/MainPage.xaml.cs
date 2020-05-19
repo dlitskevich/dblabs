@@ -18,6 +18,9 @@ using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using Syncfusion.SfDataGrid.XForms;
 
+///
+/// stored procedures
+///https://www.entityframeworktutorial.net/efcore/working-with-stored-procedure-in-ef-core.aspx
 /// TODO:
 /// 
 ///
@@ -251,15 +254,35 @@ namespace dbLabs {
 		/// /// ///////////////// //////////////
 
 		private void BuyItem(object sender, EventArgs e) {
-			try {
-				if(ShowGrid.SelectedItem != null) {
-					ShopItem item = ShowGrid.SelectedItem as ShopItem;
-					context.MakePurchase(item, int.TryParse(buyAmount.Text, out int min) ? min : 0);
+			//try {
+			//	if(ShowGrid.SelectedItem != null) {
+			//		ShopItem item = ShowGrid.SelectedItem as ShopItem;
+			//		var amount = int.TryParse(buyAmount.Text, out int min) ? min : 0;
+			//		var res = context.Database.ExecuteSqlRaw($"call make_purchase({item.Id}, {amount})");
 
+			//		//context.MakePurchase(item, int.TryParse(buyAmount.Text, out int min) ? min : 0);
+
+			//	}
+			//	context.SaveChanges();
+			//} catch(Exception ex) {
+			//	System.Console.WriteLine(ex.Message);
+			//}
+
+			using(var transaction = context.Database.BeginTransaction()) {
+				try {
+					if(ShowGrid.SelectedItem != null) {
+						ShopItem item = ShowGrid.SelectedItem as ShopItem;
+						var amount = int.TryParse(buyAmount.Text, out int min) ? min : 0;
+						var res = context.Database.ExecuteSqlRaw($"call make_purchase({item.Id}, {amount})");
+
+						context.SaveChanges();
+					}
+					transaction.Commit();
+
+				} catch(Exception ex) {
+					System.Console.WriteLine(ex.Message);
+					transaction.Rollback();
 				}
-				context.SaveChanges();
-			} catch(Exception ex) {
-				System.Console.WriteLine(ex.Message);
 			}
 		}
 
