@@ -21,9 +21,15 @@ using Syncfusion.SfDataGrid.XForms;
 ///
 /// stored procedures
 ///https://www.entityframeworktutorial.net/efcore/working-with-stored-procedure-in-ef-core.aspx
+///
+/// migrations
+/// dotnet ef migrations add init -c ShopContext
+/// dotnet ef migrations script -c ShopContext
+/// dotnet ef database update -c ShopContext
+///
+/// dotnet ef migrations add first -c ShopContext
 /// TODO:
 /// 
-///
 
 namespace dbLabs {
 	// Learn more about making custom code visible in the Xamarin.Forms previewer
@@ -39,8 +45,8 @@ namespace dbLabs {
 		public MainPage() {
 
 			using(ShopContext db = new ShopContext()) {
-
-				//db.Database.Migrate();
+				//db.Database.EnsureDeleted();
+				db.Database.Migrate();
 
 			}
 

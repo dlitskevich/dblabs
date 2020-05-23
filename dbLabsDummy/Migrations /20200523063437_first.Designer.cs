@@ -9,8 +9,8 @@ using dbLabs.Classes;
 namespace dbLabsDummy.Migrations
 {
     [DbContext(typeof(ShopContext))]
-    [Migration("20200509064144_initial")]
-    partial class initial
+    [Migration("20200523063437_first")]
+    partial class first
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -45,18 +45,18 @@ namespace dbLabsDummy.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<string>("Customer_type")
-                        .IsRequired()
+                    b.Property<string>("Customer_Type")
                         .HasColumnType("text");
 
                     b.Property<string>("Name")
                         .HasColumnType("text");
 
+                    b.Property<int?>("Weight")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.ToTable("Customers");
-
-                    b.HasDiscriminator<string>("Customer_type").HasValue("customer");
                 });
 
             modelBuilder.Entity("dbLabs.Classes.Product", b =>
@@ -66,7 +66,10 @@ namespace dbLabsDummy.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
-                        .HasColumnType("text");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("varchar(50)")
+                        .HasMaxLength(50)
+                        .HasDefaultValue("goodproduct");
 
                     b.HasKey("Id");
 
@@ -87,7 +90,7 @@ namespace dbLabsDummy.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Providers");
+                    b.ToTable("provider");
                 });
 
             modelBuilder.Entity("dbLabs.Classes.Purchase", b =>
@@ -102,10 +105,17 @@ namespace dbLabsDummy.Migrations
                     b.Property<int>("CustomerId")
                         .HasColumnType("int");
 
+                    b.Property<DateTime>("Date")
+                        .HasColumnName("Time")
+                        .HasColumnType("date");
+
                     b.Property<int?>("ShopItemId")
                         .HasColumnType("int");
 
                     b.Property<int?>("StaffId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("TestId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -115,6 +125,8 @@ namespace dbLabsDummy.Migrations
                     b.HasIndex("ShopItemId");
 
                     b.HasIndex("StaffId");
+
+                    b.HasIndex("TestId");
 
                     b.ToTable("Purchases");
                 });
@@ -127,6 +139,12 @@ namespace dbLabsDummy.Migrations
 
                     b.Property<int>("Amount")
                         .HasColumnType("int");
+
+                    b.Property<string>("Happiness")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("enum('Happy','Sad')")
+                        .HasDefaultValue("Happy");
 
                     b.Property<int>("Price")
                         .HasColumnType("int");
@@ -159,11 +177,23 @@ namespace dbLabsDummy.Migrations
                     b.ToTable("Staffs");
                 });
 
-            modelBuilder.Entity("dbLabs.Classes.VIP", b =>
+            modelBuilder.Entity("dbLabs.Classes.Test", b =>
                 {
-                    b.HasBaseType("dbLabs.Classes.Customer");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
 
-                    b.HasDiscriminator().HasValue("VIP");
+                    b.Property<string>("Name")
+                        .HasColumnType("varchar(767)");
+
+                    b.Property<string>("Test_Type")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Name");
+
+                    b.ToTable("Test");
                 });
 
             modelBuilder.Entity("dbLabs.Classes.Purchase", b =>
@@ -182,6 +212,10 @@ namespace dbLabsDummy.Migrations
                         .WithMany("Purchase")
                         .HasForeignKey("StaffId")
                         .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("dbLabs.Classes.Test", null)
+                        .WithMany("Purchase")
+                        .HasForeignKey("TestId");
                 });
 
             modelBuilder.Entity("dbLabs.Classes.ShopItem", b =>

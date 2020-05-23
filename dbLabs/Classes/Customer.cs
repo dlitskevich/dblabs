@@ -9,10 +9,12 @@ namespace dbLabs.Classes {
 		public string Name { get; set; }
 		public string Customer_Type { get; set; }
 		public int? Discount { get; set; }
+		//public int? Weight { get; set; }
 		public ICollection<Purchase> Purchase { get; set; }
 
 		public Customer() {
 			Purchase = new List<Purchase>();
+			
 		}
 	}
 }

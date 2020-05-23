@@ -18,6 +18,8 @@ namespace dbLabs.Classes {
         public DbSet<ShopItem> ShopItems { get; set; }
 		public DbSet<Purchase> Purchases { get; set; }
 
+        //public DbSet<Test> Tests { get; set; }
+
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
             optionsBuilder.UseMySQL(
@@ -53,6 +55,9 @@ namespace dbLabs.Classes {
             modelBuilder.Entity<ShopItem>().Property(c => c.Happiness).HasDefaultValue((Happiness)1).HasConversion<string>();
             modelBuilder.Entity<Purchase>().Property(p => p.Date).HasColumnType("date").HasColumnName("Time");
 
+
+    //        modelBuilder.Entity<Product>()
+				//.HasIndex(p => new { p.Name });
         }
 
 		//public bool MakePurchase(ShopItem item, int amount) {

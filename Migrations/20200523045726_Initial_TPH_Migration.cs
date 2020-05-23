@@ -2,9 +2,9 @@
 using Microsoft.EntityFrameworkCore.Migrations;
 using MySql.Data.EntityFrameworkCore.Metadata;
 
-namespace dbLabs.Migrations
+namespace dbLabsDummy.Migrations
 {
-    public partial class initial : Migration
+    public partial class Initial_TPH_Migration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -30,7 +30,8 @@ namespace dbLabs.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
                     Name = table.Column<string>(nullable: true),
-                    Customer_type = table.Column<string>(nullable: false)
+                    Customer_Type = table.Column<string>(nullable: true),
+                    Discount = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -43,7 +44,7 @@ namespace dbLabs.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(nullable: true)
+                    Name = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: true, defaultValue: "goodproduct")
                 },
                 constraints: table =>
                 {
@@ -51,7 +52,7 @@ namespace dbLabs.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Providers",
+                name: "provider",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -61,7 +62,7 @@ namespace dbLabs.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Providers", x => x.Id);
+                    table.PrimaryKey("PK_provider", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -91,7 +92,8 @@ namespace dbLabs.Migrations
                     ProductId = table.Column<int>(nullable: false),
                     ProviderId = table.Column<int>(nullable: false),
                     Amount = table.Column<int>(nullable: false),
-                    Price = table.Column<int>(nullable: false)
+                    Price = table.Column<int>(nullable: false),
+                    Happiness = table.Column<string>(type: "enum('Happy','Sad')", nullable: false, defaultValue: "Happy")
                 },
                 constraints: table =>
                 {
@@ -103,9 +105,9 @@ namespace dbLabs.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_ShopItems_Providers_ProviderId",
+                        name: "FK_ShopItems_provider_ProviderId",
                         column: x => x.ProviderId,
-                        principalTable: "Providers",
+                        principalTable: "provider",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -119,7 +121,8 @@ namespace dbLabs.Migrations
                     CustomerId = table.Column<int>(nullable: false),
                     ShopItemId = table.Column<int>(nullable: true),
                     StaffId = table.Column<int>(nullable: true),
-                    Amount = table.Column<int>(nullable: false)
+                    Amount = table.Column<int>(nullable: false),
+                    Time = table.Column<DateTime>(type: "date", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -188,7 +191,7 @@ namespace dbLabs.Migrations
                 name: "Products");
 
             migrationBuilder.DropTable(
-                name: "Providers");
+                name: "provider");
 
             migrationBuilder.DropTable(
                 name: "Contracts");

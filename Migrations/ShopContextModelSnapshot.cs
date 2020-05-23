@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using dbLabs.Classes;
 
-namespace dbLabs.Migrations
+namespace dbLabsDummy.Migrations
 {
     [DbContext(typeof(ShopContext))]
     partial class ShopContextModelSnapshot : ModelSnapshot
@@ -43,9 +43,11 @@ namespace dbLabs.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<string>("Customer_type")
-                        .IsRequired()
+                    b.Property<string>("Customer_Type")
                         .HasColumnType("text");
+
+                    b.Property<int?>("Discount")
+                        .HasColumnType("int");
 
                     b.Property<string>("Name")
                         .HasColumnType("text");
@@ -53,8 +55,6 @@ namespace dbLabs.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Customers");
-
-                    b.HasDiscriminator<string>("Customer_type").HasValue("customer");
                 });
 
             modelBuilder.Entity("dbLabs.Classes.Product", b =>
@@ -64,7 +64,10 @@ namespace dbLabs.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
-                        .HasColumnType("text");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("varchar(50)")
+                        .HasMaxLength(50)
+                        .HasDefaultValue("goodproduct");
 
                     b.HasKey("Id");
 
@@ -85,7 +88,7 @@ namespace dbLabs.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Providers");
+                    b.ToTable("provider");
                 });
 
             modelBuilder.Entity("dbLabs.Classes.Purchase", b =>
@@ -99,6 +102,10 @@ namespace dbLabs.Migrations
 
                     b.Property<int>("CustomerId")
                         .HasColumnType("int");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnName("Time")
+                        .HasColumnType("date");
 
                     b.Property<int?>("ShopItemId")
                         .HasColumnType("int");
@@ -125,6 +132,12 @@ namespace dbLabs.Migrations
 
                     b.Property<int>("Amount")
                         .HasColumnType("int");
+
+                    b.Property<string>("Happiness")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("enum('Happy','Sad')")
+                        .HasDefaultValue("Happy");
 
                     b.Property<int>("Price")
                         .HasColumnType("int");
@@ -155,13 +168,6 @@ namespace dbLabs.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Staffs");
-                });
-
-            modelBuilder.Entity("dbLabs.Classes.VIP", b =>
-                {
-                    b.HasBaseType("dbLabs.Classes.Customer");
-
-                    b.HasDiscriminator().HasValue("VIP");
                 });
 
             modelBuilder.Entity("dbLabs.Classes.Purchase", b =>
