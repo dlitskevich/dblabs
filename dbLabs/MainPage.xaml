@@ -40,12 +40,16 @@
 
             <Button Text="Buy Item" HorizontalOptions="Start" Clicked="BuyItem"/>
             <Entry x:Name="buyAmount" Text="00100"/>
+
+            <Button Text="End Edit" HorizontalOptions="Start" Clicked="EndEditing"/>
         </StackLayout>
 
         <StackLayout x:Name="Cancelation" Orientation="Horizontal">
             <Button Text="Cancel All" HorizontalOptions="Start" Clicked="Cancel"/>
             <Button Text="Cancel Deleted" HorizontalOptions="Start" Clicked="CancelDeleted"/>
             <Button Text="Cancel Modified" HorizontalOptions="Start" Clicked="CancelModified"/>
+            <Button Text="Cancel Last" HorizontalOptions="Start" Clicked="CancelLast"/>
+            <Button Text="Cancel Last Choice" HorizontalOptions="Start" Clicked="CancelLastChoice"/>
         </StackLayout>
 
         <syncfusionDG:SfDataGrid x:Name="ShowGrid"

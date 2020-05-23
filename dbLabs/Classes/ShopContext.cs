@@ -21,7 +21,7 @@ namespace dbLabs.Classes {
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
             optionsBuilder.UseMySQL(
-                "server=127.0.0.1;database=maskShop;user=root;password=Password");
+                "server=127.0.0.1;database=maskShop2;user=root;password=Password");
             
         }
 

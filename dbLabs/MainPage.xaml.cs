@@ -17,6 +17,7 @@ using dbLabs.world;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using Syncfusion.SfDataGrid.XForms;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 ///
 /// stored procedures
@@ -32,16 +33,23 @@ namespace dbLabs {
 	public partial class MainPage : ContentPage {
 
 		//private string connString = "server=127.0.0.1; user=root; password=Password; database=autoschool";
-
+		public class change { 
+			public DateTime time;
+			public PropertyValues value;
+			public EntityState state;
+		}
+	
+	
 		private ShopContext context;
 		private worldContext worldContext;
+		private Dictionary<EntityEntry, change> changedStack = new Dictionary<EntityEntry, change>();
 
 		public MainPage() {
 
 			using(ShopContext db = new ShopContext()) {
 
 				//db.Database.Migrate();
-
+				
 			}
 
 			InitializeComponent();
@@ -49,12 +57,97 @@ namespace dbLabs {
 
 		}
 
+		public void AddToStack(object sender, Microsoft.EntityFrameworkCore.ChangeTracking.EntityStateChangedEventArgs e) {
+			//var changedEntries = context.ChangeTracker.Entries().Where(x => x.State != EntityState.Unchanged).ToList();
+			var changedEntries = context.ChangeTracker.Entries();
+			var x = context.ChangeTracker.Entries();
+			//e.Entry.CurrentValues;
+			//changedStack.Add(q, new change() { time = DateTime.Now, value = q.CurrentValues.Clone() });
+			var y = e.Entry;
+			changedStack.Add(y, new change() {
+				time = DateTime.Now,
+				state = y.State,
+				value = y.CurrentValues.Clone()
+			});
+		}
+	
+
+		public void AddToStackTrack(object sender, Microsoft.EntityFrameworkCore.ChangeTracking.EntityTrackedEventArgs e) {
+			//var changedEntries = context.ChangeTracker.Entries().Where(x => x.State != EntityState.Unchanged).ToList();
+			//var changedEntries = context.ChangeTracker.Entries();
+			var x = context.ChangeTracker.Entries();
+
+		}
+
+		public void AddToStackEdit(object sender, GridCurrentCellEndEditEventArgs e) {
+			var changedEntries = context.ChangeTracker.Entries().ToList();
+			//var changedEntries = context.ChangeTracker.Entries();
+			//var rowID = e.RowColumnIndex.RowIndex;
+			var x = ShowGrid.SelectedItem;
+			var y = changedEntries.Find(z => z.Entity == x);
+			if(y != null) {
+				changedStack.Add(y, new change() {
+					time = DateTime.Now,
+					state = y.State,
+					value = y.CurrentValues.Clone() });
+			}
+
+		}
+
+
+		private void CancelLast(object sender, EventArgs e) {
+			if(changedStack.Count > 0) {
+				var row = changedStack.Aggregate((x, y) => x.Value.time > y.Value.time ? x : y);
+				
+				row.Key.CurrentValues.SetValues(row.Value.value);
+				row.Key.State = row.Value.state;
+						
+				changedStack.Remove(row.Key);
+			}
+			ShowContracts(null, null);
+			ShowShopItems(null, null);
+		}
+
+		private void CancelLastChoice(object sender, EventArgs e) {
+			var changedEntries = context.ChangeTracker.Entries().Where(x => x.State != EntityState.Unchanged).ToList();
+			var x = ShowGrid.SelectedItem;
+			var y = changedEntries.Find(z => z.Entity == x);
+
+			if(changedStack.Count > 0 && x!=null) {
+				var rows = changedStack.Where(x => x.Key == y);
+
+				resultGrid.ItemsSource = rows.ToList();
+				/*
+				row.Key.CurrentValues.SetValues(row.Value.value);
+				row.Key.State = row.Value.state;
+
+				changedStack.Remove(row.Key);
+				*/
+			}
+			ShowGrid.Refresh();
+		}
+
+		public void EndEditing(object sender, EventArgs e) {
+			ShowGrid.EndEdit();
+			var x = context.ChangeTracker.Entries();
+		}
+
+
+
 		public void PageLoaded(object sender, EventArgs e) {
 			context = new ShopContext();
 			worldContext = new worldContext();
 
+			context.ChangeTracker.StateChanged += AddToStack;
+			//Microsoft.EntityFrameworkCore;
+			context.ChangeTracker.Tracked += AddToStackTrack;
+
+			var x = context.ChangeTracker.Entries();
+
 			context.ShopItems.Load();
 			ShowGrid.ItemsSource = context.ShopItems.Local.ToBindingList();
+
+			ShowGrid.CurrentCellEndEdit += AddToStackEdit;
 
 			/*
 
