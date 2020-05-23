@@ -52,6 +52,16 @@ namespace dbLabsDummy.Migrations
                 principalTable: "Test",
                 principalColumn: "Id",
                 onDelete: ReferentialAction.Restrict);
+
+            var sp = @"CREATE PROCEDURE maskshop.viewproducts
+                    @amount_min int
+                AS
+                BEGIN
+                    SET NOCOUNT ON;
+					SELECT * FROM maskShop.ShopItems where amount>@amount_min
+                END";
+
+            migrationBuilder.Sql(sp);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
