@@ -108,21 +108,36 @@ namespace dbLabs {
 			ShowShopItems(null, null);
 		}
 
-		private void CancelLastChoice(object sender, EventArgs e) {
+		private void ShowLastChoice(object sender, EventArgs e) {
 			var changedEntries = context.ChangeTracker.Entries().Where(x => x.State != EntityState.Unchanged).ToList();
 			var x = ShowGrid.SelectedItem;
 			var y = changedEntries.Find(z => z.Entity == x);
 
 			if(changedStack.Count > 0 && x!=null) {
-				var rows = changedStack.Where(x => x.Key == y);
+				var ee = changedStack.Where(el => el.Key.Entity == y.Entity).ToDictionary(i => i.Key, i => i.Value);
+				//var e1e = changedStack.Where(el => el.Key.Entity == y.Entity).Select(el => el.Value.value.GetValue<int>("Amount"));
+				var e1e = changedStack.Where(el => el.Key.Entity == y.Entity).Select(el => el.Value.value);
+				resultGrid.ItemsSource = e1e.ToList();
 
-				resultGrid.ItemsSource = rows.ToList();
-				/*
-				row.Key.CurrentValues.SetValues(row.Value.value);
-				row.Key.State = row.Value.state;
+			}
+			ShowGrid.Refresh();
+		}
 
-				changedStack.Remove(row.Key);
-				*/
+		private void CancelLastChoice(object sender, EventArgs e) {
+			var changedEntries = context.ChangeTracker.Entries().Where(x => x.State != EntityState.Unchanged).ToList();
+			var x = ShowGrid.SelectedItem;
+			var y = changedEntries.Find(z => z.Entity == x);
+
+			if(changedStack.Count > 0 && x != null) {
+				var ee = changedStack.Where(el => el.Key.Entity == y.Entity).ToDictionary(i => i.Key, i => i.Value);
+				var e1e = changedStack.Where(el => el.Key.Entity == y.Entity).Select(el => el.Value.value);
+				
+
+				var z = resultGrid.SelectedIndex;
+				if(z != -1) {
+					y.CurrentValues.SetValues(ee.ElementAt(z).Value.value);
+					y.State = ee.ElementAt(z).Value.state;
+				}
 			}
 			ShowGrid.Refresh();
 		}

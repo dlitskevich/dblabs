@@ -50,6 +50,7 @@
             <Button Text="Cancel Modified" HorizontalOptions="Start" Clicked="CancelModified"/>
             <Button Text="Cancel Last" HorizontalOptions="Start" Clicked="CancelLast"/>
             <Button Text="Cancel Last Choice" HorizontalOptions="Start" Clicked="CancelLastChoice"/>
+            <Button Text="show Last Choice" HorizontalOptions="Start" Clicked="ShowLastChoice"/>
         </StackLayout>
 
         <syncfusionDG:SfDataGrid x:Name="ShowGrid"
