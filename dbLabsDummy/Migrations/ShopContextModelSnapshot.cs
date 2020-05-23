@@ -2,17 +2,15 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using dbLabs.Classes;
 
 namespace dbLabsDummy.Migrations
 {
     [DbContext(typeof(ShopContext))]
-    [Migration("20200523051022_init")]
-    partial class init
+    partial class ShopContextModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -48,11 +46,11 @@ namespace dbLabsDummy.Migrations
                     b.Property<string>("Customer_Type")
                         .HasColumnType("text");
 
-                    b.Property<int?>("Discount")
-                        .HasColumnType("int");
-
                     b.Property<string>("Name")
                         .HasColumnType("text");
+
+                    b.Property<int?>("Weight")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -72,6 +70,8 @@ namespace dbLabsDummy.Migrations
                         .HasDefaultValue("goodproduct");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Name");
 
                     b.ToTable("Products");
                 });
@@ -115,6 +115,9 @@ namespace dbLabsDummy.Migrations
                     b.Property<int?>("StaffId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("TestId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CustomerId");
@@ -122,6 +125,8 @@ namespace dbLabsDummy.Migrations
                     b.HasIndex("ShopItemId");
 
                     b.HasIndex("StaffId");
+
+                    b.HasIndex("TestId");
 
                     b.ToTable("Purchases");
                 });
@@ -172,6 +177,23 @@ namespace dbLabsDummy.Migrations
                     b.ToTable("Staffs");
                 });
 
+            modelBuilder.Entity("dbLabs.Classes.Test", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Test_Type")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Test");
+                });
+
             modelBuilder.Entity("dbLabs.Classes.Purchase", b =>
                 {
                     b.HasOne("dbLabs.Classes.Customer", "Customer")
@@ -188,6 +210,10 @@ namespace dbLabsDummy.Migrations
                         .WithMany("Purchase")
                         .HasForeignKey("StaffId")
                         .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("dbLabs.Classes.Test", null)
+                        .WithMany("Purchase")
+                        .HasForeignKey("TestId");
                 });
 
             modelBuilder.Entity("dbLabs.Classes.ShopItem", b =>

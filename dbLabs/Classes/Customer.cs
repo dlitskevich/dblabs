@@ -8,8 +8,8 @@ namespace dbLabs.Classes {
 		public int Id { get; set; }
 		public string Name { get; set; }
 		public string Customer_Type { get; set; }
-		public int? Discount { get; set; }
-		//public int? Weight { get; set; }
+		//public int? Discount { get; set; }
+		public int? Weight { get; set; }
 		public ICollection<Purchase> Purchase { get; set; }
 
 		public Customer() {

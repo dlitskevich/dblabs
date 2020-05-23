@@ -14,7 +14,7 @@ namespace dbLabs.Classes {
 
 		public Customer() {
 			Purchase = new List<Purchase>();
-			Weight = 10;
+			
 		}
 	}
 }

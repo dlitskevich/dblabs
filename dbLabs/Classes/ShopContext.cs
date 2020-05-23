@@ -18,7 +18,7 @@ namespace dbLabs.Classes {
         public DbSet<ShopItem> ShopItems { get; set; }
 		public DbSet<Purchase> Purchases { get; set; }
 
-        //public DbSet<Test> Tests { get; set; }
+        public DbSet<Test> Tests { get; set; }
 
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
@@ -56,8 +56,8 @@ namespace dbLabs.Classes {
             modelBuilder.Entity<Purchase>().Property(p => p.Date).HasColumnType("date").HasColumnName("Time");
 
 
-    //        modelBuilder.Entity<Product>()
-				//.HasIndex(p => new { p.Name });
+           modelBuilder.Entity<Product>()
+				.HasIndex(p => new { p.Name });
         }
 
 		//public bool MakePurchase(ShopItem item, int amount) {

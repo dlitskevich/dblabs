@@ -56,7 +56,7 @@ namespace dbLabs.Classes {
             modelBuilder.Entity<Purchase>().Property(p => p.Date).HasColumnType("date").HasColumnName("Time");
 
 
-            modelBuilder.Entity<Test>()
+           modelBuilder.Entity<Product>()
 				.HasIndex(p => new { p.Name });
         }
 

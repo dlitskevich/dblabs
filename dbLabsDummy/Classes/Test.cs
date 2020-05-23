@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace dbLabs.Classes {
-	[Table("Test")]
+	[Table ("Test")]
 	public class Test {
 		public int Id { get; set; }
 		public string Name { get; set; }
@@ -11,8 +11,9 @@ namespace dbLabs.Classes {
 		//public int? Discount { get; set; }
 		public ICollection<Purchase> Purchase { get; set; }
 
-		public Test() {
-			Purchase = new List<Purchase>();
+		public Test ()
+		{
+			Purchase = new List<Purchase> ();
 		}
 	}
 }
