@@ -39,11 +39,11 @@ namespace dbLabs {
 		public MainPage() {
 
 			using(ShopContext db = new ShopContext()) {
-			
+
 				//db.Database.Migrate();
-				
+
 			}
-			
+
 			InitializeComponent();
 
 
@@ -53,9 +53,9 @@ namespace dbLabs {
 			context = new ShopContext();
 			worldContext = new worldContext();
 
-			context.Staffs.Load();
-			ShowGrid.ItemsSource = context.Staffs.Local.ToBindingList();
-			
+			context.ShopItems.Load();
+			ShowGrid.ItemsSource = context.ShopItems.Local.ToBindingList();
+
 			/*
 
 			ShowGrid.AutoGeneratingColumn += datagrid_AutoGeneratingColumn;
@@ -174,7 +174,7 @@ namespace dbLabs {
 			ShowGrid.ItemsSource = context.Products.Local.OrderBy(p => p.Id);
 
 		}
-		
+
 		private void UpdateShopItem(object sender, EventArgs e) {
 			try {
 				var toUpdShop = (from sh in context.ShopItems.AsEnumerable()
@@ -184,11 +184,11 @@ namespace dbLabs {
 					item.Price = 1;
 				}
 
-				context.SaveChanges();
+				//context.SaveChanges();
 			} catch(Exception ex) {
 				System.Console.WriteLine(ex.Message);
 			}
-			ShowShopItems(null, null);
+			ShowGrid.Refresh();
 		}
 
 		private void AddShopItem(object sender, EventArgs e) {
@@ -204,27 +204,29 @@ namespace dbLabs {
 			var testFK = context.ShopItems.Include(s => s.Product).ToList<ShopItem>();
 			Console.WriteLine();
 		}
-		
+
 
 
 		private void RemoveShopItem(object sender, EventArgs e) {
 			List<ShopItem> shop = context.ShopItems.Include(s => s.Purchase).ToList<ShopItem>();
 			try {
 				var toDelShop = (from sh in shop
-										   where sh.Amount < 1000
-										   select sh).ToList();
+								 where sh.Amount < 1000
+								 select sh).ToList();
 				for(int i = 0; i < toDelShop.Count(); i++) {
 					ShopItem curItem = toDelShop[i] as ShopItem;
 					if(curItem != null) {
-						/*
+						
 						foreach(Purchase purch in curItem.Purchase) {
 							context.Purchases.Remove(purch);
-						}*/
+						}
 						context.ShopItems.Remove(curItem);
 					}
 				}
-				
-				context.SaveChanges();
+				ShowPurchase(null, null);
+				ShowShopItems(null, null);
+
+				//context.SaveChanges();
 			} catch(Exception ex) {
 				System.Console.WriteLine(ex.Message);
 			}
@@ -336,8 +338,8 @@ namespace dbLabs {
 		//}
 
 		private void ProductAVGamount(object sender, EventArgs e) {
-			var purchases = context.Purchases.Include(p => p.ShopItem).ToList();
-			var result =from purch in purchases
+			var purchases = context.Purchases.Include(p => p.ShopItem).Include(si => si.ShopItem.Product).ToList();
+			var result = from purch in purchases
 						 group purch by purch.ShopItem.Product.Name into amount
 						 select new { Name = amount.Key, AVGamount = amount.Average(a => a.Amount) }
 						;
@@ -348,8 +350,11 @@ namespace dbLabs {
 			var purchases = context.Purchases.Include(p => p.Customer).Include(p => p.ShopItem).ToList();
 			var result = purchases
 				.GroupBy(p => p.Customer.Id)
-				.Select(p => new { Name = p.FirstOrDefault().Customer.Name, Total = p.Sum(x =>x.Amount*x.ShopItem.Price) } );
-						;
+				.Select(p => new {
+					Name = p.FirstOrDefault().Customer.Name,
+					Total = p.Sum(x => x.Amount * x.ShopItem.Price)
+				});
+			;
 			resultGrid.ItemsSource = result;
 		}
 
@@ -382,7 +387,7 @@ namespace dbLabs {
 			var items = context.ShopItems.ToList();
 			var provs = context.Providers.ToList();
 			var result = from purch in purchs
-						 
+
 						 join cust in context.Customers.ToList()
 						 on purch.CustomerId equals cust.Id
 
@@ -406,9 +411,9 @@ namespace dbLabs {
 						 orderby purch.Id ascending
 						 select new {
 							 purch.Id,
-							 Customer=cust.Name,
-							 Product=item.Name,
-							 Seller=staff.Name,
+							 Customer = cust.Name,
+							 Product = item.Name,
+							 Seller = staff.Name,
 							 item.Provider,
 							 purch.Amount,
 							 item.Price
@@ -416,5 +421,68 @@ namespace dbLabs {
 
 			resultGrid.ItemsSource = result;
 		}
+
+
+
+		/// Cancelations
+		/// !!!!!!!!!!!!
+		///
+
+		private void Cancel(object sender, EventArgs e) {
+			ShowGrid.EndEdit();
+			var changedEntries = context.ChangeTracker.Entries().Where(x => x.State != EntityState.Unchanged).ToList();
+
+			foreach(var entry in changedEntries) {
+				switch(entry.State) {
+				case EntityState.Modified: {
+						entry.CurrentValues.SetValues(entry.OriginalValues);
+						entry.State = EntityState.Unchanged;
+						ShowGrid.Refresh();
+						break;
+					}
+				case EntityState.Deleted: {
+						entry.State = EntityState.Unchanged;
+						ShowGrid.Refresh();
+						break;
+					}
+				case EntityState.Added: {
+						entry.State = EntityState.Detached;
+						ShowGrid.Refresh();
+						break;
+					}
+
+				}
+			}
+		}
+
+		private void CancelDeleted(object sender, EventArgs e) {
+			ShowGrid.EndEdit();
+			var changedEntries = context.ChangeTracker.Entries().Where(x => x.State != EntityState.Unchanged).ToList();
+
+			foreach(var entry in changedEntries) {
+
+				if(entry.State == EntityState.Deleted) {
+					entry.State = EntityState.Unchanged;
+					ShowGrid.Refresh();
+				}
+			}
+		}
+	
+
+		private void CancelModified(object sender, EventArgs e) {
+			ShowGrid.EndEdit();
+			var changedEntries = context.ChangeTracker.Entries().Where(x => x.State != EntityState.Unchanged).ToList();
+
+			foreach(var entry in changedEntries) {
+
+				if(entry.State == EntityState.Modified) {
+					entry.CurrentValues.SetValues(entry.OriginalValues);
+					entry.State = EntityState.Unchanged;
+					ShowGrid.Refresh();
+				}
+
+			}
+		}
+
 	}
 }

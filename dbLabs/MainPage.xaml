@@ -42,6 +42,12 @@
             <Entry x:Name="buyAmount" Text="00100"/>
         </StackLayout>
 
+        <StackLayout x:Name="Cancelation" Orientation="Horizontal">
+            <Button Text="Cancel All" HorizontalOptions="Start" Clicked="Cancel"/>
+            <Button Text="Cancel Deleted" HorizontalOptions="Start" Clicked="CancelDeleted"/>
+            <Button Text="Cancel Modified" HorizontalOptions="Start" Clicked="CancelModified"/>
+        </StackLayout>
+
         <syncfusionDG:SfDataGrid x:Name="ShowGrid"
                                IsVisible="True"
                                AutoGenerateColumns="True"
