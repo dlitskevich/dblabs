@@ -116,7 +116,7 @@ namespace dbLabs {
 			if(changedStack.Count > 0 && x!=null) {
 				var ee = changedStack.Where(el => el.Key.Entity == y.Entity).ToDictionary(i => i.Key, i => i.Value);
 				//var e1e = changedStack.Where(el => el.Key.Entity == y.Entity).Select(el => el.Value.value.GetValue<int>("Amount"));
-				var e1e = changedStack.Where(el => el.Key.Entity == y.Entity).Select(el => el.Value.value);
+				var e1e = changedStack.Where(el => el.Key.Entity == y.Entity).Select(el => el.Value.value.ToObject());
 				resultGrid.ItemsSource = e1e.ToList();
 
 			}
@@ -135,8 +135,8 @@ namespace dbLabs {
 
 				var z = resultGrid.SelectedIndex;
 				if(z != -1) {
-					y.CurrentValues.SetValues(ee.ElementAt(z).Value.value);
-					y.State = ee.ElementAt(z).Value.state;
+					y.CurrentValues.SetValues(ee.ElementAt(z-1).Value.value);
+					y.State = ee.ElementAt(z-1).Value.state;
 				}
 			}
 			ShowGrid.Refresh();
