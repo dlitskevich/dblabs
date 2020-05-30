@@ -18,426 +18,158 @@ namespace dbLabs {
 	// by visiting https://aka.ms/xamarinforms-previewer
 	[DesignTimeVisible(false)]
 	public partial class MainPage : ContentPage {
-		private DataSet autoschoolDS = new DataSet("Autoschool");
-		private Dictionary<DataRow, DateTime> modified = new Dictionary<DataRow, DateTime>();
-		private Dictionary<DataRow, DateTime> changed = new Dictionary<DataRow, DateTime>();
+		private DataSet bankDS = new DataSet("Bank");
+		//private Dictionary<DataRow, DateTime> modified = new Dictionary<DataRow, DateTime>();
+		//private Dictionary<DataRow, DateTime> changed = new Dictionary<DataRow, DateTime>();
 
-		private enum AutoTypes{
-			A=1,
-			B=2,
-			C=3,
-			D=4
-		};
-		private string connString = "server=127.0.0.1; user=root; password=Password; database=autoschool";
+		private string connString = "server=127.0.0.1; user=root; password=Password; database=bankkr";
 		private MySqlDataAdapter customerAdapter;
-		private MySqlDataAdapter teacherAdapter;
-		private MySqlDataAdapter autoAdapter;
-		private MySqlDataAdapter contractAdapter;
-		private MySqlDataAdapter practiceAdapter;
+		private MySqlDataAdapter acctAdapter;
+		private MySqlDataAdapter sellerAdapter;
 
 		private MySqlCommandBuilder customerCommands;
-		private MySqlCommandBuilder teacherCommands;
-		private MySqlCommandBuilder autoCommands;
-		private MySqlCommandBuilder contractCommands;
-		private MySqlCommandBuilder practiceCommands;
+		private MySqlCommandBuilder acctCommands;
+		private MySqlCommandBuilder sellerCommands;
 
 
 		public MainPage() {
 			InitializeComponent();
 
 			customerAdapter = new MySqlDataAdapter("select * from customer", connString);
-			teacherAdapter = new MySqlDataAdapter("select * from teacher", connString);
-			// auto_type+0 as auto_type_id
-			autoAdapter = new MySqlDataAdapter("select *, auto_type+0 as auto_type_id from auto", connString);
-
-			contractAdapter = new MySqlDataAdapter("select * from contract", connString);
-			practiceAdapter = new MySqlDataAdapter("select * from practice", connString);
+			acctAdapter = new MySqlDataAdapter("select * from acct", connString);
+			sellerAdapter = new MySqlDataAdapter("select * from seller", connString);
 
 
 			customerCommands = new MySqlCommandBuilder(customerAdapter);
-			teacherCommands = new MySqlCommandBuilder(teacherAdapter);
-			autoCommands = new MySqlCommandBuilder(autoAdapter);
-			contractCommands = new MySqlCommandBuilder(contractAdapter);
-			practiceCommands = new MySqlCommandBuilder(practiceAdapter);
-
-			//customerAdapter.Fill(autoschoolDS, "customer");
-			//teacherAdapter.Fill(autoschoolDS, "teacher");
-			//autoAdapter.Fill(autoschoolDS, "auto");
-			//contractAdapter.Fill(autoschoolDS, "contract");
-			//practiceAdapter.Fill(autoschoolDS, "practice");
-
-
-			//autoschoolDS.Tables["customer"].PrimaryKey = new DataColumn[] { autoschoolDS.Tables["customer"].Columns["customer_id"] };
-			//autoschoolDS.Tables["teacher"].PrimaryKey = new DataColumn[] { autoschoolDS.Tables["teacher"].Columns["teacher_id"] };
-			//autoschoolDS.Tables["auto"].PrimaryKey = new DataColumn[] { autoschoolDS.Tables["auto"].Columns["auto_id"] };
-			//autoschoolDS.Tables["contract"].PrimaryKey = new DataColumn[] { autoschoolDS.Tables["contract"].Columns["contract_id"] };
-			//autoschoolDS.Tables["practice"].PrimaryKey = new DataColumn[] { autoschoolDS.Tables["practice"].Columns["practice_id"] };
-
-			customerAdapter.FillSchema(autoschoolDS, SchemaType.Source,"customer");
-			teacherAdapter.FillSchema(autoschoolDS, SchemaType.Source, "teacher");
-			autoAdapter.FillSchema(autoschoolDS, SchemaType.Source, "auto");
-			contractAdapter.FillSchema(autoschoolDS, SchemaType.Source, "contract");
-			practiceAdapter.FillSchema(autoschoolDS, SchemaType.Source, "practice");
-
-			//autoschoolDS.Tables["auto"].Rows.Clear();
-
-			//autoschoolDS.Tables.Add("customer");
-			//autoschoolDS.Tables.Add("teacher");
-			//autoschoolDS.Tables.Add("auto");
-			//autoschoolDS.Tables.Add("contract");
-			//autoschoolDS.Tables.Add("practice");
-
-			//autoschoolDS.Tables["customer"].Columns.Add("customer_name", Type.GetType("System.String"));
-			//autoschoolDS.Tables["customer"].Columns["customer_name"].AllowDBNull = false;
-			//autoschoolDS.Tables["customer"].Columns.Add("customer_surname", Type.GetType("System.String"));
-			//autoschoolDS.Tables["customer"].Columns["customer_surname"].AllowDBNull = false;
-			//autoschoolDS.Tables["customer"].Columns.Add("customer_phone", Type.GetType("System.String"));
-			//autoschoolDS.Tables["customer"].Columns.Add("customer_birth", Type.GetType("System.DateTime"));
-
-			//teacherAdapter.Fill(autoschoolDS, "customer");
-			//teacherAdapter.Fill(autoschoolDS, "teacher");
-			//autoAdapter.Fill(autoschoolDS, "auto");
-			//contractAdapter.Fill(autoschoolDS, "contract");
-			//practiceAdapter.Fill(autoschoolDS, "practice");
-
+			acctCommands = new MySqlCommandBuilder(acctAdapter);
+			sellerCommands = new MySqlCommandBuilder(sellerAdapter);
 
 			
-			autoschoolDS.Tables["customer"].Columns["customer_name"].DataType = Type.GetType("System.String");
-			autoschoolDS.Tables["customer"].Columns["customer_name"].AllowDBNull = false;
-			autoschoolDS.Tables["customer"].Columns["customer_surname"].DataType = Type.GetType("System.String");
-			autoschoolDS.Tables["customer"].Columns["customer_surname"].AllowDBNull = false;
-			autoschoolDS.Tables["customer"].Columns["customer_phone"].DataType = Type.GetType("System.String");
-			autoschoolDS.Tables["customer"].Columns["customer_birth"].DataType = Type.GetType("System.DateTime");
+
+			customerAdapter.Fill(bankDS, "customer");
+			acctAdapter.Fill(bankDS, "acct");
+			sellerAdapter.Fill(bankDS, "seller");
 
 
-			autoschoolDS.Tables["teacher"].Columns["teacher_name"].DataType = Type.GetType("System.String");
-			autoschoolDS.Tables["teacher"].Columns["teacher_name"].AllowDBNull = false;
-			autoschoolDS.Tables["teacher"].Columns["teacher_surname"].DataType = Type.GetType("System.String");
-			autoschoolDS.Tables["teacher"].Columns["teacher_surname"].AllowDBNull = false;
-			autoschoolDS.Tables["teacher"].Columns["teacher_phone"].DataType = Type.GetType("System.String");
 
+			//ForeignKeyConstraint CustomerToAcct =
+			//	new ForeignKeyConstraint(
+			//		"CustomerContract",
+			//		bankDS.Tables["customer"].Columns["customer_id"],
+			//		bankDS.Tables["acct"].Columns["acct_owner"]
+			//		);
+			//CustomerToAcct.DeleteRule = Rule.Cascade;
+			//bankDS.Tables["acct"].Constraints.Add(CustomerToAcct);
 			
-			autoschoolDS.Tables["auto"].Columns["auto_name"].DataType = Type.GetType("System.String");
-			autoschoolDS.Tables["auto"].Columns["auto_name"].DefaultValue = "Gillie";
-			autoschoolDS.Tables["auto"].Columns["auto_type"].DataType = Type.GetType("System.String");
-			autoschoolDS.Tables["auto"].Columns["auto_type"].DefaultValue = "A";
-			autoschoolDS.Tables["auto"].Columns["auto_type_id"].DataType = typeof(AutoTypes);
-			autoschoolDS.Tables["auto"].Columns["auto_type_id"].DefaultValue = AutoTypes.A;
-			//Enum.Parse(typeof(types), "A");
-			//autoschoolDS.Tables["auto"].Columns["auto_type"].Expression = "CONVERT(auto_type,typeof(types))";
-
-			autoschoolDS.Tables["auto"].Columns["colour"].DataType = Type.GetType("System.String");
-			autoschoolDS.Tables["auto"].Columns["colour"].DefaultValue = "red";
-			autoschoolDS.Tables["auto"].Columns["available"].DataType = Type.GetType("System.Boolean");
-			
-			autoschoolDS.Tables["auto"].Columns["available"].DefaultValue = true;
-			autoschoolDS.Tables["auto"].Columns["price"].DataType = Type.GetType("System.Int32");
-			autoschoolDS.Tables["auto"].Columns["price"].DefaultValue = 5000;
-
-
-
-			autoschoolDS.Tables["contract"].Columns["customer_id"].DataType = Type.GetType("System.Int32");
-			autoschoolDS.Tables["contract"].Columns["customer_id"].AllowDBNull = false;
-			autoschoolDS.Tables["contract"].Columns["contract_type"].DataType = Type.GetType("System.String");
-			autoschoolDS.Tables["contract"].Columns["contract_type"].DefaultValue = "A";
-			autoschoolDS.Tables["contract"].Columns["payment"].DataType = Type.GetType("System.Int32");
-			autoschoolDS.Tables["contract"].Columns["payment"].DefaultValue = 500;
-			autoschoolDS.Tables["contract"].Columns["contract_start_date"].DataType = Type.GetType("System.DateTime");
-			//autoschoolDS.Tables["contract"].Columns["contract_start_date"].DefaultValue = DateTime.Now;
-			autoschoolDS.Tables["contract"].Columns["contract_end_date"].DataType = Type.GetType("System.DateTime");
-			//autoschoolDS.Tables["contract"].Columns["contract_end_date"].DefaultValue = DateTime.Now.AddMonths(3);
-
-			autoschoolDS.Tables["practice"].Columns["customer_id"].DataType = Type.GetType("System.Int32");
-			autoschoolDS.Tables["practice"].Columns["customer_id"].AllowDBNull = false;
-			autoschoolDS.Tables["practice"].Columns["teacher_id"].DataType = Type.GetType("System.Int32");
-			autoschoolDS.Tables["practice"].Columns["teacher_id"].AllowDBNull = false;
-			autoschoolDS.Tables["practice"].Columns["auto_id"].DataType = Type.GetType("System.Int32");
-			autoschoolDS.Tables["practice"].Columns["auto_id"].AllowDBNull = false;
-			autoschoolDS.Tables["practice"].Columns["practice_date"].DataType = Type.GetType("System.DateTime");
-			autoschoolDS.Tables["practice"].Columns["practice_date"].DefaultValue = DateTime.Now;
-			autoschoolDS.Tables["practice"].Columns["mark"].DataType = Type.GetType("System.Int32");
-			autoschoolDS.Tables["practice"].Columns["mark"].DefaultValue = 80;
-
-
-			customerAdapter.Fill(autoschoolDS, "customer");
-			teacherAdapter.Fill(autoschoolDS, "teacher");
-			autoAdapter.Fill(autoschoolDS, "auto");
-			contractAdapter.Fill(autoschoolDS, "contract");
-			practiceAdapter.Fill(autoschoolDS, "practice");
-
-
-			foreach(string table in new string[] { "customer", "teacher", "auto", "contract", "practice" }) {
-				autoschoolDS.Tables[table].PrimaryKey = new DataColumn[] { autoschoolDS.Tables[table].Columns[table + "_id"] };
-
-				autoschoolDS.Tables[table].Columns[table + "_id"].AutoIncrement = true;
-				var lastId = (from m in autoschoolDS.Tables[table].AsEnumerable()
-							  select m[table + "_id"]).Max();
-				autoschoolDS.Tables[table].Columns[table + "_id"].AutoIncrementSeed = (int)lastId + 1;
-				autoschoolDS.Tables[table].Columns[table + "_id"].AutoIncrementStep = 1;
-			};
-
-
-			ForeignKeyConstraint CustomerToContract =
-				new ForeignKeyConstraint(
-					"CustomerContract",
-					autoschoolDS.Tables["customer"].Columns["customer_id"],
-					autoschoolDS.Tables["contract"].Columns["customer_id"]
-					);
-			autoschoolDS.Tables["contract"].Constraints.Add(CustomerToContract);
-			
-
-			DataRelation CustomerToPractice =
-				new DataRelation(
-					"CustomerPractice",
-					autoschoolDS.Tables["customer"].Columns["customer_id"],
-					autoschoolDS.Tables["practice"].Columns["customer_id"]
-					);
-			autoschoolDS.Relations.Add(CustomerToPractice);
-
-			DataRelation AutoToPractice =
-				new DataRelation(
-					"AutoPractice",
-					autoschoolDS.Tables["auto"].Columns["auto_id"],
-					autoschoolDS.Tables["practice"].Columns["auto_id"]
-					);
-			autoschoolDS.Relations.Add(AutoToPractice);
-			AutoToPractice.ChildKeyConstraint.DeleteRule = Rule.Cascade;
-
-			DataRelation TeacherToPractice =
-				new DataRelation(
-					"TeacherPractice",
-					autoschoolDS.Tables["teacher"].Columns["teacher_id"],
-					autoschoolDS.Tables["practice"].Columns["teacher_id"]
-					);
-			autoschoolDS.Relations.Add(TeacherToPractice);
-
-
-			var UpdateCmd = customerCommands.GetUpdateCommand();
-			//var parameter = UpdateCmd.Parameters.Add("@auto_type", MySqlDbType.Int32,13, "auto_type");
-			//auto_type = @auto_type,     `colour` = @p2, `available` = @p3, `price` = @p4
-			UpdateCmd.CommandText = $"UPDATE `customer` SET `customer_name` = @p1," +
-														 $" `customer_surname` = @p2, " +
-														 $"`customer_phone` = @p3, " +
-														 $"`customer_birth` = @p4 WHERE `customer_id` = @p5)";
-			customerAdapter.UpdateCommand = UpdateCmd;
-
-
-			//var UpdateCmd = autoCommands.GetUpdateCommand();
-			//var parameter = UpdateCmd.Parameters.Add("@auto_type", MySqlDbType.Int32,13, "auto_type");
-			//auto_type = @auto_type,     `colour` = @p2, `available` = @p3, `price` = @p4
-			//UpdateCmd.CommandText = $"UPDATE `auto` SET `auto_name` = @p1 where `auto_id` = @p6";
-			//autoAdapter.UpdateCommand = UpdateCmd;
-
-			/*
-			var DeleteCmd = customerCommands.GetDeleteCommand();
-			DeleteCmd.CommandText = $"DELETE FROM `customer` WHERE(`customer_id` = @p1)";
-			customerAdapter.DeleteCommand = DeleteCmd;
-			*/
-
-			autoschoolDS.Tables["customer"].RowChanged += StackModified;
-			autoschoolDS.Tables["teacher"].RowChanged += StackModified;
-			autoschoolDS.Tables["auto"].RowChanged += StackModified;
-			autoschoolDS.Tables["contract"].RowChanged += StackModified;
-			autoschoolDS.Tables["practice"].RowChanged += StackModified;
-
-			autoschoolDS.Tables["customer"].RowDeleted += StackDeleted;
-			autoschoolDS.Tables["teacher"].RowDeleted += StackDeleted;
-			autoschoolDS.Tables["auto"].RowDeleted += StackDeleted;
-			autoschoolDS.Tables["contract"].RowDeleted += StackDeleted;
-			autoschoolDS.Tables["practice"].RowDeleted += StackDeleted;
-
-
-			autoschoolDS.Tables["auto"].ColumnChanged += AutoTypeSync;
-			//autoschoolDS.Tables["customer"].N += StackAdded;
-			//autoschoolDS.Tables["teacher"].TableNewRow += StackAdded;
-			//autoschoolDS.Tables["auto"].TableNewRow += StackAdded;
-			//autoschoolDS.Tables["contract"].TableNewRow += StackAdded;
-			//autoschoolDS.Tables["practice"].TableNewRow += StackAdded;
-
-			practiceAdapter.InsertCommand = new MySqlCommand("add_practice");
-			practiceAdapter.InsertCommand.CommandType = CommandType.StoredProcedure;
-			MySqlParameter param = new MySqlParameter("id", MySqlDbType.Int32, 0, "practice_id");
-			param.Direction = ParameterDirection.Output;
-			practiceAdapter.InsertCommand.Parameters.Add(param);
-
-			param = new MySqlParameter("cur_mark", MySqlDbType.Int32, 0, "mark");
-			param.Direction = ParameterDirection.InputOutput;
-			practiceAdapter.InsertCommand.Parameters.Add(param);
 
 
 		}
-		// TODO:
-		// 1) update configurate
-		// 2) fk restrict deleting row with 3 and more child rows
-		// 3) call procedure updating rows, without fill
-		// 4) linq update non-linearly (update + join)
-		// TODO:
-
+		
 		/// ////////////////////////////////////////////////
 		/// Initialize page
 		/// ////////////////////////////////////////////////
 		
 		private void PageLoaded(object sender, EventArgs e) {
-			ShowGrid.ItemsSource = autoschoolDS.Tables["customer"].DefaultView;
-			UpdateColumnsNames(null, null);
+			ShowGrid.ItemsSource = bankDS.Tables["customer"].DefaultView;
+			
 		}
 
 		/// ////////////////////////////////////////////////
 		/// Show properties
 		/// ////////////////////////////////////////////////		
+		private void addSellerTransaction(object s, EventArgs e) {
+			using(MySqlConnection connection = new MySqlConnection(connString)) {
+				connection.Open();
 
-		private void UpdateColumnsNames(object sender, EventArgs e) {
-			string tableName = sender==null? "customer" : (string)((Picker)sender).SelectedItem;
-			DataColumnCollection columns = autoschoolDS.Tables[tableName].Columns;
+				// Start a local transaction.
+				MySqlTransaction sqlTran = connection.BeginTransaction();
 
-			List<string> names = new List<string>();
-			foreach(DataColumn column in columns) {
-				names.Add(column.ColumnName);
-			}
-			columnNames.ItemsSource = names.ToArray();
-		}
+				// Enlist a command in the current transaction.
+				MySqlCommand command = connection.CreateCommand();
+				command.Transaction = sqlTran;
+				int id = (int)(bankDS.Tables["seller"].AsEnumerable()).Last()[0] + 1; 
+				try {
+					command.CommandText ="INSERT INTO bankkr.seller VALUES("+ id.ToString()+ ", \"Name\",\"Surname\")";
+					command.ExecuteNonQuery();
 
-		private void ShowRowState(object sender, EventArgs e) {
-			string tableName = tableSelected.SelectedItem == null ? "customer" : (string)tableSelected.SelectedItem;
-			int rowIndex = 1;
-			try {
-				if(Int32.Parse(rowNumber.Text) == 0) {
-					rowIndex = ShowGrid.SelectedIndex;
-				} else {
-					rowIndex = Int32.Parse(rowNumber.Text);
+					// Commit the transaction.
+					sqlTran.Commit();
+					Console.WriteLine("Both records were written to database.");
+				} catch(Exception ex) {
+					// Handle the exception if the transaction fails to commit.
+					Console.WriteLine(ex.Message);
+
+					try {
+						// Attempt to roll back the transaction.
+						sqlTran.Rollback();
+					} catch(Exception exRollback) {
+						Console.WriteLine(exRollback.Message);
+					}
 				}
-			} catch {
-				rowIndex = 1;
 			}
-			try {
-				rowState.Text = autoschoolDS.Tables[tableName].Rows[rowIndex-1].RowState.ToString();
-			} catch {
-				rowState.Text = "smth_wrong";
-			}
-			
-
 		}
-
-		private void ShowProperty(object sender, EventArgs e) {
-			string tableName = tableSelected.SelectedItem == null ? "customer" : (string)tableSelected.SelectedItem;
-			string colname = columnNames.SelectedItem == null? (string)columnNames.Items[0] : (string)columnNames.SelectedItem;
-
-			var columnSelected = autoschoolDS.Tables[tableName].Columns[colname];
-			
-			string colproperty = "";
-			colproperty += "Name - > " + columnSelected.ColumnName + "\n";
-			colproperty += "Type - > " + columnSelected.DataType + "\n";
-			colproperty += "Allow NULL - > " + columnSelected.AllowDBNull + "\n";
-			colproperty += "Autoincrement - > " + columnSelected.AutoIncrement + "\n";
-			colproperty += "Unique - > " + columnSelected.Unique + "\n";
-			colproperty += "Number of primary keys - >" + autoschoolDS.Tables[tableName].PrimaryKey.Length + "\n";
-
-			var alert = new NSAlert() {
-				AlertStyle = NSAlertStyle.Informational,
-				InformativeText = colproperty,
-				MessageText = "Properties of "+ colname,
-			};
-			alert.AddButton("Ok");
-			alert.RunModal();
-		}
-
-
 		/// ////////////////////////////////////////////////
 		/// CRUD
 		/// ////////////////////////////////////////////////
 
 		private void ShowCustomer(object sender, EventArgs e) {
-			ShowGrid.ItemsSource = autoschoolDS.Tables["customer"].DefaultView;
+			ShowGrid.ItemsSource = bankDS.Tables["customer"].DefaultView;
 			addcustomer.IsVisible = true;
-			contractPK.IsVisible = true;
-			addteacher.IsVisible = false;
-			addauto.IsVisible = false;
-			addcontract.IsVisible = false;
-			addpractice.IsVisible = false;
-			ShowGrid.Columns[0].IsHidden = true;
-		}
-
-		private void ShowTeacher(object sender, EventArgs e) {
-			ShowGrid.ItemsSource = autoschoolDS.Tables["teacher"].DefaultView;
-			addcustomer.IsVisible = false;	
-			addteacher.IsVisible = true;
-			addauto.IsVisible = false;
-			addcontract.IsVisible = false;
-			addpractice.IsVisible = false;
-			contractPK.IsVisible = false;
-			ShowGrid.Columns[0].IsHidden = true;
-		}
-
-		private void ShowAuto(object sender, EventArgs e) {
-			ShowGrid.ItemsSource = autoschoolDS.Tables["auto"].DefaultView;
-			ShowGrid.Columns["auto_type"].AllowEditing = false;
-			addcustomer.IsVisible = false;
-			addteacher.IsVisible = false;
-			addauto.IsVisible = true;
-			addcontract.IsVisible = false;
-			addpractice.IsVisible = false;
-			contractPK.IsVisible = false;
+			
 			//ShowGrid.Columns[0].IsHidden = true;
 		}
 
-		private void ShowContract(object sender, EventArgs e) {
-			ShowGrid.ItemsSource = autoschoolDS.Tables["contract"].DefaultView;
-			addcustomer.IsVisible = false;
-			addteacher.IsVisible = false;
-			addauto.IsVisible = false;
-			addcontract.IsVisible = true;
-			addpractice.IsVisible = false;
-			ShowGrid.Columns[0].IsHidden = true;
-			contractPK.IsVisible = false;
+		private void ShowAcct(object sender, EventArgs e) {
+			ShowGrid.ItemsSource = bankDS.Tables["acct"].DefaultView;
+			
+
+			//ShowGrid.Columns[0].IsHidden = true;
 		}
-		
-		private void ShowPractice(object sender, EventArgs e) {
-			ShowGrid.ItemsSource = autoschoolDS.Tables["practice"].DefaultView;
-			addcustomer.IsVisible = false;
-			addteacher.IsVisible = false;
-			addauto.IsVisible = false;
-			addcontract.IsVisible = false;
-			addpractice.IsVisible = true;
-			contractPK.IsVisible = false;
+
+		private void ShowSeller(object sender, EventArgs e) {
+			ShowGrid.ItemsSource = bankDS.Tables["seller"].DefaultView;
+
+
+			//ShowGrid.Columns[0].IsHidden = true;
 		}
 
 
 		private void Sync(object sender, EventArgs e) {
 
 			ShowGrid.EndEdit();
-			//autoschoolDS.Tables["product"].AcceptChanges();
+			//bankDS.Tables["product"].AcceptChanges();
 			//productAdapter.Up;
 
 			try {
-				contractAdapter.Update(autoschoolDS.Tables["contract"]);
-				practiceAdapter.Update(autoschoolDS.Tables["practice"]);
-				customerAdapter.Update(autoschoolDS.Tables["customer"]);
-				autoAdapter.Update(autoschoolDS.Tables["auto"]);
-				teacherAdapter.Update(autoschoolDS.Tables["teacher"]);
-				changed.Clear();
-				modified.Clear();
+				acctAdapter.Update(bankDS.Tables["acct"]);
+				sellerAdapter.Update(bankDS.Tables["seller"]);
+				customerAdapter.Update(bankDS.Tables["customer"]);
+				
 
 			} catch(MySqlException ex) {
 				Console.WriteLine(ex.Message);
 			}
-			//autoschoolDS.Clear();
-			customerAdapter.Fill(autoschoolDS, "customer");
-			teacherAdapter.Fill(autoschoolDS, "teacher");
-			autoAdapter.Fill(autoschoolDS, "auto");
-			contractAdapter.Fill(autoschoolDS, "contract");
-			practiceAdapter.Fill(autoschoolDS, "practice");
+			bankDS.AcceptChanges();
+			bankDS.Clear();
+			customerAdapter.Fill(bankDS, "customer");
+			acctAdapter.Fill(bankDS, "acct");
+
+			sellerAdapter.Fill(bankDS, "seller");
+			
+			
+
 
 			// PageLoaded(null, null);
 		}
 
 		private void Cancel(object sender, EventArgs e) {
 			ShowGrid.EndEdit();
-			autoschoolDS.RejectChanges();
+			bankDS.RejectChanges();
 		}
 
 		private void CancelDeleted(object sender, EventArgs e) {
 			ShowGrid.EndEdit();
-			foreach(DataTable table in autoschoolDS.Tables) {
+			foreach(DataTable table in bankDS.Tables) {
 				foreach(DataRow row in table.Rows) {
 					if(row.RowState == DataRowState.Deleted) {
 						row.RejectChanges();
@@ -448,7 +180,7 @@ namespace dbLabs {
 
 		private void CancelModified(object sender, EventArgs e) {
 			ShowGrid.EndEdit();
-			foreach(DataTable table in autoschoolDS.Tables) {
+			foreach(DataTable table in bankDS.Tables) {
 				foreach(DataRow row in table.Rows) {
 					if(row.RowState == DataRowState.Modified) {
 						row.RejectChanges();
@@ -456,7 +188,7 @@ namespace dbLabs {
 				}
 			}
 		}
-
+		/*
 		private void CancelLastModified(object sender, EventArgs e) {
 			if(modified.Count > 0) {
 				DataRow row = modified.Aggregate((x, y) => x.Value > y.Value ? x : y).Key;
@@ -503,7 +235,8 @@ namespace dbLabs {
 			}
 
 		}
-
+		*/
+		/*
 		private void AutoTypeSync(object sender, DataColumnChangeEventArgs e) {
 
 			if(e.Column.Table.TableName == "auto" && e.Column.ColumnName == "auto_type_id") {
@@ -514,7 +247,7 @@ namespace dbLabs {
 			} 
 
 		}
-
+		*/
 		//private void StackAdded(object sender, DataRowChangeEventArgs e) {
 
 		//	if(e.Row.RowState == DataRowState.Unchanged) {				
@@ -524,7 +257,7 @@ namespace dbLabs {
 		//	}
 
 		//}
-
+		/*
 		private void StackModified(object sender, DataRowChangeEventArgs e) {
 			
 			if(e.Row.RowState == DataRowState.Unchanged) {
@@ -544,97 +277,39 @@ namespace dbLabs {
 			
 
 		}
-
+		*/
 		private void AddCustomer(object sender, EventArgs e) {
 			DataRow row;
-			row = autoschoolDS.Tables["customer"].NewRow();
-			//row[0] = (int)(autoschoolDS.Tables["customer"].AsEnumerable()).Last()[0] + 1;
+			row = bankDS.Tables["customer"].NewRow();
+			//row[0] = (int)(bankDS.Tables["customer"].AsEnumerable()).Last()[0] + 1;
 			row[1] = "Name";
 			row[2] = "Surname";
 			row[4] = (DateTime)DateTime.Now.AddYears(-18);
-			autoschoolDS.Tables["customer"].Rows.Add(row);
+			bankDS.Tables["customer"].Rows.Add(row);
 
-			ShowGrid.ItemsSource = autoschoolDS.Tables["customer"].DefaultView;
+			ShowGrid.ItemsSource = bankDS.Tables["customer"].DefaultView;
 		}
 
-		private void AddTeacher(object sender, EventArgs e) {
+		private void AddSeller(object sender, EventArgs e) {
 			DataRow row;
-			row = autoschoolDS.Tables["teacher"].NewRow();
-			//row[0] = (int)(autoschoolDS.Tables["teacher"].AsEnumerable()).Last()[0] + 1;
+			row = bankDS.Tables["seller"].NewRow();
+			row[0] = (int)(bankDS.Tables["seller"].AsEnumerable()).Last()[0] + 1;
 			row[1] = "Name";
 			row[2] = "Surname";
-			row[3] = "";
-			autoschoolDS.Tables["teacher"].Rows.Add(row);
+			bankDS.Tables["seller"].Rows.Add(row);
 
-			ShowGrid.ItemsSource = autoschoolDS.Tables["teacher"].DefaultView;
+			ShowGrid.ItemsSource = bankDS.Tables["seller"].DefaultView;
 		}
 
-		private void AddAuto(object sender, EventArgs e) {
-			DataRow row;
-			row = autoschoolDS.Tables["auto"].NewRow();
-			//row[0] = (int)(autoschoolDS.Tables["auto"].AsEnumerable()).Last()[0] + 1;
-			
-			autoschoolDS.Tables["auto"].Rows.Add(row);
-
-			ShowGrid.ItemsSource = autoschoolDS.Tables["auto"].DefaultView;
-		}
-
-		private void AddContract(object sender, EventArgs e) {
-			DataRow row;
-			row = autoschoolDS.Tables["contract"].NewRow();
-			//row[0] = (int)(autoschoolDS.Tables["contract"].AsEnumerable()).Last()[0] + 1;
-			row[4] = (DateTime)DateTime.Now;
-			row[5] = (DateTime)DateTime.Now.AddMonths(3);
-			autoschoolDS.Tables["contract"].Rows.Add(row);
-
-			ShowGrid.ItemsSource = autoschoolDS.Tables["contract"].DefaultView;
-		}
-
-		private void AddPractice(object sender, EventArgs e) {
-			DataRow row;
-			row = autoschoolDS.Tables["practice"].NewRow();
-			//row[0] = (int)(autoschoolDS.Tables["practice"].AsEnumerable()).Last()[0] + 1;
-			row[1] = 1;
-			row[2] = 1;
-			row[3] = 1;
-			row[4] = (DateTime)DateTime.Now;
-			row[5] = 100;
-			autoschoolDS.Tables["practice"].Rows.Add(row);
-
-			practiceAdapter.Update(autoschoolDS, "practice");
-			autoschoolDS.AcceptChanges();
-			changed.Clear();
-			modified.Clear();
-
-			ShowGrid.ItemsSource = autoschoolDS.Tables["practice"].DefaultView;
-		}
-
-		private void ContractPK(object sender, EventArgs e) {
-			if(ShowGrid.SelectedItem != null) {
-				DataRow selectedRow = ((DataRow)((DataRowView)ShowGrid.SelectedItem).Row);
-				DataRow row;
-				row = autoschoolDS.Tables["contract"].NewRow();
-				row[1] = selectedRow[0];
-				row[2] = contractType.Text;
-				row[4] = (DateTime)DateTime.Now;
-				row[5] = (DateTime)DateTime.Now.AddMonths(3);
-				autoschoolDS.Tables["contract"].Rows.Add(row);
-
-
-				ShowGrid.ItemsSource = autoschoolDS.Tables["contract"].DefaultView;
-			}
-		}
+		
 
 		private void RemoveItem(object sender, EventArgs e) {
 			if(ShowGrid.SelectedItem != null) {
-				//autoschoolDS.Tables["product"].Rows.Remove((DataRow)((DataRowView)ShowGrid.SelectedItem).Row);
-				//autoschoolDS.Tables["product"].Rows.RemoveAt((int)ShowGrid.SelectedIndex-1);
-				if(
-					(((DataRowView)ShowGrid.SelectedItem).Row).Table.TableName!="auto"
-					||(((DataRowView)ShowGrid.SelectedItem).Row).GetChildRows("AutoPractice").Count() < 3
-					) {					
-					((DataRow)((DataRowView)ShowGrid.SelectedItem).Row).Delete();
-				}
+				//bankDS.Tables["product"].Rows.Remove((DataRow)((DataRowView)ShowGrid.SelectedItem).Row);
+				//bankDS.Tables["product"].Rows.RemoveAt((int)ShowGrid.SelectedIndex-1);
+							
+				((DataRow)((DataRowView)ShowGrid.SelectedItem).Row).Delete();
+				
 				//Refresh(null, null);
 			}
 		}
@@ -666,53 +341,12 @@ namespace dbLabs {
 		/// Filters part
 		/// ////////////////////////////////////////////////
 
-		private void FilterContract(object sender, EventArgs e) {
-
-			var result = from contract in autoschoolDS.Tables["contract"].AsEnumerable()
-						 where
-						 (int.TryParse(minPrice.Text, out int min) ? min : 0) < (int)contract["payment"]
-						 && (int)contract["payment"] < (int.TryParse(maxPrice.Text, out int max) ? max : 5000)
-						 select contract;
-
-			IEnumerable<DataRow> resultQuery;
-			if(byType.IsChecked && byDate.IsChecked) {
-				resultQuery = result.OrderBy(x => x["contract_type"]).ThenBy(x => x["contract_start_date"]);
-			} else if(byDate.IsChecked) {
-				resultQuery = result.OrderBy(x => x.ItemArray[4]);
-			} else if(byType.IsChecked) {
-				resultQuery = result.OrderBy(x => x.ItemArray[2]);
-			} else {
-				resultQuery = result;
-			};
-
-			resultGrid.ItemsSource = resultQuery.CopyToDataTable().DefaultView;
-		}
-
-		private void FindAuto(object sender, EventArgs e) {
-
-			var result = from auto in autoschoolDS.Tables["auto"].AsEnumerable()
-						 where
-						 (auto["auto_name"].ToString()).Contains(autoPattern.Text.ToString())
-						 &&
-						 (int.TryParse(minPriceAuto.Text, out int min) ? min : 0) < (int)auto["price"]
-						 && (int)auto["price"] < (int.TryParse(maxPriceAuto.Text, out int max) ? max : 70000)
-						 select auto;
-
-			// test
-			var resultt = from auto in autoschoolDS.Tables["auto"].AsEnumerable()
-						 select new { id=auto.Field<int>("auto_id"), newPrice = auto.Field<string>("colour") == "blue" ? 16001 : (auto.Field<string>("colour") == "black" ? 16000 : auto.Field<int>("price")) }
-						 ;
-
-			resultGrid.ItemsSource = resultt;
-			//if(result.Count() != 0) {
-			//	resultGrid.ItemsSource = result.CopyToDataTable().DefaultView;
-			//}
-		}
+		
 
 		private void UpdatePriceAuto(object sender, EventArgs e) {
 
-			(from auto in autoschoolDS.Tables["auto"].AsEnumerable()
-			 join newPrice in (from auto in autoschoolDS.Tables["auto"].AsEnumerable()
+			(from auto in bankDS.Tables["auto"].AsEnumerable()
+			 join newPrice in (from auto in bankDS.Tables["auto"].AsEnumerable()
 			 select new { id = auto.Field<int>("auto_id"), newPrice = auto.Field<string>("colour") == "blue" ? 16001 : (auto.Field<string>("colour") == "black" ? 16000 : auto.Field<int>("price")) })
 			 on auto.Field<int>("auto_id") equals newPrice.id
 			where
@@ -722,18 +356,9 @@ namespace dbLabs {
 		}
 
 
-		private void DeleteAutoName(object sender, EventArgs e) {
-
-			(from auto in autoschoolDS.Tables["auto"].AsEnumerable()
-			 where
-			 ((string)auto["auto_name"]).Contains(autoPattern.Text.ToString())
-			 select auto).ForEach(row => row.Delete()) ;
-
-		}
-
 		private void JoinContract(object sender, EventArgs e) {
-			var result = autoschoolDS.Tables["contract"].Select().Join(
-				autoschoolDS.Tables["customer"].Select(),
+			var result = bankDS.Tables["contract"].Select().Join(
+				bankDS.Tables["customer"].Select(),
 				contract => contract["customer_id"],
 				customer => customer["customer_id"],
 				(contract, customer) => new {
@@ -750,7 +375,7 @@ namespace dbLabs {
 		}
 
 		private void AverageContract(object sender, EventArgs e) {
-			var result = autoschoolDS.Tables["contract"].Select().GroupBy(
+			var result = bankDS.Tables["contract"].Select().GroupBy(
 					contract => contract["contract_type"],
 					(type, rest) => new {
 						Type = type,
@@ -762,8 +387,8 @@ namespace dbLabs {
 		}
 
 		private void AutoUsage(object sender, EventArgs e) {
-			var result = autoschoolDS.Tables["auto"].Select().GroupJoin(
-					autoschoolDS.Tables["practice"].Select(),
+			var result = bankDS.Tables["auto"].Select().GroupJoin(
+					bankDS.Tables["practice"].Select(),
 					auto => auto["auto_id"],
 					practice => practice["auto_id"],
 
@@ -777,8 +402,8 @@ namespace dbLabs {
 		}
 
 		private void TeacherPractice(object sender, EventArgs e) {
-			var result = from teacher in autoschoolDS.Tables["teacher"].AsEnumerable()
-						 join practice in autoschoolDS.Tables["practice"].AsEnumerable()
+			var result = from teacher in bankDS.Tables["teacher"].AsEnumerable()
+						 join practice in bankDS.Tables["practice"].AsEnumerable()
 						 on teacher["teacher_id"] equals practice["teacher_id"]
 						 group new { teacher, practice }
 						 by new {
@@ -800,28 +425,38 @@ namespace dbLabs {
 		}
 
 		private void CustomerMark(object sender, EventArgs e) {
-			var result = from customer in autoschoolDS.Tables["customer"].AsEnumerable()
-						 join practice in autoschoolDS.Tables["practice"].AsEnumerable()
-						 on customer["customer_id"] equals practice["customer_id"]
-						 group new { customer, practice }
+			var avg = from acc in bankDS.Tables["acct"].AsEnumerable()
+					  group new { acc } by acc.Field<int>("acct_owner")
+					  into accgrouped
+					  select accgrouped.Sum(x =>x.acc.Field<double>("acct_balance"))
+					  ;
+			var avvg = avg.Average();
+			var result = from customer in bankDS.Tables["customer"].AsEnumerable()
+						 join acc in bankDS.Tables["acct"].AsEnumerable()
+						 on customer["customer_id"] equals acc["acct_owner"]
+						 group new { customer, acc }
 						 by new {
 							 id = customer.Field<int>("customer_id"),
 							 Name = customer.Field<string>("customer_name"),
 							 Surname = customer.Field<string>("customer_surname"),
-							 Phone = customer.Field<string>("customer_phone")
+							 Phone = customer.Field<string>("customer_phone"),
+							 
 						 } into customerpractice
 						 orderby customerpractice.Key.id ascending
+						 
 						 select new {
 							 customerpractice.Key.id,
 							 customerpractice.Key.Name,
 							 customerpractice.Key.Surname,
 							 customerpractice.Key.Phone,
-							 minMark = customerpractice.Min(x => x.practice.Field<int>("mark")),
-							 maxMark = customerpractice.Max(x => x.practice.Field<int>("mark")),
-							 averageMark = (int)customerpractice.Average(x => x.practice.Field<int>("mark"))
-						 };
+							 total = customerpractice.Sum(x => x.acc.Field<double>("acct_balance")),
+							 // maxMark = customerpractice.Max(x => x.practice.Field<int>("mark")),
+							 //averageMark = (int)customerpractice.Average(x => x.practice.Field<int>("mark"))
+						 }
+						 
+						 ;
 
-			resultGrid.ItemsSource = result;
+			resultGrid.ItemsSource = result.Where(x =>x.total> avvg);
 		}
 
 

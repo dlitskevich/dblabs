@@ -20,10 +20,9 @@
 
         <StackLayout Orientation="Horizontal">
             <Button Text="Show Customers"  HorizontalOptions="Start" Clicked="ShowCustomer"/>
-            <Button Text="Show Teachers"  HorizontalOptions="Start" Clicked="ShowTeacher"/>
-            <Button Text="Show Autos"  HorizontalOptions="Start" Clicked="ShowAuto"/>
-            <Button Text="Show Contracts"  HorizontalOptions="Start" Clicked="ShowContract"/>
-            <Button Text="Show Practices"  HorizontalOptions="Start" Clicked="ShowPractice"/>
+             <Button Text="Show Acct"  HorizontalOptions="Start" Clicked="ShowAcct"/>
+             <Button Text="Show Seller"  HorizontalOptions="Start" Clicked="ShowSeller"/>
+           
         </StackLayout>
 
         <StackLayout x:Name="RRA" Orientation="Horizontal">
@@ -31,21 +30,14 @@
             <Button Text="Cancel" HorizontalOptions="Start" Clicked="Cancel"/>
             <Button Text="Remove Item" HorizontalOptions="Start" Clicked="RemoveItem"/>
             <Button x:Name="addcustomer" Text="Add New Customer" IsVisible="True" HorizontalOptions="Start" Clicked="AddCustomer"/>
-            <Button x:Name="addteacher" Text="Add New Teacher" IsVisible="False" HorizontalOptions="Start" Clicked="AddTeacher"/>
-            <Button x:Name="addauto" Text="Add New Auto" IsVisible="False" HorizontalOptions="Start" Clicked="AddAuto"/>
-            <Button x:Name="addcontract" Text="Add New Contract" IsVisible="False" HorizontalOptions="Start" Clicked="AddContract"/>
-            <Button x:Name="addpractice" Text="Add New Practice" IsVisible="False" HorizontalOptions="Start" Clicked="AddPractice"/>
-            <Button x:Name="contractPK" Text="Add Contract PK" IsVisible="False" HorizontalOptions="Start" Clicked="ContractPK"/>
-            <Entry x:Name="contractType" Text="A"/>
+            <Button x:Name="addcseller" Text="Add New Seller" IsVisible="True" HorizontalOptions="Start" Clicked="AddSeller"/>
+           
+            <Button x:Name="addcsddeller" Text="Add New Seller" IsVisible="True" HorizontalOptions="Start" Clicked="addSellerTransaction"/>
 
-            <Label Text="MultSelection" TextColor="Aqua"/>
-            <CheckBox IsChecked="False" HorizontalOptions="End" CheckedChanged="MultSelection"/>
+            <Entry x:Name="contractType" Text="A"/>
 
             <Button Text="CancelDel" HorizontalOptions="End" Clicked="CancelDeleted"/>
             <Button Text="CancelMod" HorizontalOptions="End" Clicked="CancelModified"/>
-            <Button Text="CancelLastMod" HorizontalOptions="End" Clicked="CancelLastModified"/>
-            <Button Text="CancelLast" HorizontalOptions="End" Clicked="CancelLast"/>
-            <Button Text="Remove Selected" HorizontalOptions="End" Clicked="RemoveSelected"/>
         </StackLayout>
 
         
@@ -66,53 +58,10 @@
                                >
         </syncfusionDG:SfDataGrid>
         
+        
+
         <StackLayout Orientation="Horizontal">
-            <Button Text="Show row state" HorizontalOptions="Start" Clicked="ShowRowState"/>
-            <Entry x:Name="rowNumber" Text="  0"/>
-            <Entry x:Name="rowState" IsReadOnly="True" Text="default_value"/>
-            <Button Text="Show properties" HorizontalOptions="Start" Clicked="ShowProperty"/>
-            <Picker x:Name="tableSelected" HorizontalOptions="FillAndExpand" SelectedIndexChanged="UpdateColumnsNames">
-                <Picker.Items>
-                    <x:String>customer</x:String>
-                    <x:String>teacher</x:String>
-                    <x:String>auto</x:String>
-                    <x:String>contract</x:String>
-                    <x:String>practice</x:String>
-                </Picker.Items>
-            </Picker>
-            <Picker x:Name="columnNames" HorizontalOptions="FillAndExpand" />
-
-
-        </StackLayout>
-
-        <StackLayout Orientation="Vertical">
-            <StackLayout Orientation="Horizontal">
-                <Button Text="Filter Contracts" HorizontalOptions="Start" Clicked="JoinContract"/>
-                <Entry x:Name="minPrice" TextColor="Red" Text="1000"/>
-                <Entry x:Name="maxPrice" TextColor="Green" Text="5000"/>
-                <Label Text="Sort by type" TextColor="Aqua"/>
-                <CheckBox x:Name="byType"/>
-                <Label Text="Sort by Date" TextColor="Pink"/>
-                <CheckBox x:Name="byDate"/>
-            </StackLayout>
-
-            <StackLayout Orientation="Horizontal">
-                <Button Text="Find Auto by Name" HorizontalOptions="Start" Clicked="FindAuto"/>
-                <Entry x:Name="autoPattern" TextColor="BlueViolet" Text="ek"/>
-                <Entry x:Name="minPriceAuto" TextColor="Red" Text="1000"/>
-                <Entry x:Name="maxPriceAuto" TextColor="Green" Text="70000"/>
-                <Button Text="Update Auto price by Name" HorizontalOptions="Start" Clicked="UpdatePriceAuto"/>
-                <Entry x:Name="updatePriceAuto" TextColor="Magenta" Text="7000"/>
-                <Button Text="Delete Auto by name" HorizontalOptions="Start" Clicked="DeleteAutoName"/>
-            </StackLayout>
-
-            <StackLayout Orientation="Horizontal">
-                <Button Text="JoinContract" HorizontalOptions="Start" Clicked="JoinContract"/>
-                <Button Text="Average Contract" HorizontalOptions="Start" Clicked="AverageContract"/>
-                <Button Text="Auto Usage" HorizontalOptions="Start" Clicked="AutoUsage"/>
-                <Button Text="Teacher Practice" HorizontalOptions="Start" Clicked="TeacherPractice"/>
-                <Button Text="Customer Marks" HorizontalOptions="Start" Clicked="CustomerMark"/>
-            </StackLayout>
+            <Button Text="Customer Marks" HorizontalOptions="Start" Clicked="CustomerMark"/>
         </StackLayout>
 
         <syncfusionDG:SfDataGrid x:Name="resultGrid"
