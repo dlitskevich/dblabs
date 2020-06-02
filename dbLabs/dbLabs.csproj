@@ -30,6 +30,8 @@
     <PackageReference Include="System.Data.SqlClient" Version="4.8.1" />
     <PackageReference Include="MySql.Data.EntityFrameworkCore" Version="8.0.20" />
     <PackageReference Include="Syncfusion.Xamarin.SfDataGrid" Version="18.1.0.46" />
+    <PackageReference Include="MongoDB.Driver" Version="2.10.4" />
+    <PackageReference Include="MongoDB.Bson" Version="2.10.4" />
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="Classes\books.cs" />
