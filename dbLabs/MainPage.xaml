@@ -10,7 +10,6 @@
     mc:Ignorable="d"
     x:Class="dbLabs.MainPage"
     Appearing="PageLoaded"
-    Disappearing="PageClosed"
     >
     
     
@@ -19,7 +18,7 @@
         <!-- Place new controls here
         Appearing="PageLoaded"
         
-        -->
+        
 
         <StackLayout Orientation="Horizontal">
             <Button Text="Show Contracts"  HorizontalOptions="Start" Clicked="ShowContracts"/>
@@ -52,7 +51,7 @@
             <Button Text="Cancel Last Choice" HorizontalOptions="Start" Clicked="CancelLastChoice"/>
             <Button Text="show Last Choice" HorizontalOptions="Start" Clicked="ShowLastChoice"/>
         </StackLayout>
-
+        -->
         <syncfusionDG:SfDataGrid x:Name="ShowGrid"
                                IsVisible="True"
                                AutoGenerateColumns="True"
@@ -72,14 +71,14 @@
         </syncfusionDG:SfDataGrid>
 
 
-
+        <!--
         <StackLayout Orientation="Horizontal">
                 <Button Text="Average purchase amount" HorizontalOptions="Start" Clicked="ProductAVGamount"/>
                 <Button Text="Customer Total" HorizontalOptions="Start" Clicked="CustomerTotal"/>
                 <Button Text="Provider Info" HorizontalOptions="Start" Clicked="ProviderInfo"/>
                 <Button Text="Purchase Info" HorizontalOptions="Start" Clicked="PurchaseInfo"/>
             </StackLayout>
-        <!-- Result -->
+        Result 
         <StackLayout Orientation="Horizontal">
                 <Button Text="query" HorizontalOptions="Start" />
         </StackLayout>
@@ -99,6 +98,7 @@
                                ShowRowHeader="True"
                                >
         </syncfusionDG:SfDataGrid>
+        -->
         <!--
         <StackLayout Orientation="Horizontal">
             <Button Text="Show Customers"  HorizontalOptions="Start" Clicked="ShowCustomer"/>
